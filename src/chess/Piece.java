@@ -32,8 +32,8 @@ public abstract class Piece {
     public ArrayList<BoardSquare> getAvailableMoves(Board board, BoardSquare source) {
         ArrayList<BoardSquare> squares = new ArrayList<>();
         BoardSquare sq;
-        for (int i = 0; i < board.NUM_COLS; i++) {
-            for (int j = 0; j < board.NUM_ROWS; j++) {
+        for (int i = 0; i < Board.NUM_COLS; i++) {
+            for (int j = 0; j < Board.NUM_ROWS; j++) {
                 sq = board.getBoardSquareAt(i, j);
                 if (legalMove(board, source, sq)) {
                     squares.add(sq);
