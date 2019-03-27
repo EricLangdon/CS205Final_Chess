@@ -3,7 +3,7 @@ package chess;
 import java.util.ArrayList;
 
 public abstract class Piece {
-    public static final int score = 0;
+    public static final int SCORE = 0;
     private Color color;
 
     /**
