@@ -13,7 +13,7 @@ public class Pawn extends Piece {
      * Sets the pawn's color to white
      */
     public void Piece(){
-        this.color= white;
+        this.color= color.WHITE;
     }
     /**
      * Constructor
@@ -32,7 +32,7 @@ public class Pawn extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
-
+        
     }
 
     public boolean hasMoved(BoardSquare current){

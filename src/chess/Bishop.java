@@ -12,7 +12,7 @@ public class Bishop extends Piece {
      * Sets the Bishops's color to white
      */
     public void Piece(){
-        this.color= white;
+        this.color= color.WHITE;
     }
     /**
      * Constructor

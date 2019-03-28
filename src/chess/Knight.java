@@ -12,7 +12,7 @@ public class Knight extends Piece {
      * Sets the knight's color to white
      */
     public void Piece(){
-        this.color= white;
+        this.color= color.WHITE;
     }
     /**
      * Constructor
