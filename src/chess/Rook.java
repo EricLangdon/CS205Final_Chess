@@ -4,22 +4,6 @@ import java.util.ArrayList;
 
 public class Rook extends Piece {
     public static final int SCORE = 5;
-    private BoardSquare startSquare;
-
-    /**
-     * hasMoved
-     * Returns if the piece has moved
-     * @param current boardsquare where the piece is located
-     * @return a boolean of whether the piece has moved
-     */
-    public boolean hasMoved(BoardSquare current){
-        if (current.x == startSquare.x && current.y == startSquare.y){
-            return false;
-        }
-        else{
-            return true;
-        }
-    }
 
     /**
      * legalMove

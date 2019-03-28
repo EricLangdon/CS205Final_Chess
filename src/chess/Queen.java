@@ -3,7 +3,7 @@ package chess;
 import java.util.ArrayList;
 
 public class Queen extends Piece {
-    public static int SCORE = 9;
+    public static final int SCORE = 9;
 
     /**
      * legalMove
