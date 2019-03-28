@@ -15,9 +15,42 @@ public class Rook extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
-        // TODO: implement
-        if (source.x == target.x || source.y == target.y) {
-            return true;
+        // TODO: super
+        if (source.x == target.x) { // if in the same column
+            if (source.y < target.y) { // if target is higher on the board
+                for (int i = 1; source.y + i < target.y; i++) {
+                    if (board.getBoardSquareAt(source.x, source.y + i).isOccupied()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            if (source.y > target.y) { // if target is lower on the board
+                for (int i = 1; source.y - i > target.y; i++) {
+                    if (board.getBoardSquareAt(source.x, source.y - i).isOccupied()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        if (source.y == target.y) { // if in the same row
+            if (source.x < target.x) { // if target is to the right on the board
+                for (int i = 1; source.x + i < target.x; i++) {
+                    if (board.getBoardSquareAt(source.y, source.x + i).isOccupied()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            if (source.x > target.x) { // if target is to the left on the board
+                for (int i = 1; source.x - i > target.x; i++) {
+                    if (board.getBoardSquareAt(source.y, source.x - i).isOccupied()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
         return false;
     }
