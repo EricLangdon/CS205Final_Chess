@@ -9,7 +9,7 @@ public class BoardSquare {
     /**
      * Default Constructor
      */
-    BoardSquare () {
+    BoardSquare() {
         piece = null;
         x = 0;
         y = 0;
@@ -17,11 +17,12 @@ public class BoardSquare {
 
     /**
      * Constructor
+     *
      * @param piece the piece occupying the boardSquare
      * @param xCoor
      * @param yCoor
      */
-    BoardSquare (Piece piece, int xCoor, int yCoor) {
+    BoardSquare(Piece piece, int xCoor, int yCoor) {
         this.piece = piece;
         x = xCoor;
         y = yCoor;
@@ -29,6 +30,7 @@ public class BoardSquare {
 
     /**
      * isOccupied
+     *
      * @return true if the piece is not null
      */
     public boolean isOccupied() {
@@ -37,6 +39,7 @@ public class BoardSquare {
 
     /**
      * getPiece
+     *
      * @return the piece occupying the boardSquare
      */
     public Piece getPiece() {
@@ -45,6 +48,7 @@ public class BoardSquare {
 
     /**
      * getX
+     *
      * @return the x-coor of the BoardSquare
      */
     public int getX() {
@@ -53,6 +57,7 @@ public class BoardSquare {
 
     /**
      * getY
+     *
      * @return the y-coor of the BoardSquare
      */
     public int getY() {
@@ -60,18 +65,13 @@ public class BoardSquare {
     }
 
     /**
-     * setX
+     * setPosition
+     *
      * @param x the new x-coor of the BoardSquare
-     */
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    /**
-     * setY
      * @param y the new y-coor of the BoardSquare
      */
-    public void setY(int y) {
+    public void setPosition(int x, int y) {
+        this.x = x;
         this.y = y;
     }
 }
