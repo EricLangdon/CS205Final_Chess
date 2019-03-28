@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Pawn extends Piece {
     public static final int SCORE = 3;
     private Color color;
+    private BoardSquare startSquare;
 
 
     /**
@@ -32,6 +33,15 @@ public class Pawn extends Piece {
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
 
+    }
+
+    public boolean hasMoved(BoardSquare current){
+        if (current.x == startSquare.x && current.y == startSquare.y){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     /**
