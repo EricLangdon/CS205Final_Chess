@@ -15,10 +15,13 @@ public class Board {
      */
     Board () {
         createBoard(board);
+        //initialize AL of pieces
+        fillBoard();
     }
 
     /**
      * createBoard
+     * @param board the board object
      */
     private void createBoard(ArrayList<ArrayList<BoardSquare>> board) {
 
@@ -62,5 +65,14 @@ public class Board {
     public boolean colorInCheck(Color color) {
         //TODO: implement
         return false;
+    }
+
+    /**
+     * isCaptured
+     * @param p the piece that has been captured
+     */
+    public void pieceCaptured(Piece p){
+        pieces.remove(p);
+        captured.add(p);
     }
 }
