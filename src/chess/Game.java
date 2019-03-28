@@ -5,7 +5,7 @@ public class Game {
         PVP, DUMB_COMPUTER;
     }
 
-    private Board board;
+    private ChessBoard board;
     // TODO: timer
 
     private Color currentTurn;
@@ -25,7 +25,7 @@ public class Game {
      * Setup game and board for a game
      */
     public void newGame() {
-        board = new Board();
+        board = new ChessBoard();
     }
 
     /**
@@ -66,7 +66,7 @@ public class Game {
      * Get the board
      * @return the board
      */
-    public Board getBoard() {
+    public ChessBoard getBoard() {
         return board;
     }
 

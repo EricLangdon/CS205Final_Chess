@@ -12,7 +12,6 @@ public abstract class Piece {
      */
     Piece(){this.color = color.WHITE; }
 
-     */
     /**
      * Constructor
      * @param color the color of the piece
@@ -28,7 +27,7 @@ public abstract class Piece {
      * @param target the boardsquare that the piece wants to be moved to
      * @return if the given move is legal
      */
-    abstract public boolean legalMove(Board board, BoardSquare source, BoardSquare target);
+    abstract public boolean legalMove(ChessBoard board, BoardSquare source, BoardSquare target);
 
     /**
      * Get list of legal moves for a piece
@@ -36,11 +35,11 @@ public abstract class Piece {
      * @param source the piece to check movement
      * @return an arraylist of boardsquares that the piece occupying source can move to
      */
-    public ArrayList<BoardSquare> getAvailableMoves(Board board, BoardSquare source) {
+    public ArrayList<BoardSquare> getAvailableMoves(ChessBoard board, BoardSquare source) {
         ArrayList<BoardSquare> squares = new ArrayList<>();
         BoardSquare sq;
-        for (int i = 0; i < Board.NUM_COLS; i++) {
-            for (int j = 0; j < Board.NUM_ROWS; j++) {
+        for (int i = 0; i < ChessBoard.NUM_COLS; i++) {
+            for (int j = 0; j < ChessBoard.NUM_ROWS; j++) {
                 sq = board.getBoardSquareAt(i, j);
                 if (legalMove(board, source, sq)) {
                     squares.add(sq);

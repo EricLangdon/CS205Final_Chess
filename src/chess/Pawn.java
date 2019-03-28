@@ -31,7 +31,7 @@ public class Pawn extends Piece {
      * @param target the boardsquare that the piece wants to be moved to
      * @return boolean true if move is legal
      */
-    public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
+    public boolean legalMove (ChessBoard board, BoardSquare source, BoardSquare target){
         
     }
 
@@ -51,7 +51,7 @@ public class Pawn extends Piece {
      * @param source boardsquare where the piece currently is located
      * @return an arraylist of all boardsquares that the pawn can legally move to
      */
-    public ArrayList<BoardSquare> getAvailableMoves(Board board, BoardSquare source){
+    public ArrayList<BoardSquare> getAvailableMoves(ChessBoard board, BoardSquare source){
 
     }
 
