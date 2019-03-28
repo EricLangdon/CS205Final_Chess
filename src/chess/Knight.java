@@ -49,7 +49,7 @@ public class Knight extends Piece {
      * getColor
      * @return the color of the piece
      */
-    public Color getColor() {return color}
+    public Color getColor() {return color;}
 
 
 }
