@@ -10,9 +10,11 @@ public abstract class Piece {
      * Default Constructor
      * Sets the default Piece color to white
      */
-    Piece(){this.color = color.WHITE; }
+    Piece() {
+        this.color = color.WHITE;
+    }
 
-     */
+
     /**
      * Constructor
      * @param color the color of the piece
