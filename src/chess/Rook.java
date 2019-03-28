@@ -14,6 +14,12 @@ public class Rook extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
+        // TODO: implement
+        if ( !(source.x == target.x && source.y == target.y) ) { // if not the same space
+            if (source.x == target.x || source.y == target.y) {
+                return true;
+            }
+        }
         return false;
     }
 
