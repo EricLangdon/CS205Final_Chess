@@ -14,17 +14,7 @@ public class Rook extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
-        // TODO: implement
+        return false;
     }
 
-    /**
-     * getAvailableMoves
-     * Returns list of all legal moves available to the Bishop
-     * @param board the board
-     * @param source boardsquare where the piece currently is located
-     * @return an arraylist of all boardsquares that the Bishop can legally move to
-     */
-    public ArrayList<BoardSquare> getAvailableMoves(Board board, BoardSquare source){
-        // TODO: implement
-    }
 }

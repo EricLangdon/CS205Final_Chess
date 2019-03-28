@@ -31,25 +31,16 @@ public class Knight extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
-
-    }
-
-    /**
-     * getAvailableMoves
-     * Returns list of all legal moves available to the Knight
-     * @param board the board
-     * @param source boardsquare where the piece currently is located
-     * @return an arraylist of all boardsquares that the knight can legally move to
-     */
-    public ArrayList<BoardSquare> getAvailableMoves(Board board, BoardSquare source){
-
+        return false;
     }
 
     /**
      * getColor
      * @return the color of the piece
      */
-    public Color getColor() {return color}
+    public Color getColor() {
+        return color;
+    }
 
 
 }
