@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public abstract class Piece {
     public static final int SCORE = 0;
     private Color color;
+    private boolean hasMoved;
 
     /**
      * Default Constructor
@@ -13,7 +14,6 @@ public abstract class Piece {
     Piece() {
         this.color = color.WHITE;
     }
-
 
     /**
      * Constructor
@@ -57,6 +57,22 @@ public abstract class Piece {
      */
     public Color getColor() {
         return this.color;
+    }
+
+    /**
+     * Return if the piece has moved yet
+     * @return true if the piece has moved
+     */
+    public boolean getHasMoved() {
+        return hasMoved;
+    }
+
+    /**
+     * Set of the piece has moved
+     * @param hasMoved if the piece has moved
+     */
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
     }
 
 }
