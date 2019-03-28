@@ -32,7 +32,23 @@ public class Pawn extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
-        
+        if (color==color.WHITE){
+            if(target.y==source.y+1){
+                return true;
+            }
+            else if(!hasMoved(source) && target.y==source.y+2){
+                return true;
+            }
+            else if(target.y==source.y+1 && target.x==source.x-1 && target.getPiece().getColor()==color.BLACK){
+                return true;
+            }
+            else if(target.y==source.y+1 && target.x==source.x+1 && target.getPiece().getColor()==color.BLACK){
+
+            }
+        }
+        else{
+
+        }
     }
 
     public boolean hasMoved(BoardSquare current){
