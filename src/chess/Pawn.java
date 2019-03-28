@@ -16,6 +16,7 @@ public class Pawn extends Piece {
 
     /**
      * Constructor
+     *
      * @param color The color of the piece
      */
     public void Piece(Color color) {
@@ -26,27 +27,36 @@ public class Pawn extends Piece {
     /**
      * legalMove
      * Check if the given move is legal for the pawn given the board source and target squares.
+     *
      * @param board  the board
      * @param source the boardsquare containing the piece checking for move
      * @param target the boardsquare that the piece wants to be moved to
      * @return boolean true if move is legal
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
+        //Checks if target is legal first
+        super.legalMove(board, source, target);
+
+        //Creates the inverter
+        int invert;
         if (color == color.WHITE) {
-            if (target.y == source.y + 1) {
-                return true;
-            } else if (source.getPiece().getHasMoved() && target.y == source.y + 2) {
-                return true;
-            } else if (target.y == source.y + 1 && target.x == source.x - 1 && target.getPiece().getColor() == color.BLACK) {
-                return true;
-            } else if (target.y == source.y + 1 && target.x == source.x + 1 && target.getPiece().getColor() == color.BLACK) {
-                return true;
-            } else {
-                return false;
-            }
+            invert = 1;
         } else {
+            invert = -1;
         }
-        return false;
+
+        //Handles pawn logic
+        if (target.y == source.y + 1*invert && target.getPiece()==null) {
+            return true;
+        } else if (target.y == source.y + 2*invert && !getHasMoved()) {
+            return true;
+        } else if (target.y == source.y + 1*invert && target.x == source.x - 1*invert && target.getPiece().getColor() == color.BLACK) {
+            return true;
+        } else if (target.y == source.y + 1*invert && target.x == source.x + 1*invert && target.getPiece().getColor() == color.BLACK) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -57,5 +67,4 @@ public class Pawn extends Piece {
     public Color getColor() {
         return color;
     }
-
 }
