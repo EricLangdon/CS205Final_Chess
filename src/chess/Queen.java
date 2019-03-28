@@ -15,6 +15,12 @@ public class Queen extends Piece {
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
         // TODO: implement
+        if ( !(source.x == target.x && source.y == target.y) ) { // if not the same space
+            if ( (source.x == target.x || source.y == target.y) ||
+                    (source.x - target.x == source.y - target.y) ) {
+                return true;
+            }
+        }
         return false;
     }
 
