@@ -31,7 +31,7 @@ public class Bishop extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
-
+        
     }
 
     /**

@@ -21,7 +21,7 @@ public class Board {
      * createBoard
      */
     private void createBoard(ArrayList<ArrayList<BoardSquare>> board) {
-        //TODO
+
     }
 
     /**
