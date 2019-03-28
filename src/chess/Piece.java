@@ -23,6 +23,7 @@ public abstract class Piece {
         this.color = color;
     }
 
+
     /**
      * Check if the given move is legal given the board and source and target squares. To be overridden in piece subclasses
      * @param board  the board
@@ -30,7 +31,14 @@ public abstract class Piece {
      * @param target the boardsquare that the piece wants to be moved to
      * @return if the given move is legal
      */
-    abstract public boolean legalMove(Board board, BoardSquare source, BoardSquare target);
+    public boolean legalMove(Board board, BoardSquare source, BoardSquare target){
+        if (target.getPiece().getColor()==color){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
 
     /**
      * Get list of legal moves for a piece
