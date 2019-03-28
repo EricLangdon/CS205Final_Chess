@@ -43,11 +43,13 @@ public class Pawn extends Piece {
                 return true;
             }
             else if(target.y==source.y+1 && target.x==source.x+1 && target.getPiece().getColor()==color.BLACK){
-
+                return true;
+            }
+            else{
+                return false;
             }
         }
         else{
-
         }
     }
 
