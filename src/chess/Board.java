@@ -1,7 +1,7 @@
 package chess;
 import java.util.ArrayList;
 
-public class ChessBoard {
+public class Board {
     public static final int NUM_ROWS = 8;
     public static final int NUM_COLS = 8;
 
@@ -13,7 +13,7 @@ public class ChessBoard {
     /**
      * Default Constructor
      */
-    ChessBoard () {
+    Board () {
         createBoard(board);
     }
 
@@ -21,7 +21,7 @@ public class ChessBoard {
      * createBoard
      */
     private void createBoard(ArrayList<ArrayList<BoardSquare>> board) {
-        //TODO
+
     }
 
     /**
