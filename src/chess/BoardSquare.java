@@ -6,6 +6,9 @@ public class BoardSquare {
     int y;
     Piece piece;
 
+    private boolean selected = false;
+    private boolean highlighted = false;
+
     /**
      * Default Constructor
      */
@@ -73,5 +76,42 @@ public class BoardSquare {
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    /**
+     * Get if the boardsquare is selected
+     *
+     * @return if the boardsquare is selected
+     */
+    public boolean isSelected() {
+        return selected;
+    }
+
+    /**
+     * Set the selected state of the boardsquare
+     *
+     * @param selected if the boardsquare is selected
+     */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    /**
+     * Get if the boardsquare is highlighted
+     *
+     * @return if the boardsquare is highlighted
+     */
+    public boolean isHighlighted() {
+        return highlighted;
+    }
+
+
+    /**
+     * Set the highlighted state of the boardsquare
+     *
+     * @param highlighted if the boardsquare is highlighted
+     */
+    public void setHighlighted(boolean highlighted) {
+        this.highlighted = highlighted;
     }
 }
