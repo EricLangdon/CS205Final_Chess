@@ -35,25 +35,28 @@ public class Pawn extends Piece {
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
         //Checks if target is legal first
-        super.legalMove(board, source, target);
+        if (super.legalMove(board, source, target)) {
 
-        //Creates the inverter
-        int invert;
-        if (color == color.WHITE) {
-            invert = 1;
-        } else {
-            invert = -1;
-        }
+            //Creates the inverter
+            int invert;
+            if (color == color.WHITE) {
+                invert = 1;
+            } else {
+                invert = -1;
+            }
 
-        //Handles pawn logic
-        if (target.y == source.y + 1*invert && target.getPiece()==null) {
-            return true;
-        } else if (target.y == source.y + 2*invert && !getHasMoved()) {
-            return true;
-        } else if (target.y == source.y + 1*invert && target.x == source.x - 1*invert && target.getPiece().getColor() == color.BLACK) {
-            return true;
-        } else if (target.y == source.y + 1*invert && target.x == source.x + 1*invert && target.getPiece().getColor() == color.BLACK) {
-            return true;
+            //Handles pawn logic
+            if (target.y == source.y + 1 * invert && target.getPiece() == null) {
+                return true;
+            } else if (target.y == source.y + 2 * invert && !getHasMoved()) {
+                return true;
+            } else if (target.y == source.y + 1 * invert && target.x == source.x - 1 * invert && target.getPiece().getColor() == color.BLACK) {
+                return true;
+            } else if (target.y == source.y + 1 * invert && target.x == source.x + 1 * invert && target.getPiece().getColor() == color.BLACK) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
