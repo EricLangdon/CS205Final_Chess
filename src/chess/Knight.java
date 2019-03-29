@@ -31,7 +31,32 @@ public class Knight extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
-        return false;
+        //Checks if target is legal first
+        if(super.legalMove(board, source, target)){
+
+            //Creates the inverter that creates left side moves
+            int invert;
+            if(target.getX()>source.getX()){
+                invert = 1;
+            } else{
+                invert =-1;
+            }
+
+            //Handles knight logic
+            if(target.getY()==source.getY()+2 && target.getX()==source.getX()+invert){              //Up 2 and left/right
+                return true;
+            } else if (target.getY()==source.getY()+1 && target.getX()==source.getX()+2*invert){    //Up 1 and left/right
+                return true;
+            } else if (target.getY()==source.getY()-1 && target.getX()==source.getX()+2*invert){    //Down 1 and left/right
+                return true;
+            } else if (target.getY()==source.getY()-2 && target.getX()==source.getX()+invert){      //down 2 and left/right
+                return true;
+            } else {
+                return false;
+            }
+        } else{
+            return false;
+        }
     }
 
     /**
