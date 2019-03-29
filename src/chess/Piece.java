@@ -17,6 +17,7 @@ public abstract class Piece {
 
     /**
      * Constructor
+     *
      * @param color the color of the piece
      */
     Piece(Color color) {
@@ -26,22 +27,29 @@ public abstract class Piece {
 
     /**
      * Check if the given move is legal given the board and source and target squares. To be overridden in piece subclasses
+     *
      * @param board  the board
      * @param source the boardsquare containing the piece checking for move
      * @param target the boardsquare that the piece wants to be moved to
      * @return if the given move is legal
      */
-    public boolean legalMove(Board board, BoardSquare source, BoardSquare target){
-        if (target.getPiece().getColor()==color){
+    public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
+        //Checks if source location equals target location
+        if (target.getX() != source.getX() && target.getY() != source.getY()) {
+            //Checks if piece in target is the same color as piece in source
+            if (target.getPiece().getColor() != source.getPiece().getColor()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
             return false;
-        }
-        else{
-            return true;
         }
     }
 
     /**
      * Get list of legal moves for a piece
+     *
      * @param board  the board
      * @param source the piece to check movement
      * @return an arraylist of boardsquares that the piece occupying source can move to
@@ -69,6 +77,7 @@ public abstract class Piece {
 
     /**
      * Return if the piece has moved yet
+     *
      * @return true if the piece has moved
      */
     public boolean getHasMoved() {
@@ -77,6 +86,7 @@ public abstract class Piece {
 
     /**
      * Set of the piece has moved
+     *
      * @param hasMoved if the piece has moved
      */
     public void setHasMoved(boolean hasMoved) {
