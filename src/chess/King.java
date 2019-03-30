@@ -15,10 +15,11 @@ public class King extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
-        // TODO: implement
-        if ((source.x == target.x || source.x - target.x == 1 || source.x - target.x == -1) &&
-                (source.y == target.y || source.y - target.y == 1 || source.y - target.y == -1)) {
-            return true;
+        if (super.legalMove(board, source, target)) {
+            if ((source.x == target.x || source.x - target.x == 1 || source.x - target.x == -1) &&
+                    (source.y == target.y || source.y - target.y == 1 || source.y - target.y == -1)) {
+                return true;
+            }
         }
         return false;
     }
