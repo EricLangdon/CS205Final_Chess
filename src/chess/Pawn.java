@@ -7,24 +7,6 @@ public class Pawn extends Piece {
     private Color color;
 
     /**
-     * Default constructor
-     * Sets the pawn's color to white
-     */
-    public void Piece() {
-        this.color = color.WHITE;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param color The color of the piece
-     */
-    public void Piece(Color color) {
-        this.color = color;
-        this.color = color;
-    }
-
-    /**
      * legalMove
      * Check if the given move is legal for the pawn given the board source and target squares.
      *
