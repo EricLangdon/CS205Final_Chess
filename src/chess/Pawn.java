@@ -7,24 +7,6 @@ public class Pawn extends Piece {
     private Color color;
 
     /**
-     * Default constructor
-     * Sets the pawn's color to white
-     */
-    public void Piece() {
-        this.color = color.WHITE;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param color The color of the piece
-     */
-    public void Piece(Color color) {
-        this.color = color;
-        this.color = color;
-    }
-
-    /**
      * legalMove
      * Check if the given move is legal for the pawn given the board source and target squares.
      *
@@ -46,9 +28,9 @@ public class Pawn extends Piece {
             }
 
             //Handles pawn logic
-            if (target.y == source.y + invert && target.getPiece() == null) {
+            if (target.y == source.y + invert && target.x==source.x && target.getPiece() == null) {
                 return true;
-            } else if (target.y == source.y + 2 * invert && !getHasMoved()) {
+            } else if (target.y == source.y + 2 * invert && target.x==source.x && target.getPiece() == null && !getHasMoved()) {
                 return true;
             } else if (target.y == source.y + invert && target.x == source.x - invert && target.getPiece().getColor() == Color.BLACK) {
                 return true;
