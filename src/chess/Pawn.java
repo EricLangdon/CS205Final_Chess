@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 public class Pawn extends Piece {
     public static final int SCORE = 3;
-    private Color color;
+
+    public Pawn(Color color){
+        super(color);
+    }
 
     /**
      * legalMove
@@ -21,7 +24,7 @@ public class Pawn extends Piece {
 
             //Creates the inverter that applies the moves to opposite color
             int invert;
-            if (color == Color.WHITE) {
+            if (color.equals(Color.WHITE)) {
                 invert = 1;
             } else {
                 invert = -1;
@@ -32,9 +35,9 @@ public class Pawn extends Piece {
                 return true;
             } else if (target.y == source.y + 2 * invert && target.x==source.x && target.getPiece() == null && !getHasMoved()) {
                 return true;
-            } else if (target.y == source.y + invert && target.x == source.x - invert && target.getPiece().getColor() == Color.BLACK) {
+            } else if (target.y == source.y + invert && target.x == source.x - invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
                 return true;
-            } else if (target.y == source.y + invert && target.x == source.x + invert && target.getPiece().getColor() == Color.BLACK) {
+            } else if (target.y == source.y + invert && target.x == source.x + invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
                 return true;
             } else {
                 return false;

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public abstract class Piece {
     public static final int SCORE = 0;
-    private Color color;
-    private boolean hasMoved;
+    protected Color color;
+    protected boolean hasMoved;
     private final char unicode = 0x2659;
 
     /**
@@ -13,7 +13,7 @@ public abstract class Piece {
      * Sets the default Piece color to white
      */
     Piece() {
-        this.color = color.WHITE;
+        this.color = Color.WHITE;
     }
 
     /**
@@ -93,8 +93,8 @@ public abstract class Piece {
         this.hasMoved = hasMoved;
     }
 
-    public char getUnicode(){
-        if(this.color == Color.BLACK){
+    public char getUnicode() {
+        if (this.color == Color.BLACK) {
             return unicode + 6;
         }
         return unicode;
