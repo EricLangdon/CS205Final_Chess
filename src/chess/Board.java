@@ -75,4 +75,11 @@ public class Board {
         pieces.remove(p);
         captured.add(p);
     }
+
+    /**
+     * fillBoard
+     * initializes all the pieces on the board
+     */
+    public void fillBoard() {
+    }
 }
