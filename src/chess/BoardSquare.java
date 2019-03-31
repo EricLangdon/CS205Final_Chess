@@ -50,6 +50,15 @@ public class BoardSquare {
     }
 
     /**
+     * Set the piece occupying the boardSquare
+     *
+     * @param piece the piece
+     */
+    public void setPiece(Piece piece) {
+        this.piece = piece;
+    }
+
+    /**
      * getX
      *
      * @return the x-coor of the BoardSquare
@@ -65,17 +74,6 @@ public class BoardSquare {
      */
     public int getY() {
         return y;
-    }
-
-    /**
-     * setPosition
-     *
-     * @param x the new x-coor of the BoardSquare
-     * @param y the new y-coor of the BoardSquare
-     */
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
     }
 
     /**
