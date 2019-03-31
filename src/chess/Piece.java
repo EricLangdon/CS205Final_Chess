@@ -6,6 +6,7 @@ public abstract class Piece {
     public static final int SCORE = 0;
     private Color color;
     private boolean hasMoved;
+    private final char unicode = 0x2659;
 
     /**
      * Default Constructor
@@ -35,16 +36,15 @@ public abstract class Piece {
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
         //Checks if source location equals target location
-        if (target.getX() != source.getX() && target.getY() != source.getY()) {
-            //Checks if piece in target is the same color as piece in source
-            if (target.getPiece().getColor() != source.getPiece().getColor()) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
+        if (target.getX() == source.getX() && target.getY() == source.getY()) {
             return false;
         }
+        //Checks if piece in target is the same color as piece in source
+        if (target.isOccupied() && target.getPiece().getColor() == source.getPiece().getColor()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -91,6 +91,13 @@ public abstract class Piece {
      */
     public void setHasMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
+    }
+
+    public char getUnicode(){
+        if(this.color == Color.BLACK){
+            return unicode + 6;
+        }
+        return unicode;
     }
 
 }
