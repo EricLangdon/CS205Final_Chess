@@ -10,7 +10,7 @@ public class Board {
     private ArrayList<Piece> captured = new ArrayList<>();
     private ArrayList<Piece> pieces = new ArrayList<>();
 
-    private ArrayList<BoardSquare> highlightedSquares;
+    private ArrayList<BoardSquare> highlightedSquares = new ArrayList<>();
     private BoardSquare selectedSquare;
 
 
@@ -61,6 +61,10 @@ public class Board {
      * @return true if the piece is successfully moved, false if the move failed
      */
     public boolean movePiece(BoardSquare source, BoardSquare target) {
+        if (source.isOccupied() && source.getPiece().legalMove(this, source, target)) {
+            target.setPiece(source.getPiece());
+            source.setPiece(null);
+        }
         // TODO: implement
         return false;
     }
