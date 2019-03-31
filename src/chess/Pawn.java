@@ -37,22 +37,22 @@ public class Pawn extends Piece {
         //Checks if target is legal first
         if (super.legalMove(board, source, target)) {
 
-            //Creates the inverter
+            //Creates the inverter that applies the moves to opposite color
             int invert;
-            if (color == color.WHITE) {
+            if (color == Color.WHITE) {
                 invert = 1;
             } else {
                 invert = -1;
             }
 
             //Handles pawn logic
-            if (target.y == source.y + 1 * invert && target.getPiece() == null) {
+            if (target.y == source.y + invert && target.getPiece() == null) {
                 return true;
             } else if (target.y == source.y + 2 * invert && !getHasMoved()) {
                 return true;
-            } else if (target.y == source.y + 1 * invert && target.x == source.x - 1 * invert && target.getPiece().getColor() == color.BLACK) {
+            } else if (target.y == source.y + invert && target.x == source.x - invert && target.getPiece().getColor() == Color.BLACK) {
                 return true;
-            } else if (target.y == source.y + 1 * invert && target.x == source.x + 1 * invert && target.getPiece().getColor() == color.BLACK) {
+            } else if (target.y == source.y + invert && target.x == source.x + invert && target.getPiece().getColor() == Color.BLACK) {
                 return true;
             } else {
                 return false;

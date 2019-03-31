@@ -15,10 +15,78 @@ public class Queen extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
-        // TODO: implement
-        if ((source.x == target.x || source.y == target.y) ||
-                (source.x - target.x == source.y - target.y)) {
-            return true;
+        if (super.legalMove(board, source, target)) {
+
+            // horizontal/vertical logic
+            if (source.x == target.x) { // if in the same column
+                if (source.y < target.y) { // if target is higher on the board
+                    for (int i = 1; source.y + i < target.y; i++) {
+                        if (board.getBoardSquareAt(source.x, source.y + i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else if (source.y > target.y) { // if target is lower on the board
+                    for (int i = 1; source.y - i > target.y; i++) {
+                        if (board.getBoardSquareAt(source.x, source.y - i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            } else if (source.y == target.y) { // if in the same row
+                if (source.x < target.x) { // if target is to the right on the board
+                    for (int i = 1; source.x + i < target.x; i++) {
+                        if (board.getBoardSquareAt(source.y, source.x + i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else if (source.x > target.x) { // if target is to the left on the board
+                    for (int i = 1; source.x - i > target.x; i++) {
+                        if (board.getBoardSquareAt(source.y, source.x - i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+
+            // diagonal logic
+            if (source.x - target.x == source.y - target.y) { // if lower left or upper right diagonal
+                if (source.x < target.x) { // if target is upper right
+                    for (int i = 1; source.x + i < target.x; i++) {
+                        if (board.getBoardSquareAt(source.x + i, source.y + i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else if (source.x > target.x) { // if target is lower left
+                    for (int i = 1; source.x - i > target.x; i++) {
+                        if (board.getBoardSquareAt(source.x - i, source.y - i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            } else if (source.x - target.x == (source.y - target.y) * -1) { // if upper left or lower right diagonal
+                if (source.x < target.x) { // if target is lower right
+                    for (int i = 1; source.x + i < target.x; i++) {
+                        if (board.getBoardSquareAt(source.y - i, source.x + i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else if (source.x > target.x) { // if target is upper left
+                    for (int i = 1; source.x - i > target.x; i++) {
+                        if (board.getBoardSquareAt(source.y + i, source.x - i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+
         }
         return false;
     }

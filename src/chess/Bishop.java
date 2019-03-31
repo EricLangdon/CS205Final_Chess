@@ -31,6 +31,41 @@ public class Bishop extends Piece {
      * @return boolean true if move is legal
      */
     public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
+        if (super.legalMove(board, source, target)) {
+            if (source.x - target.x == source.y - target.y) { // if lower left or upper right diagonal
+                if (source.x < target.x) { // if target is upper right
+                    for (int i = 1; source.x + i < target.x; i++) {
+                        if (board.getBoardSquareAt(source.x + i, source.y + i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else if (source.x > target.x) { // if target is lower left
+                    for (int i = 1; source.x - i > target.x; i++) {
+                        if (board.getBoardSquareAt(source.x - i, source.y - i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            } else if (source.x - target.x == (source.y - target.y) * -1) { // if upper left or lower right diagonal
+                if (source.x < target.x) { // if target is lower right
+                    for (int i = 1; source.x + i < target.x; i++) {
+                        if (board.getBoardSquareAt(source.y - i, source.x + i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else if (source.x > target.x) { // if target is upper left
+                    for (int i = 1; source.x - i > target.x; i++) {
+                        if (board.getBoardSquareAt(source.y + i, source.x - i).isOccupied()) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
