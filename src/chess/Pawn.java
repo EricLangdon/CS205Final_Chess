@@ -28,9 +28,9 @@ public class Pawn extends Piece {
             }
 
             //Handles pawn logic
-            if (target.y == source.y + invert && target.getPiece() == null) {
+            if (target.y == source.y + invert && target.x==source.x && target.getPiece() == null) {
                 return true;
-            } else if (target.y == source.y + 2 * invert && !getHasMoved()) {
+            } else if (target.y == source.y + 2 * invert && target.x==source.x && target.getPiece() == null && !getHasMoved()) {
                 return true;
             } else if (target.y == source.y + invert && target.x == source.x - invert && target.getPiece().getColor() == Color.BLACK) {
                 return true;
