@@ -26,10 +26,12 @@ public class Game {
      */
     public void newGame() {
         board = new Board();
+        currentTurn = Color.WHITE;
     }
 
     /**
      * Save game to file
+     *
      * @param filepath filepath to save to
      */
     public void save(String filepath) {
@@ -39,6 +41,7 @@ public class Game {
 
     /**
      * Load game from a filepath
+     *
      * @param filepath filepath to load from
      */
     public void load(String filepath) {
@@ -55,15 +58,17 @@ public class Game {
 
     /**
      * Get the winner, if one exists
+     *
      * @return null if no winner, else the color of the winner
      */
-    Color getWinner(){
+    Color getWinner() {
         // TODO implement
         return null;
     }
 
     /**
      * Get the board
+     *
      * @return the board
      */
     public Board getBoard() {
@@ -72,14 +77,24 @@ public class Game {
 
     /**
      * Get the game mode
+     *
      * @return the game mode
      */
-    public GameMode getMode(){
+    public GameMode getMode() {
         return mode;
     }
 
     /**
+     * Get the color of the current turn
+     * @return the current turn
+     */
+    public Color getCurrentTurn() {
+        return currentTurn;
+    }
+
+    /**
      * Get score based on captured pieces of a color
+     *
      * @param color color
      * @return the score for the color
      */
