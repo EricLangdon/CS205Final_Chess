@@ -18,18 +18,7 @@ public class Board {
      * Default Constructor
      */
     Board() {
-        createBoard(board);
-        //initialize AL of pieces
         fillBoard();
-    }
-
-    /**
-     * createBoard
-     *
-     * @param board the board object
-     */
-    private void createBoard(ArrayList<ArrayList<BoardSquare>> board) {
-
     }
 
     /**
@@ -153,4 +142,13 @@ public class Board {
         }
         this.highlightedSquares.clear();
     }
+
+    /**
+     * fillBoard
+     * initializes all the pieces on the board
+     */
+    public void fillBoard() {
+
+    }
+
 }

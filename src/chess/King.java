@@ -19,6 +19,30 @@ public class King extends Piece {
             if ((source.x == target.x || source.x - target.x == 1 || source.x - target.x == -1) &&
                     (source.y == target.y || source.y - target.y == 1 || source.y - target.y == -1)) {
                 return true;
+            } else if (!getHasMoved()) { // if King has not moved (for castling)
+                // get row that the castle is taking place in
+                int row = 0;
+                if (getColor() == Color.BLACK) {
+                    row = 7;
+                }
+                if (source.y == target.y && source.x - target.x == -2) { // if King is moving two to the right
+                    if (!board.getBoardSquareAt(source.x + 1, row).isOccupied()) { // path is clear
+                        if (board.getBoardSquareAt(7, row).isOccupied()) { // if there is a piece in that corner
+                            if (!board.getBoardSquareAt(7, row).piece.getHasMoved()) { // if right rook has not moved
+                                return true;
+                            }
+                        }
+                    }
+                } else if (source.y == target.y && source.x - target.x == 2) { // if King is moving two to the left
+                    if (!board.getBoardSquareAt(source.x - 1, row).isOccupied() &&
+                            !board.getBoardSquareAt(source.x - 3, row).isOccupied()) { // path is clear
+                        if (board.getBoardSquareAt(0, row).isOccupied()) { // if there is a piece in that corner
+                            if (!board.getBoardSquareAt(0, row).piece.getHasMoved()) { // if left rook has not moved
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
         }
         return false;
