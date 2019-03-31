@@ -93,4 +93,12 @@ public abstract class Piece {
         this.hasMoved = hasMoved;
     }
 
+    /**
+     * Set the color of the piece
+     * @param color the color of the piece
+     */
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
 }
