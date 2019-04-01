@@ -42,19 +42,19 @@ public class BoardSquarePane extends VBox {
 
         if (boardSquare.getX() % 2 == 0 && boardSquare.getY() % 2 == 0 || boardSquare.getX() % 2 == 1 && boardSquare.getY() % 2 == 1) {
             if (boardSquare.isSelected()) {
-                color = LIGHT_COLOR_SELECTED;
-            } else if (boardSquare.isHighlighted()) {
-                color = LIGHT_COLOR_HIGHLIGHTED;
-            } else {
-                color = LIGHT_COLOR;
-            }
-        } else {
-            if (boardSquare.isSelected()) {
                 color = DARK_COLOR_SELECTED;
             } else if (boardSquare.isHighlighted()) {
                 color = DARK_COLOR_HIGHLIGHTED;
             } else {
                 color = DARK_COLOR;
+            }
+        } else {
+            if (boardSquare.isSelected()) {
+                color = LIGHT_COLOR_SELECTED;
+            } else if (boardSquare.isHighlighted()) {
+                color = LIGHT_COLOR_HIGHLIGHTED;
+            } else {
+                color = LIGHT_COLOR;
             }
         }
 
