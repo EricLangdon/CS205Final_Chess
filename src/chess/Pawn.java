@@ -34,7 +34,8 @@ public class Pawn extends Piece {
             //Handles pawn logic
             if (target.y == source.y + invert && target.x == source.x && target.getPiece() == null) {
                 return true;
-            } else if (target.y == source.y + 2 * invert && target.x == source.x && target.getPiece() == null && !getHasMoved()) {
+            } else if (target.y == source.y + 2 * invert && target.x == source.x && !board.getBoardSquareAt(source.x, source.y + 1).isOccupied()
+                    && target.getPiece() == null && !getHasMoved()) {
                 return true;
             } else if (target.y == source.y + invert && target.x == source.x - invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
                 return true;
