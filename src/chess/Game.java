@@ -14,10 +14,12 @@ public class Game {
 
     private GameMode mode;
 
+
     /**
      * Constructor; calls newGame
      */
-    public Game() {
+    public Game(GameMode mode) {
+        this.mode = mode;
         newGame();
     }
 
@@ -53,6 +55,12 @@ public class Game {
      */
     public void executeTurn() {
         // TODO: implement
+        switch (mode) {
+            case DUMB_COMPUTER:
+                break;
+            case PVP:
+                break;
+        }
         currentTurn = currentTurn.other();
     }
 

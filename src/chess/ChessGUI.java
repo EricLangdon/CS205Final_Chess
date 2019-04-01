@@ -20,7 +20,7 @@ public class ChessGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        this.game = new Game();
+        this.game = new Game(Game.GameMode.PVP);
 
         BorderPane bp = new BorderPane();
         bp.setPadding(new Insets(5));
@@ -53,25 +53,31 @@ public class ChessGUI extends Application {
             for (int j = 0; j < Board.NUM_ROWS; j++) {
                 BoardSquare boardSquare = game.getBoard().getBoardSquareAt(i, j);
                 BoardSquarePane bsp = new BoardSquarePane(boardSquare);
+                Board board = this.game.getBoard();
                 bsp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                    // move the currently selected piece to the square clicked square
+                    if (board.getSelectedSquare() != null && !boardSquare.equals(board.getSelectedSquare())) {
+                        if(board.movePiece(board.getSelectedSquare(), boardSquare)) {
+                            board.resetHighlightedSquares();
+                            board.deselectSquare();
+                            this.game.executeTurn();
+                        }
+                    }
+
                     // Let a user select a source square
                     if (!boardSquare.isSelected() && boardSquare.isOccupied() && boardSquare.getPiece().getColor().equals(this.game.getCurrentTurn())) {
                         // select square clicked and highlight all possible moves
-                        this.game.getBoard().selectSquare(boardSquare);
-                        this.game.getBoard().resetHighlightedSquares();
-                        for (BoardSquare bs : boardSquare.getPiece().getAvailableMoves(this.game.getBoard(), boardSquare)) {
-                            this.game.getBoard().addHighlightedSquare(bs);
+                        board.selectSquare(boardSquare);
+                        board.resetHighlightedSquares();
+                        for (BoardSquare bs : boardSquare.getPiece().getAvailableMoves(board, boardSquare)) {
+                            board.addHighlightedSquare(bs);
                         }
                     } else if (boardSquare.isSelected()) {
                         // deselect and unhighlight everything if same square clicked again
-                        this.game.getBoard().deselectSquare();
-                        this.game.getBoard().resetHighlightedSquares();
+                        board.deselectSquare();
+                        board.resetHighlightedSquares();
                     }
 
-                    // move the currently selected piece to the square just clicked
-                    if (this.game.getBoard().getSelectedSquare() != null) {
-                        this.game.getBoard().movePiece(this.game.getBoard().getSelectedSquare(), boardSquare);
-                    }
                     updateGrid();
                 });
                 this.grid.add(bsp, i, Board.NUM_ROWS - j);
