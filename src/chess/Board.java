@@ -22,6 +22,7 @@ public class Board {
     Board () {
         // BoardSquares
         for (int i=0; i<NUM_ROWS; i++) {
+            board.add(new ArrayList<>(NUM_COLS));
             for (int j=0; j<NUM_COLS; j++) {
                 BoardSquare boardSquare = new BoardSquare(i, j);
                 board.get(i).add(j, boardSquare);
@@ -30,42 +31,30 @@ public class Board {
 
         // Pawns
         for (int i=0; i<NUM_COLS; i++) {
-            Pawn pawn = new Pawn();
-            getBoardSquareAt(i, 1).addPiece(pawn);
-            pawn.setColor(Color.BLACK);
-            getBoardSquareAt(i, 6).addPiece(pawn);
+            getBoardSquareAt(i, 1).addPiece(new Pawn(Color.WHITE));
+            getBoardSquareAt(i, 6).addPiece(new Pawn(Color.BLACK));
         }
         // Rooks
-        Rook rook = new Rook();
-        getBoardSquareAt(0, 0).addPiece(rook);
-        getBoardSquareAt(7, 0).addPiece(rook);
-        rook.setColor(Color.BLACK);
-        getBoardSquareAt(0, 7).addPiece(rook);
-        getBoardSquareAt(7, 7).addPiece(rook);
+        getBoardSquareAt(0, 0).addPiece(new Rook(Color.WHITE));
+        getBoardSquareAt(7, 0).addPiece(new Rook(Color.WHITE));
+        getBoardSquareAt(0, 7).addPiece(new Rook(Color.BLACK));
+        getBoardSquareAt(7, 7).addPiece(new Rook(Color.BLACK));
         // Knights
-        Knight knight = new Knight();
-        getBoardSquareAt(1, 0).addPiece(knight);
-        getBoardSquareAt(6, 0).addPiece(knight);
-        knight.setColor(Color.BLACK);
-        getBoardSquareAt(1, 7).addPiece(knight);
-        getBoardSquareAt(6, 7).addPiece(knight);
+        getBoardSquareAt(1, 0).addPiece(new Knight(Color.WHITE));
+        getBoardSquareAt(6, 0).addPiece(new Knight(Color.WHITE));
+        getBoardSquareAt(1, 7).addPiece(new Knight(Color.BLACK));
+        getBoardSquareAt(6, 7).addPiece(new Knight(Color.BLACK));
         // Bishops
-        Bishop bishop = new Bishop();
-        getBoardSquareAt(2, 0).addPiece(bishop);
-        getBoardSquareAt(5, 0).addPiece(bishop);
-        bishop.setColor(Color.BLACK);
-        getBoardSquareAt(2, 7).addPiece(bishop);
-        getBoardSquareAt(5, 7).addPiece(bishop);
+        getBoardSquareAt(2, 0).addPiece(new Bishop(Color.WHITE));
+        getBoardSquareAt(5, 0).addPiece(new Bishop(Color.WHITE));
+        getBoardSquareAt(2, 7).addPiece(new Bishop(Color.BLACK));
+        getBoardSquareAt(5, 7).addPiece(new Bishop(Color.BLACK));
         // Queens
-        Queen queen = new Queen();
-        getBoardSquareAt(3, 0).addPiece(queen);
-        queen.setColor(Color.BLACK);
-        getBoardSquareAt(3, 7).addPiece(queen);
+        getBoardSquareAt(3, 0).addPiece(new Queen(Color.WHITE));
+        getBoardSquareAt(3, 7).addPiece(new Queen(Color.BLACK));
         // Kings
-        King king = new King();
-        getBoardSquareAt(4, 0).addPiece(king);
-        king.setColor(Color.BLACK);
-        getBoardSquareAt(4, 7).addPiece(king);
+        getBoardSquareAt(4, 0).addPiece(new King(Color.WHITE));
+        getBoardSquareAt(4, 7).addPiece(new King(Color.BLACK));
     }
     /**
      * getCaptured
