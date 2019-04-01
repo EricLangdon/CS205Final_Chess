@@ -89,6 +89,7 @@ public class Board {
             target.setPiece(source.getPiece());
             source.setPiece(null);
             target.getPiece().setHasMoved(true);
+            return true;
         }
         // TODO: implement
         return false;
