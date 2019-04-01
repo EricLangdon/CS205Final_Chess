@@ -100,4 +100,13 @@ public abstract class Piece {
         return unicode;
     }
 
+    /**
+     * Set the color of the piece
+     *
+     * @param color the color of the piece
+     */
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
 }

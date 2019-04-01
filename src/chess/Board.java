@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.ArrayList;
+import java.util.concurrent.BlockingDeque;
 
 public class Board {
     public static final int NUM_ROWS = 8;
@@ -16,11 +17,56 @@ public class Board {
 
     /**
      * Default Constructor
+     * Sets up boardSquares and pieces on the board
      */
-    Board() {
-        fillBoard();
-    }
+    Board () {
+        // BoardSquares
+        for (int i=0; i<NUM_ROWS; i++) {
+            for (int j=0; j<NUM_COLS; j++) {
+                BoardSquare boardSquare = new BoardSquare(i, j);
+                board.get(i).add(j, boardSquare);
+            }
+        }
 
+        // Pawns
+        for (int i=0; i<NUM_COLS; i++) {
+            Pawn pawn = new Pawn();
+            getBoardSquareAt(i, 1).addPiece(pawn);
+            pawn.setColor(Color.BLACK);
+            getBoardSquareAt(i, 6).addPiece(pawn);
+        }
+        // Rooks
+        Rook rook = new Rook();
+        getBoardSquareAt(0, 0).addPiece(rook);
+        getBoardSquareAt(7, 0).addPiece(rook);
+        rook.setColor(Color.BLACK);
+        getBoardSquareAt(0, 7).addPiece(rook);
+        getBoardSquareAt(7, 7).addPiece(rook);
+        // Knights
+        Knight knight = new Knight();
+        getBoardSquareAt(1, 0).addPiece(knight);
+        getBoardSquareAt(6, 0).addPiece(knight);
+        knight.setColor(Color.BLACK);
+        getBoardSquareAt(1, 7).addPiece(knight);
+        getBoardSquareAt(6, 7).addPiece(knight);
+        // Bishops
+        Bishop bishop = new Bishop();
+        getBoardSquareAt(2, 0).addPiece(bishop);
+        getBoardSquareAt(5, 0).addPiece(bishop);
+        bishop.setColor(Color.BLACK);
+        getBoardSquareAt(2, 7).addPiece(bishop);
+        getBoardSquareAt(5, 7).addPiece(bishop);
+        // Queens
+        Queen queen = new Queen();
+        getBoardSquareAt(3, 0).addPiece(queen);
+        queen.setColor(Color.BLACK);
+        getBoardSquareAt(3, 7).addPiece(queen);
+        // Kings
+        King king = new King();
+        getBoardSquareAt(4, 0).addPiece(king);
+        king.setColor(Color.BLACK);
+        getBoardSquareAt(4, 7).addPiece(king);
+    }
     /**
      * getCaptured
      *

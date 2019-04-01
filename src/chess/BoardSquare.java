@@ -21,12 +21,10 @@ public class BoardSquare {
     /**
      * Constructor
      *
-     * @param piece the piece occupying the boardSquare
      * @param xCoor
      * @param yCoor
      */
-    BoardSquare(Piece piece, int xCoor, int yCoor) {
-        this.piece = piece;
+    BoardSquare(int xCoor, int yCoor) {
         x = xCoor;
         y = yCoor;
     }
