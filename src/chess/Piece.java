@@ -6,14 +6,14 @@ public abstract class Piece {
     public static final int SCORE = 0;
     protected Color color;
     protected boolean hasMoved;
-    private final char unicode = 0x2659;
+    protected char unicode;
 
     /**
      * Default Constructor
      * Sets the default Piece color to white
      */
     Piece() {
-        this.color = Color.WHITE;
+        this(Color.WHITE);
     }
 
     /**
@@ -23,6 +23,7 @@ public abstract class Piece {
      */
     Piece(Color color) {
         this.color = color;
+        unicode = 0x2659;
     }
 
 
@@ -95,7 +96,7 @@ public abstract class Piece {
 
     public char getUnicode() {
         if (this.color == Color.BLACK) {
-            return unicode + 6;
+            return (char) (unicode + 6);
         }
         return unicode;
     }

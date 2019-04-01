@@ -7,10 +7,12 @@ public class King extends Piece {
 
     /**
      * Constrictor
+     *
      * @param color the color of the piece
      */
-    public King(Color color){
+    public King(Color color) {
         super(color);
+        unicode = 0x2654;
     }
 
     /**
