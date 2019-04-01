@@ -86,6 +86,7 @@ public class Game {
 
     /**
      * Get the color of the current turn
+     *
      * @return the current turn
      */
     public Color getCurrentTurn() {
@@ -102,7 +103,7 @@ public class Game {
         int score = 0;
         for (Piece piece : board.getCaptured()) {
             if (!piece.getColor().equals(color)) {
-                score += piece.SCORE;
+                score += piece.getScore();
             }
         }
         return score;

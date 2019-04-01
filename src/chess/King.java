@@ -3,7 +3,6 @@ package chess;
 import java.util.ArrayList;
 
 public class King extends Piece {
-    public static final int SCORE = 99;
 
     /**
      * Constrictor
@@ -13,6 +12,7 @@ public class King extends Piece {
     public King(Color color) {
         super(color);
         unicode = 0x2654;
+        score = 99;
     }
 
     /**

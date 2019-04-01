@@ -3,11 +3,11 @@ package chess;
 import java.util.ArrayList;
 
 public class Pawn extends Piece {
-    public static final int SCORE = 3;
 
     public Pawn(Color color) {
         super(color);
         unicode = 0x2659;
+        score = 3;
     }
 
     /**

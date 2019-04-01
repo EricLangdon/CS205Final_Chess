@@ -3,9 +3,9 @@ package chess;
 import java.util.ArrayList;
 
 public abstract class Piece {
-    public static final int SCORE = 0;
     protected Color color;
     protected boolean hasMoved;
+    protected int score;
     protected char unicode;
 
     /**
@@ -24,6 +24,7 @@ public abstract class Piece {
     Piece(Color color) {
         this.color = color;
         unicode = 0x2659;
+        score = 0;
     }
 
 
@@ -110,4 +111,12 @@ public abstract class Piece {
         this.color = color;
     }
 
+    /**
+     * Get the score value of the piece
+     *
+     * @return the value
+     */
+    public int getScore() {
+        return score;
+    }
 }
