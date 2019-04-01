@@ -8,29 +8,24 @@ public class Bishop extends Piece {
 
 
     /**
-     * Default constructor
-     * Sets the Bishops's color to white
+     * Constrictor
+     *
+     * @param color the color of the piece
      */
-    public void Piece(){
-        this.color= color.WHITE;
-    }
-    /**
-     * Constructor
-     * @param color The color of the piece
-     */
-    public void Piece(Color color){
-        this.color = color;
+    public Bishop(Color color) {
+        super(color);
     }
 
     /**
      * legalMove
      * Check if the given move is legal for the Bishop given the board source and target squares.
-     * @param board the board
+     *
+     * @param board  the board
      * @param source the boardsquare containing the piece checking for move
      * @param target the boardsquare that the piece wants to be moved to
      * @return boolean true if move is legal
      */
-    public boolean legalMove (Board board, BoardSquare source, BoardSquare target){
+    public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
         if (super.legalMove(board, source, target)) {
             if (source.x - target.x == source.y - target.y) { // if lower left or upper right diagonal
                 if (source.x < target.x) { // if target is upper right
@@ -71,6 +66,7 @@ public class Bishop extends Piece {
 
     /**
      * getColor
+     *
      * @return the color of the piece
      */
     public Color getColor() {

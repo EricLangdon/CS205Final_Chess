@@ -6,6 +6,15 @@ public class Rook extends Piece {
     public static final int SCORE = 5;
 
     /**
+     * Constrictor
+     *
+     * @param color the color of the piece
+     */
+    public Rook(Color color) {
+        super(color);
+    }
+
+    /**
      * legalMove
      * Check if the given move is legal for the Bishop given the board source and target squares.
      *

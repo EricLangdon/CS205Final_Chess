@@ -6,6 +6,14 @@ public class King extends Piece {
     public static final int SCORE = 99;
 
     /**
+     * Constrictor
+     * @param color the color of the piece
+     */
+    public King(Color color){
+        super(color);
+    }
+
+    /**
      * legalMove
      * Check if the given move is legal for the Bishop given the board source and target squares.
      *

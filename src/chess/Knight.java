@@ -8,18 +8,11 @@ public class Knight extends Piece {
 
 
     /**
-     * Default constructor
-     * Sets the knight's color to white
+     * Constrictor
+     * @param color the color of the piece
      */
-    public void Piece(){
-        this.color= color.WHITE;
-    }
-    /**
-     * Constructor
-     * @param color The color of the piece
-     */
-    public void Piece(Color color){
-        this.color = color;
+    public Knight(Color color){
+        super(color);
     }
 
     /**

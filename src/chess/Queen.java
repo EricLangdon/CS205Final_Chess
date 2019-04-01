@@ -6,6 +6,15 @@ public class Queen extends Piece {
     public static final int SCORE = 9;
 
     /**
+     * Constrictor
+     *
+     * @param color the color of the piece
+     */
+    public Queen(Color color) {
+        super(color);
+    }
+
+    /**
      * legalMove
      * Check if the given move is legal for the Bishop given the board source and target squares.
      *
