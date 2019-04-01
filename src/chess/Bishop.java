@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class Bishop extends Piece {
     public static final int SCORE = 3;
-    private Color color;
-
 
     /**
      * Constrictor
