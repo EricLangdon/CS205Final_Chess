@@ -25,6 +25,7 @@ public abstract class Piece {
         this.color = color;
         unicode = 0x2659;
         score = 0;
+        hasMoved = false;
     }
 
 

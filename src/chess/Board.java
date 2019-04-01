@@ -88,6 +88,7 @@ public class Board {
         if (source.isOccupied() && source.getPiece().legalMove(this, source, target)) {
             target.setPiece(source.getPiece());
             source.setPiece(null);
+            target.getPiece().setHasMoved(true);
         }
         // TODO: implement
         return false;
