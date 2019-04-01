@@ -180,11 +180,19 @@ public class Board {
     }
 
     /**
-     * fillBoard
-     * initializes all the pieces on the board
+     * getPieces
      */
-    public void fillBoard() {
-
+    public ArrayList<Piece> getPieces(Color color) {
+        ArrayList<Piece> pieces = new ArrayList<>();
+        for (int i=0; i<NUM_ROWS; i++) {
+            for (int j=0; j<NUM_COLS; j++) {
+                if (getBoardSquareAt(i, j).isOccupied()) {
+                    if (getBoardSquareAt(i, j).getPiece().getColor() == color) {
+                        pieces.add(getBoardSquareAt(i, j).getPiece());
+                    }
+                }
+            }
+        }
+        return pieces;
     }
-
 }
