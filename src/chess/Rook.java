@@ -45,14 +45,14 @@ public class Rook extends Piece {
             } else if (source.y == target.y) { // if in the same row
                 if (source.x < target.x) { // if target is to the right on the board
                     for (int i = 1; source.x + i < target.x; i++) {
-                        if (board.getBoardSquareAt(source.y, source.x + i).isOccupied()) {
+                        if (board.getBoardSquareAt(source.x + i, source.y).isOccupied()) {
                             return false;
                         }
                     }
                     return true;
                 } else if (source.x > target.x) { // if target is to the left on the board
                     for (int i = 1; source.x - i > target.x; i++) {
-                        if (board.getBoardSquareAt(source.y, source.x - i).isOccupied()) {
+                        if (board.getBoardSquareAt(source.x - i, source.y).isOccupied()) {
                             return false;
                         }
                     }

@@ -47,14 +47,14 @@ public class Queen extends Piece {
             } else if (source.y == target.y) { // if in the same row
                 if (source.x < target.x) { // if target is to the right on the board
                     for (int i = 1; source.x + i < target.x; i++) {
-                        if (board.getBoardSquareAt(source.y, source.x + i).isOccupied()) {
+                        if (board.getBoardSquareAt(source.x + i, source.y).isOccupied()) {
                             return false;
                         }
                     }
                     return true;
                 } else if (source.x > target.x) { // if target is to the left on the board
                     for (int i = 1; source.x - i > target.x; i++) {
-                        if (board.getBoardSquareAt(source.y, source.x - i).isOccupied()) {
+                        if (board.getBoardSquareAt(source.x - i, source.y).isOccupied()) {
                             return false;
                         }
                     }
@@ -82,14 +82,14 @@ public class Queen extends Piece {
             } else if (source.x - target.x == (source.y - target.y) * -1) { // if upper left or lower right diagonal
                 if (source.x < target.x) { // if target is lower right
                     for (int i = 1; source.x + i < target.x; i++) {
-                        if (board.getBoardSquareAt(source.y - i, source.x + i).isOccupied()) {
+                        if (board.getBoardSquareAt(source.x + i, source.y - i).isOccupied()) {
                             return false;
                         }
                     }
                     return true;
                 } else if (source.x > target.x) { // if target is upper left
                     for (int i = 1; source.x - i > target.x; i++) {
-                        if (board.getBoardSquareAt(source.y + i, source.x - i).isOccupied()) {
+                        if (board.getBoardSquareAt(source.x - i, source.y + i).isOccupied()) {
                             return false;
                         }
                     }
