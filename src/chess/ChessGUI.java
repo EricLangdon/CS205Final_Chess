@@ -55,29 +55,28 @@ public class ChessGUI extends Application {
                 BoardSquarePane bsp = new BoardSquarePane(boardSquare);
                 Board board = this.game.getBoard();
                 bsp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    // move the currently selected piece to the square clicked square
+                    // if a square is already selected, move its piece
                     if (board.getSelectedSquare() != null && !boardSquare.equals(board.getSelectedSquare())) {
                         if(board.movePiece(board.getSelectedSquare(), boardSquare)) {
                             board.resetHighlightedSquares();
                             board.deselectSquare();
                             this.game.executeTurn();
                         }
-                    }
-
-                    // Let a user select a source square
-                    if (!boardSquare.isSelected() && boardSquare.isOccupied() && boardSquare.getPiece().getColor().equals(this.game.getCurrentTurn())) {
-                        // select square clicked and highlight all possible moves
-                        board.selectSquare(boardSquare);
-                        board.resetHighlightedSquares();
-                        for (BoardSquare bs : boardSquare.getPiece().getAvailableMoves(board, boardSquare)) {
-                            board.addHighlightedSquare(bs);
+                    }else {
+                        // Let a user select a source square
+                        if (!boardSquare.isSelected() && boardSquare.isOccupied() && boardSquare.getPiece().getColor().equals(this.game.getCurrentTurn())) {
+                            // select square clicked and highlight all possible moves
+                            board.selectSquare(boardSquare);
+                            board.resetHighlightedSquares();
+                            for (BoardSquare bs : boardSquare.getPiece().getAvailableMoves(board, boardSquare)) {
+                                board.addHighlightedSquare(bs);
+                            }
+                        } else if (boardSquare.isSelected()) {
+                            // deselect and unhighlight everything if same square clicked again
+                            board.deselectSquare();
+                            board.resetHighlightedSquares();
                         }
-                    } else if (boardSquare.isSelected()) {
-                        // deselect and unhighlight everything if same square clicked again
-                        board.deselectSquare();
-                        board.resetHighlightedSquares();
                     }
-
                     updateGrid();
                 });
                 this.grid.add(bsp, i, Board.NUM_ROWS - j);
