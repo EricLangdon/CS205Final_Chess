@@ -58,12 +58,15 @@ public class Game {
         SimpleCPU computer= new SimpleCPU();    //Todo Reset execute turn when done
         switch (mode) {
             case DUMB_COMPUTER:
+                computer.choiceMove(board);
+                currentTurn=currentTurn.WHITE;
                 break;
             case PVP:
+                currentTurn=currentTurn.other();
                 break;
         }
-        currentTurn = currentTurn.other();
-        computer.choiceMove(board);
+//        currentTurn = currentTurn.WHITE/*other()*/;
+//        computer.choiceMove(board);
     }
 
     /**
