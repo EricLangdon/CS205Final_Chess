@@ -55,6 +55,7 @@ public class Game {
      */
     public void executeTurn() {
         // TODO: implement
+        SimpleCPU computer= new SimpleCPU();    //Todo Reset execute turn when done
         switch (mode) {
             case DUMB_COMPUTER:
                 break;
@@ -62,6 +63,7 @@ public class Game {
                 break;
         }
         currentTurn = currentTurn.other();
+        computer.choiceMove(board);
     }
 
     /**

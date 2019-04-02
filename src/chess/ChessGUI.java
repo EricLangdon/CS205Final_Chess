@@ -20,7 +20,7 @@ public class ChessGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        this.game = new Game(Game.GameMode.PVP);
+        this.game = new Game(Game.GameMode.DUMB_COMPUTER/*PVP*/);   //Todo Revert back to PVP when done
 
         BorderPane bp = new BorderPane();
         bp.setPadding(new Insets(5));
