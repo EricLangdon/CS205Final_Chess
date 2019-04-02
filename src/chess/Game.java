@@ -1,5 +1,7 @@
 package chess;
 
+import java.io.File;
+
 public class Game {
     public enum GameMode {
         PVP, DUMB_COMPUTER;
@@ -49,9 +51,9 @@ public class Game {
     /**
      * Save game to file
      *
-     * @param filepath filepath to save to
+     * @param file file to save to
      */
-    public void save(String filepath) {
+    public void save(File file) {
         // TODO: implement
     }
 
@@ -59,9 +61,9 @@ public class Game {
     /**
      * Load game from a filepath
      *
-     * @param filepath filepath to load from
+     * @param file file to load from
      */
-    public void load(String filepath) {
+    public void load(File file) {
         // TODO: implement
     }
 

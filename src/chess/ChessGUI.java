@@ -12,7 +12,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
 
 
 public class ChessGUI extends Application {
@@ -50,10 +53,10 @@ public class ChessGUI extends Application {
         newMenu.getItems().addAll(newPvpItem, newDumbComputerItem);
         // save
         MenuItem saveItem = new MenuItem("Save Game");
-        saveItem.setOnAction(e -> this.save());
+        saveItem.setOnAction(e -> this.save(primaryStage));
         // load
         MenuItem loadItem = new MenuItem("Load Game");
-        loadItem.setOnAction(e -> this.load());
+        loadItem.setOnAction(e -> this.load(primaryStage));
 
         fileMenu.getItems().addAll(newMenu, saveItem, loadItem);
         menuBar.getMenus().add(fileMenu);
@@ -150,11 +153,29 @@ public class ChessGUI extends Application {
 
     }
 
-    private void save() {
-        // TODO implement
+    /**
+     * Save a game to file. Provide the user a popup to select file
+     */
+    private void save(Stage stage) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Load from file");
+        File file = fc.showSaveDialog(stage);
+        if (file != null) {
+            this.game.save(file);
+        }
     }
 
-    private void load() {
+    /**
+     * Load a game from file. Provide the user a popup to select filepath
+     */
+    private void load(Stage stage) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Save to file");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
+        File file = fc.showOpenDialog(stage);
+        if (file != null) {
+            this.game.load(file);
+        }
         // TODO implement
     }
 
