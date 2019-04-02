@@ -14,13 +14,28 @@ public class Game {
 
     private GameMode mode;
 
+    /**
+     * Constructor
+     *
+     * @param mode    gamemode
+     * @param player1 color of player1
+     * @param player2 color of player2
+     */
+    public Game(GameMode mode, Color player1, Color player2) {
+        this.mode = mode;
+        this.player1 = player1;
+        this.player2 = player2;
+        newGame();
+    }
 
     /**
      * Constructor; calls newGame
+     * defaults player1 to white
+     *
+     * @param mode gamemmode
      */
     public Game(GameMode mode) {
-        this.mode = mode;
-        newGame();
+        this(mode, Color.WHITE, Color.BLACK);
     }
 
     /**
@@ -54,19 +69,16 @@ public class Game {
      * Execute turn
      */
     public void executeTurn() {
-        // TODO: implement
-        SimpleCPU computer= new SimpleCPU();    //Todo Reset execute turn when done
+        SimpleCPU computer = new SimpleCPU();    //Todo Reset execute turn when done
         switch (mode) {
             case DUMB_COMPUTER:
                 computer.choiceMove(board);
-                currentTurn=currentTurn.WHITE;
+                currentTurn = player1;
                 break;
             case PVP:
-                currentTurn=currentTurn.other();
+                currentTurn = currentTurn.other();
                 break;
         }
-//        currentTurn = currentTurn.WHITE/*other()*/;
-//        computer.choiceMove(board);
     }
 
     /**
