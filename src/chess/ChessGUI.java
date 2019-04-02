@@ -57,8 +57,11 @@ public class ChessGUI extends Application {
         // load
         MenuItem loadItem = new MenuItem("Load Game");
         loadItem.setOnAction(e -> this.load(primaryStage));
+        //exit
+        MenuItem exitItem = new MenuItem("Quit");
+        exitItem.setOnAction(e -> Platform.exit());
 
-        fileMenu.getItems().addAll(newMenu, saveItem, loadItem);
+        fileMenu.getItems().addAll(newMenu, saveItem, loadItem, exitItem);
         menuBar.getMenus().add(fileMenu);
         bp.setTop(menuBar);
 
