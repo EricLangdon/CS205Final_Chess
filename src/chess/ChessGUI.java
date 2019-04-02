@@ -2,18 +2,18 @@ package chess;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
 
 public class ChessGUI extends Application {
 
@@ -22,9 +22,45 @@ public class ChessGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        BorderPane bp = new BorderPane();
+        Scene scene = new Scene(bp, 1000, 800);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Chess");
+
+
+        // menubars
+        MenuBar menuBar = new MenuBar();
+        final String os = System.getProperty("os.name");
+        if (os != null && os.startsWith("Mac")) {
+            menuBar.useSystemMenuBarProperty().set(true);
+        }
+        Menu fileMenu = new Menu("File");
+        // new
+        Menu newMenu = new Menu("New Game");
+        MenuItem newPvpItem = new MenuItem("2 Player");
+        newPvpItem.setOnAction(event -> {
+            this.game = new Game(Game.GameMode.PVP);
+            updateGrid();
+        });
+        MenuItem newDumbComputerItem = new MenuItem("Dumb Computer");
+        newDumbComputerItem.setOnAction(event -> {
+            this.game = new Game(Game.GameMode.DUMB_COMPUTER);
+            updateGrid();
+        });
+        newMenu.getItems().addAll(newPvpItem, newDumbComputerItem);
+        // save
+        MenuItem saveItem = new MenuItem("Save Game");
+        saveItem.setOnAction(e -> this.save());
+        // load
+        MenuItem loadItem = new MenuItem("Load Game");
+        loadItem.setOnAction(e -> this.load());
+
+        fileMenu.getItems().addAll(newMenu, saveItem, loadItem);
+        menuBar.getMenus().add(fileMenu);
+        bp.setTop(menuBar);
+
         this.game = new Game(Game.GameMode.DUMB_COMPUTER);
 
-        BorderPane bp = new BorderPane();
         bp.setPadding(new Insets(0));
         bp.setLeft(null);
 
@@ -41,9 +77,7 @@ public class ChessGUI extends Application {
         bp.setCenter(grid);
         updateGrid();
 
-        Scene scene = new Scene(bp, 1000, 800);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Chess");
+
         primaryStage.show();
 
     }
@@ -88,12 +122,12 @@ public class ChessGUI extends Application {
                 bsp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     // if a square is already selected, move its piece
                     if (board.getSelectedSquare() != null && !boardSquare.equals(board.getSelectedSquare())) {
-                        if(board.movePiece(board.getSelectedSquare(), boardSquare)) {
+                        if (board.movePiece(board.getSelectedSquare(), boardSquare)) {
                             board.resetHighlightedSquares();
                             board.deselectSquare();
                             this.game.executeTurn();
                         }
-                    }else {
+                    } else {
                         // Let a user select a source square
                         if (!boardSquare.isSelected() && boardSquare.isOccupied() && boardSquare.getPiece().getColor().equals(this.game.getCurrentTurn())) {
                             // select square clicked and highlight all possible moves
@@ -114,6 +148,14 @@ public class ChessGUI extends Application {
             }
         }
 
+    }
+
+    private void save() {
+        // TODO implement
+    }
+
+    private void load() {
+        // TODO implement
     }
 
     public static void main(String[] args) {
