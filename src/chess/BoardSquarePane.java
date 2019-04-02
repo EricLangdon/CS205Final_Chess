@@ -12,13 +12,13 @@ import javafx.scene.text.Font;
 
 public class BoardSquarePane extends VBox {
     private BoardSquare boardSquare;
-
+    public static final int SQUARE_SIZE = 85;
     private static final Color DARK_COLOR = Color.rgb(192, 192, 192);
-    private static final Color DARK_COLOR_SELECTED = Color.rgb(162, 162, 182);
-    private static final Color DARK_COLOR_HIGHLIGHTED = Color.rgb(172, 172, 182);
+    private static final Color DARK_COLOR_SELECTED = Color.rgb(245, 245, 96);
+    private static final Color DARK_COLOR_HIGHLIGHTED = Color.rgb(162, 162, 192);
     private static final Color LIGHT_COLOR = Color.rgb(255, 255, 255);
-    private static final Color LIGHT_COLOR_SELECTED = Color.rgb(225, 225, 245);
-    private static final Color LIGHT_COLOR_HIGHLIGHTED = Color.rgb(235, 235, 245);
+    private static final Color LIGHT_COLOR_SELECTED = Color.rgb(255, 255, 96);
+    private static final Color LIGHT_COLOR_HIGHLIGHTED = Color.rgb(235, 235, 255);
 
     /**
      * Constructor
@@ -35,8 +35,8 @@ public class BoardSquarePane extends VBox {
      * Draw the pane
      */
     public void draw() {
-        this.setMinHeight(85);
-        this.setMinWidth(85);
+        this.setMinHeight(SQUARE_SIZE);
+        this.setMinWidth(SQUARE_SIZE);
         this.setAlignment(Pos.CENTER);
         Color color;
 
