@@ -86,6 +86,19 @@ public class Board {
      */
     public boolean movePiece(BoardSquare source, BoardSquare target) {
         if (source.isOccupied() && source.getPiece().legalMove(this, source, target)) {
+            if (source.getX() == 4 && source.getY() == 0 && target.getX() == 2) {
+                getBoardSquareAt(3, 0).setPiece(getBoardSquareAt(0, 0).getPiece());
+                getBoardSquareAt(0, 0).setPiece(null);
+            } else if (source.getX() == 4 && source.getY() == 0 && target.getX() == 6) {
+                getBoardSquareAt(5, 0).setPiece(getBoardSquareAt(7, 0).getPiece());
+                getBoardSquareAt(7, 0).setPiece(null);
+            } else if (source.getX() == 4 && source.getY() == 7 && target.getX() == 2) {
+                getBoardSquareAt(3, 7).setPiece(getBoardSquareAt(0, 7).getPiece());
+                getBoardSquareAt(0, 7).setPiece(null);
+            } else if (source.getX() == 4 && source.getY() == 7 && target.getX() == 6) {
+                getBoardSquareAt(5, 7).setPiece(getBoardSquareAt(7, 7).getPiece());
+                getBoardSquareAt(7, 7).setPiece(null);
+            }
             target.setPiece(source.getPiece());
             source.setPiece(null);
             target.getPiece().setHasMoved(true);
