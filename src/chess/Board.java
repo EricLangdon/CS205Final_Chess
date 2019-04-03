@@ -99,6 +99,9 @@ public class Board {
                 getBoardSquareAt(5, 7).setPiece(getBoardSquareAt(7, 7).getPiece());
                 getBoardSquareAt(7, 7).setPiece(null);
             }
+            if(target.isOccupied()) {
+                captured.add(target.getPiece());
+            }
             target.setPiece(source.getPiece());
             source.setPiece(null);
             target.getPiece().setHasMoved(true);
