@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.ArrayList;
-import java.util.concurrent.BlockingDeque;
 
 public class Board {
     public static final int NUM_ROWS = 8;
@@ -9,7 +8,6 @@ public class Board {
 
     private ArrayList<ArrayList<BoardSquare>> board = new ArrayList<>(NUM_ROWS);
     private ArrayList<Piece> captured = new ArrayList<>();
-    private ArrayList<Piece> pieces = new ArrayList<>();
 
     private ArrayList<BoardSquare> highlightedSquares = new ArrayList<>();
     private BoardSquare selectedSquare;
@@ -31,30 +29,30 @@ public class Board {
 
         // Pawns
         for (int i=0; i<NUM_COLS; i++) {
-            getBoardSquareAt(i, 1).addPiece(new Pawn(Color.WHITE));
-            getBoardSquareAt(i, 6).addPiece(new Pawn(Color.BLACK));
+            getBoardSquareAt(i, 1).setPiece(new Pawn(Color.WHITE));
+            getBoardSquareAt(i, 6).setPiece(new Pawn(Color.BLACK));
         }
         // Rooks
-        getBoardSquareAt(0, 0).addPiece(new Rook(Color.WHITE));
-        getBoardSquareAt(7, 0).addPiece(new Rook(Color.WHITE));
-        getBoardSquareAt(0, 7).addPiece(new Rook(Color.BLACK));
-        getBoardSquareAt(7, 7).addPiece(new Rook(Color.BLACK));
+        getBoardSquareAt(0, 0).setPiece(new Rook(Color.WHITE));
+        getBoardSquareAt(7, 0).setPiece(new Rook(Color.WHITE));
+        getBoardSquareAt(0, 7).setPiece(new Rook(Color.BLACK));
+        getBoardSquareAt(7, 7).setPiece(new Rook(Color.BLACK));
         // Knights
-        getBoardSquareAt(1, 0).addPiece(new Knight(Color.WHITE));
-        getBoardSquareAt(6, 0).addPiece(new Knight(Color.WHITE));
-        getBoardSquareAt(1, 7).addPiece(new Knight(Color.BLACK));
-        getBoardSquareAt(6, 7).addPiece(new Knight(Color.BLACK));
+        getBoardSquareAt(1, 0).setPiece(new Knight(Color.WHITE));
+        getBoardSquareAt(6, 0).setPiece(new Knight(Color.WHITE));
+        getBoardSquareAt(1, 7).setPiece(new Knight(Color.BLACK));
+        getBoardSquareAt(6, 7).setPiece(new Knight(Color.BLACK));
         // Bishops
-        getBoardSquareAt(2, 0).addPiece(new Bishop(Color.WHITE));
-        getBoardSquareAt(5, 0).addPiece(new Bishop(Color.WHITE));
-        getBoardSquareAt(2, 7).addPiece(new Bishop(Color.BLACK));
-        getBoardSquareAt(5, 7).addPiece(new Bishop(Color.BLACK));
+        getBoardSquareAt(2, 0).setPiece(new Bishop(Color.WHITE));
+        getBoardSquareAt(5, 0).setPiece(new Bishop(Color.WHITE));
+        getBoardSquareAt(2, 7).setPiece(new Bishop(Color.BLACK));
+        getBoardSquareAt(5, 7).setPiece(new Bishop(Color.BLACK));
         // Queens
-        getBoardSquareAt(3, 0).addPiece(new Queen(Color.WHITE));
-        getBoardSquareAt(3, 7).addPiece(new Queen(Color.BLACK));
+        getBoardSquareAt(3, 0).setPiece(new Queen(Color.WHITE));
+        getBoardSquareAt(3, 7).setPiece(new Queen(Color.BLACK));
         // Kings
-        getBoardSquareAt(4, 0).addPiece(new King(Color.WHITE));
-        getBoardSquareAt(4, 7).addPiece(new King(Color.BLACK));
+        getBoardSquareAt(4, 0).setPiece(new King(Color.WHITE));
+        getBoardSquareAt(4, 7).setPiece(new King(Color.BLACK));
     }
     /**
      * getCaptured
@@ -128,7 +126,6 @@ public class Board {
      * @param p the piece that has been captured
      */
     public void pieceCaptured(Piece p) {
-        pieces.remove(p);
         captured.add(p);
     }
 
