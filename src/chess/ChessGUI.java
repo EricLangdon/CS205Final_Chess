@@ -22,6 +22,7 @@ public class ChessGUI extends Application {
 
     private Game game;
     private GridPane grid;
+    private VBox sidebar;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -71,10 +72,10 @@ public class ChessGUI extends Application {
         bp.setLeft(null);
 
         // right pane
-        VBox right = new VBox();
-        right.setPrefWidth(200);
-        right.setBackground(new Background(new BackgroundFill(Color.BROWN.darker(), CornerRadii.EMPTY, Insets.EMPTY)));
-        bp.setRight(right);
+        sidebar = new VBox();
+        sidebar.setPrefWidth(200);
+        sidebar.setBackground(new Background(new BackgroundFill(Color.rgb(114, 29, 29), CornerRadii.EMPTY, Insets.EMPTY)));
+        bp.setRight(sidebar);
 
         // center grid with actual board
         this.grid = new GridPane();
@@ -88,10 +89,20 @@ public class ChessGUI extends Application {
 
     }
 
+    private void updateSidebar() {
+        sidebar.getChildren().clear();
+        sidebar.getChildren().addAll(
+                new PlayerInfoPane(this.game, chess.Color.BLACK),
+                new Separator(),
+                new PlayerInfoPane(this.game, chess.Color.WHITE)
+        );
+    }
+
     /**
      * Redraw the entire board
      */
     private void updateGrid() {
+        updateSidebar(); // TODO update timer
         this.grid.getChildren().clear();
         for (int i = 0; i < Board.NUM_COLS + 1; i++) {
             for (int j = 0; j < Board.NUM_ROWS + 1; j++) {
