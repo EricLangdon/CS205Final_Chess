@@ -4,7 +4,7 @@ import java.io.File;
 
 public class Game {
     public enum GameMode {
-        PVP, DUMB_COMPUTER;
+        PVP, DUMB_COMPUTER, SMART_COMPUTER;
     }
 
     private Board board;
@@ -46,6 +46,7 @@ public class Game {
     public void newGame() {
         board = new Board();
         currentTurn = Color.WHITE;
+        mode = GameMode.SMART_COMPUTER;
     }
 
     /**
@@ -72,7 +73,12 @@ public class Game {
      */
     public void executeTurn() {
         SimpleCPU computer = new SimpleCPU();    //Todo Reset execute turn when done
+        ComplexCPU ai = new ComplexCPU();
         switch (mode) {
+            case SMART_COMPUTER:
+                ai.choiceMove(board);
+                currentTurn = player1;
+                break;
             case DUMB_COMPUTER:
                 computer.choiceMove(board);
                 currentTurn = player1;
