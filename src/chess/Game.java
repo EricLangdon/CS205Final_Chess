@@ -46,7 +46,6 @@ public class Game {
     public void newGame() {
         board = new Board();
         currentTurn = Color.WHITE;
-        mode = GameMode.SMART_COMPUTER;
     }
 
     /**
