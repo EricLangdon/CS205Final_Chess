@@ -110,21 +110,6 @@ public class BoardSquare {
     public void setHighlighted(boolean highlighted) {
         this.highlighted = highlighted;
     }
-
-
-    /**
-     * addPiece
-     * @param piece the piece occupying the boardSquare
-     */
-    public void addPiece(Piece piece) {
-        this.piece = piece;
-    }
-
-    /**
-     * removePiece
-     */
-    public void removePiece() {
-        this.piece = null;
-    }
+    
 
 }
