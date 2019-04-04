@@ -5,6 +5,18 @@ import java.io.File;
 public class Game {
     public enum GameMode {
         PVP, DUMB_COMPUTER, SMART_COMPUTER;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case DUMB_COMPUTER:
+                    return "Dumb Computer";
+                case SMART_COMPUTER:
+                    return "Smart Computer";
+                default:
+                    return this.name();
+            }
+        }
     }
 
     private Board board;

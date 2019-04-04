@@ -41,24 +41,14 @@ public class ChessGUI extends Application {
         Menu fileMenu = new Menu("File");
 
         Menu newMenu = new Menu("New Game");
-        MenuItem newPvpItem = new MenuItem("2 Player");
-        newPvpItem.setOnAction(event -> {
-            this.game = new Game(Game.GameMode.PVP);
-            updateGrid();
-        });
-
-        MenuItem newDumbComputerItem = new MenuItem("Dumb Computer");
-        newDumbComputerItem.setOnAction(event -> {
-            this.game = new Game(Game.GameMode.DUMB_COMPUTER);
-            updateGrid();
-        });
-
-        MenuItem newSmartComputerItem = new MenuItem("Smart Computer");
-        newSmartComputerItem.setOnAction(event -> {
-            this.game = new Game(Game.GameMode.SMART_COMPUTER);
-            updateGrid();
-        });
-        newMenu.getItems().addAll(newPvpItem, newDumbComputerItem, newSmartComputerItem);
+        for (Game.GameMode mode : Game.GameMode.values()){
+            MenuItem item = new MenuItem(mode.toString());
+            item.setOnAction(event -> {
+                this.game = new Game(mode);
+                updateGrid();
+            });
+            newMenu.getItems().add(item);
+        }
 
         // save
         MenuItem saveItem = new MenuItem("Save Game");
