@@ -20,7 +20,8 @@ public class Game {
     }
 
     private Board board;
-    // TODO: timer
+    private ChessClock p1Clock;
+    private ChessClock p2Clock;
 
     private Color currentTurn;
     private Color player1;
