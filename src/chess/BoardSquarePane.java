@@ -18,7 +18,7 @@ public class BoardSquarePane extends VBox {
     private static final Color DARK_COLOR_HIGHLIGHTED = Color.rgb(162, 162, 192);
     private static final Color LIGHT_COLOR = Color.rgb(255, 255, 255);
     private static final Color LIGHT_COLOR_SELECTED = Color.rgb(255, 255, 96);
-    private static final Color LIGHT_COLOR_HIGHLIGHTED = Color.rgb(235, 235, 255);
+    private static final Color LIGHT_COLOR_HIGHLIGHTED = Color.rgb(215, 215, 255);
 
     /**
      * Constructor
