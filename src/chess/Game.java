@@ -14,6 +14,7 @@ public class Game {
     private Color player1;
     private Color player2;
 
+    
     private GameMode mode;
 
     /**
