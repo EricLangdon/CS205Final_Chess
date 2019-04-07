@@ -48,7 +48,9 @@ public abstract class Piece {
 
         //Call test in check
         if (checkCheck) {
-            if (board.colorInCheck(color)) {
+            Board tempBoard = new Board(board);
+            tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()));
+            if (tempBoard.colorInCheck(color)) {
                 return false;
             }
         }
@@ -74,7 +76,7 @@ public abstract class Piece {
         for (int i = 0; i < Board.NUM_COLS; i++) {
             for (int j = 0; j < Board.NUM_ROWS; j++) {
                 sq = board.getBoardSquareAt(i, j);
-                if (legalMove(board, source, sq)) {
+                if (legalMove(board, source, sq, true)) {
                     squares.add(sq);
                 }
             }

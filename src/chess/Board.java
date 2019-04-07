@@ -17,7 +17,7 @@ public class Board {
      * Default Constructor
      * Sets up boardSquares and pieces on the board
      */
-    Board() {
+    public Board() {
         // BoardSquares
         for (int i = 0; i < NUM_ROWS; i++) {
             board.add(new ArrayList<>(NUM_COLS));
@@ -58,7 +58,7 @@ public class Board {
     /**
      * Copy Constructor
      */
-    Board(Board oldBoard) {
+    public Board(Board oldBoard) {
         for (int i = 0; i < NUM_ROWS; i++) {
             board.add(new ArrayList<>(NUM_COLS));
             for (int j = 0; j < NUM_COLS; j++) {
@@ -137,9 +137,9 @@ public class Board {
         ArrayList<BoardSquare> opponentSources = new ArrayList<>();
         BoardSquare kingSquare = new BoardSquare();
         BoardSquare square = new BoardSquare();
-        for (int i = 0; i < NUM_ROWS; i++) {
-            for (int j = 0; j < NUM_COLS; j++) {
-                square = getBoardSquareAt(i, j);
+        for (int i = 0; i < NUM_COLS; i++) {
+            for (int j = 0; j < NUM_ROWS; j++) {
+                square = getBoardSquareAt(j, i);
                 if (square.isOccupied()) {
                     if (square.getPiece().getColor() == color && square.getPiece() instanceof King) {
                         kingSquare = square;
@@ -150,12 +150,10 @@ public class Board {
                 }
             }
         }
-        int k=0;
-        while(k<opponentSources.size()) {
-            if (opponentSources.get(k).getPiece().legalMove(this, opponentSources.get(k), kingSquare)){
+        int k = 0;
+        for(BoardSquare sq : opponentSources){
+            if(sq.getPiece().legalMove(this, sq, kingSquare)){
                 return true;
-            } else {
-                k++;
             }
         }
         return false;
