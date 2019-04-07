@@ -47,11 +47,11 @@ public abstract class Piece {
         }
 
         //Call test in check
-//        if (checkCheck) {
-//            if (testCheckAlly(board, source, target)) {
-//                return false;
-//            }
-//        }
+        if (checkCheck) {
+            if (board.colorInCheck(color)) {
+                return false;
+            }
+        }
 
         //Checks if piece in target is the same color as piece in source
         if (target.isOccupied() && target.getPiece().getColor() == color) {
