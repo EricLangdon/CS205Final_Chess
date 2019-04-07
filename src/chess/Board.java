@@ -152,7 +152,7 @@ public class Board {
         }
         int k = 0;
         for(BoardSquare sq : opponentSources){
-            if(sq.getPiece().legalMove(this, sq, kingSquare)){
+            if(sq.getPiece().legalMove(this, sq, kingSquare, false)){
                 return true;
             }
         }
