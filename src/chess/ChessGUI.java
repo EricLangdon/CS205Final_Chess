@@ -2,12 +2,13 @@ package chess;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -144,22 +145,24 @@ public class ChessGUI extends Application {
                             board.resetHighlightedSquares();
                             board.deselectSquare();
                             this.game.executeTurn();
-                        }
-                    } else {
-                        // Let a user select a source square
-                        if (!boardSquare.isSelected() && boardSquare.isOccupied() && boardSquare.getPiece().getColor().equals(this.game.getCurrentTurn())) {
-                            // select square clicked and highlight all possible moves
-                            board.selectSquare(boardSquare);
-                            board.resetHighlightedSquares();
-                            for (BoardSquare bs : boardSquare.getPiece().getAvailableMoves(board, boardSquare)) {
-                                board.addHighlightedSquare(bs);
-                            }
-                        } else if (boardSquare.isSelected()) {
-                            // deselect and unhighlight everything if same square clicked again
-                            board.deselectSquare();
-                            board.resetHighlightedSquares();
+                            updateGrid();
+                            return;
                         }
                     }
+                    // Let a user select a source square
+                    if (!boardSquare.isSelected() && boardSquare.isOccupied() && boardSquare.getPiece().getColor().equals(this.game.getCurrentTurn())) {
+                        // select square clicked and highlight all possible moves
+                        board.selectSquare(boardSquare);
+                        board.resetHighlightedSquares();
+                        for (BoardSquare bs : boardSquare.getPiece().getAvailableMoves(board, boardSquare)) {
+                            board.addHighlightedSquare(bs);
+                        }
+                    } else if (boardSquare.isSelected()) {
+                        // deselect and unhighlight everything if same square clicked again
+                        board.deselectSquare();
+                        board.resetHighlightedSquares();
+                    }
+
                     updateGrid();
                 });
 
@@ -198,4 +201,5 @@ public class ChessGUI extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
 }
