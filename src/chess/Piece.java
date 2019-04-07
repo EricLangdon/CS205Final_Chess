@@ -2,7 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
-public abstract class Piece {
+public abstract class Piece implements Cloneable {
     protected Color color;
     protected boolean hasMoved;
     protected int score;
@@ -26,6 +26,26 @@ public abstract class Piece {
         unicode = 0x2659;
         score = 0;
         hasMoved = false;
+    }
+
+    /**
+     * Copy Constructor
+     */
+    Piece(Piece oldPiece) {
+        this.color = oldPiece.getColor();
+        this.hasMoved = oldPiece.getHasMoved();
+        this.score = oldPiece.getScore();
+        this.unicode = oldPiece.getUnicode();
+    }
+
+    public Piece clone () {
+        try {
+            Piece clonePiece = (Piece) super.clone();
+            return clonePiece;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 

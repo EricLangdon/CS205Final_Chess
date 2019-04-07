@@ -65,7 +65,7 @@ public class Board {
                 BoardSquare boardSquare = new BoardSquare(i, j);
                 board.get(i).add(j, boardSquare);
                 if (oldBoard.getBoardSquareAt(i, j).isOccupied()) {
-                    boardSquare.setPiece(oldBoard.getBoardSquareAt(i, j).getPiece());
+                    boardSquare.setPiece(oldBoard.getBoardSquareAt(i, j).getPiece().clone());
                 }
             }
         }
