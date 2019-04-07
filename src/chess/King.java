@@ -24,8 +24,8 @@ public class King extends Piece {
      * @param target the boardsquare that the piece wants to be moved to
      * @return boolean true if move is legal
      */
-    public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
-        if (super.legalMove(board, source, target)) {
+    public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
+        if (super.legalMove(board, source, target, checkCheck)) {
             if ((source.x == target.x || source.x - target.x == 1 || source.x - target.x == -1) &&
                     (source.y == target.y || source.y - target.y == 1 || source.y - target.y == -1)) {
                 return true;

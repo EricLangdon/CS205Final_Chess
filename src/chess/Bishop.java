@@ -24,8 +24,8 @@ public class Bishop extends Piece {
      * @param target the boardsquare that the piece wants to be moved to
      * @return boolean true if move is legal
      */
-    public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
-        if (super.legalMove(board, source, target)) {
+    public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
+        if (super.legalMove(board, source, target, checkCheck)) {
             if (source.x - target.x == source.y - target.y) { // if lower left or upper right diagonal
                 if (source.x < target.x) { // if target is upper right
                     for (int i = 1; source.x + i < target.x; i++) {

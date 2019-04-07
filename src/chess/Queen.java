@@ -24,8 +24,8 @@ public class Queen extends Piece {
      * @param target the boardsquare that the piece wants to be moved to
      * @return boolean true if move is legal
      */
-    public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
-        if (super.legalMove(board, source, target)) {
+    public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
+        if (super.legalMove(board, source, target, checkCheck)) {
 
             // horizontal/vertical logic
             if (source.x == target.x) { // if in the same column

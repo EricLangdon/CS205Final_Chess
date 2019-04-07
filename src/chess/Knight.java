@@ -24,9 +24,9 @@ public class Knight extends Piece {
      * @param target the boardsquare that the piece wants to be moved to
      * @return boolean true if move is legal
      */
-    public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
+    public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
         //Checks if target is legal first
-        if (super.legalMove(board, source, target)) {
+        if (super.legalMove(board, source, target, checkCheck)) {
 
             //Creates the inverter that creates left side moves
             int invert;

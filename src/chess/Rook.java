@@ -24,8 +24,8 @@ public class Rook extends Piece {
      * @param target the boardsquare that the piece wants to be moved to
      * @return boolean true if move is legal
      */
-    public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
-        if (super.legalMove(board, source, target)) {
+    public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
+        if (super.legalMove(board, source, target, checkCheck)) {
             if (source.x == target.x) { // if in the same column
                 if (source.y < target.y) { // if target is higher on the board
                     for (int i = 1; source.y + i < target.y; i++) {
