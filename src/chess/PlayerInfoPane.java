@@ -9,12 +9,13 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
 
-public class PlayerInfoPane extends VBox {
+public class PlayerInfoPane extends HBox {
 
     private chess.Color player;
     private Game game;
 
     private static final Color TEXT_COLOR = Color.web("#ccc");
+    private static final Color BACKGROUND_COLOR = Color.DARKSLATEGRAY;
 
     public PlayerInfoPane(Game game, chess.Color player) {
         super(0);
@@ -24,64 +25,34 @@ public class PlayerInfoPane extends VBox {
     }
 
     private void draw() {
-        this.setPrefHeight(395);
-        this.setPadding(new Insets(0, 10, 0, 10));
-        this.setAlignment(Pos.TOP_LEFT);
+        this.setAlignment(Pos.CENTER);
+        this.setPadding(new Insets(0));
+        this.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        Label timerLabel = new Label("Time Left");
-        timerLabel.setFont(new Font(32));
-        timerLabel.setTextFill(TEXT_COLOR);
-        timerLabel.setPadding(new Insets(10, 0,0,0));
-
-        Label timer = new Label("5:00");
-        timer.setFont(new Font(30));
-        timer.setTextFill(TEXT_COLOR);
-        timer.setPadding(new Insets(0, 0,8,0));
-
-        Label scoreLabel = new Label("Score");
-        scoreLabel.setFont(new Font(32));
+        Label scoreLabel = new Label("Score: " + this.game.getScore(player));
+        scoreLabel.setFont(new Font(22));
         scoreLabel.setTextFill(TEXT_COLOR);
-        scoreLabel.setPadding(new Insets(8, 0,0,0));
-
-        Label score = new Label(this.game.getScore(player) + " points");
-        score.setFont(new Font(30));
-        score.setTextFill(TEXT_COLOR);
-        score.setPadding(new Insets(0, 0,8,0));
-
-        Label capturedLabel = new Label("Captured");
-        capturedLabel.setFont(new Font(32));
-        capturedLabel.setTextFill(TEXT_COLOR);
-        capturedLabel.setPadding(new Insets(8, 0,0,0));
 
         FlowPane captured = new FlowPane();
+        captured.setAlignment(Pos.CENTER_LEFT);
         for (Piece piece : this.game.getBoard().getCaptured()) {
             if (piece.getColor() == player) continue;
             Label label = new Label(Character.toString(piece.getUnicode()));
-            label.setFont(Font.font(32));
-            if(piece.getColor() == chess.Color.BLACK){
+            label.setFont(Font.font(22));
+            if (piece.getColor() == chess.Color.BLACK) {
                 label.setTextFill(Color.web("#111"));
-            }else {
+            } else {
                 label.setTextFill(TEXT_COLOR);
             }
             captured.getChildren().add(label);
         }
-        if (captured.getChildren().isEmpty()){
-            Label label = new Label("(none)");
-            label.setFont(new Font(24));
-            label.setTextFill(TEXT_COLOR);
-            captured.getChildren().add(label);
-        }
-
-        Separator sep = new Separator();
-        sep.setMaxWidth(150);
-        sep.setOpacity(0.33);
-        Separator sep2 = new Separator();
-        sep2.setMaxWidth(150);
-        sep2.setOpacity(0.33);
 
 
-
-        this.getChildren().addAll(timerLabel, timer, sep, scoreLabel, score, sep2, capturedLabel, captured);
+        Label timer = new Label("Time Left: " + "5:00"); // TODO get timer value when implemented
+        timer.setFont(new Font(22));
+        timer.setTextFill(TEXT_COLOR);
+        timer.setAlignment(Pos.CENTER_RIGHT);
+        this.getChildren().addAll(scoreLabel, captured, timer);
     }
 
 
