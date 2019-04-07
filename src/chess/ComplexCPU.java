@@ -19,13 +19,15 @@ public class ComplexCPU {
      * analyzes the board and makes educated move based on piece scores
      */
     public void choiceMove(Board board) {
-        HashMap<Integer,ArrayList<BoardSquare>> ownTargetsMap = new HashMap<>();
+        HashMap<Integer,ArrayList<BoardSquare>> targetsMap = new HashMap<>();
+        HashMap<Integer,ArrayList<MoveScore>> scoresMap = new HashMap<>();
         ArrayList<BoardSquare> sources = new ArrayList<>();
         ArrayList<BoardSquare> moves;
         BoardSquare square, randSource, randTarget;
         BoardSquare maxSource = new BoardSquare();
         BoardSquare maxTarget = new BoardSquare();
         int counter = 0, max = 0;
+
         Random random = new Random();
         int randomNum1 = 0, randomNum2;
 
@@ -36,7 +38,7 @@ public class ComplexCPU {
                     if (square.getPiece().getAvailableMoves(board, square).size() != 0) {
                         sources.add(square);
                         moves = square.getPiece().getAvailableMoves(board, square);
-                        ownTargetsMap.put(sources.size() - 1, sources.get(counter).getPiece().getAvailableMoves(board, square));
+                        targetsMap.put(sources.size() - 1, sources.get(counter).getPiece().getAvailableMoves(board, square));
                         counter++;
                         for (int k=0; k<moves.size(); k++) { // all available moves for this piece
                             if (moves.get(k).isOccupied()) {
@@ -44,6 +46,7 @@ public class ComplexCPU {
                                     max = moves.get(k).getPiece().getScore();
                                     maxSource = square;
                                     maxTarget = moves.get(k);
+                                    // TODO: scoresMap.put  will replace targetsMap
                                 }
                             }
                         }
@@ -52,10 +55,10 @@ public class ComplexCPU {
             }
         }
 
-        randomNum1 = random.nextInt(sources.size() - 1);
+        randomNum1 = random.nextInt(sources.size());
         randSource = sources.get(randomNum1);
-        randomNum2 = ownTargetsMap.get(randomNum1).size() - 1;
-        randTarget = ownTargetsMap.get(randomNum1).get(randomNum2);
+        randomNum2 = targetsMap.get(randomNum1).size();
+        randTarget = targetsMap.get(randomNum1).get(randomNum2);
 
         if (max > 0) {
             board.movePiece(maxSource, maxTarget);
@@ -64,11 +67,40 @@ public class ComplexCPU {
         }
     }
 
-    public void findOppMove (Board board, BoardSquare source, BoardSquare target) {
-        // simulate move to predict opponent's move
-        // if called recursively, rather than recreate new in function, reset moves on this board?
-        Board temp = board;
-        temp.movePiece(source, target);
-    }
+    public MoveScore findMoveScore(Board board, BoardSquare source, BoardSquare target) {
+        MoveScore tempScore = new MoveScore();
+        BoardSquare square = new BoardSquare();
+        int currScore = 0;
+        Board tempBoard = new Board(board);
+        Color moverColor = source.getPiece().getColor();
 
+        if (target.isOccupied()) {
+            currScore = target.getPiece().getScore();
+        }
+
+        // simulate move to score possible reaction moves
+        tempBoard.movePiece(source, target);
+
+        for (int i=0; i<tempBoard.NUM_ROWS; i++) {
+            for (int j=0; j<tempBoard.NUM_COLS; j++) {
+                square = tempBoard.getBoardSquareAt(i, j);
+                if (square.isOccupied() && square.getPiece().getColor() == moverColor.other()) {
+                    // TODO: implement
+                }
+            }
+        }
+
+        tempScore.score = currScore;
+        tempScore.target = target;
+
+        return tempScore;
+    }
+}
+
+class MoveScore {
+    BoardSquare target;
+    int score;
+
+    MoveScore() {
+    }
 }
