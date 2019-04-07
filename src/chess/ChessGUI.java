@@ -107,6 +107,7 @@ public class ChessGUI extends Application {
         this.grid.getChildren().clear();
         for (int i = 0; i < Board.NUM_COLS + 1; i++) {
             for (int j = 0; j < Board.NUM_ROWS + 1; j++) {
+                // labels
                 if (i < 1 || j < 1) {
                     // bottom left corner doesn't get any label
                     if (i == 0 && j == 0) {
@@ -130,10 +131,9 @@ public class ChessGUI extends Application {
                     label.setFont(Font.font(15));
                     label.setText(text);
                     this.grid.add(label, i, Board.NUM_ROWS - j);
-
                     continue;
                 }
-
+                // boardsquares
                 BoardSquare boardSquare = game.getBoard().getBoardSquareAt(i - 1, j - 1);
                 BoardSquarePane bsp = new BoardSquarePane(boardSquare);
                 Board board = this.game.getBoard();
@@ -162,6 +162,7 @@ public class ChessGUI extends Application {
                     }
                     updateGrid();
                 });
+
                 this.grid.add(bsp, i, Board.NUM_ROWS - j);
             }
         }
