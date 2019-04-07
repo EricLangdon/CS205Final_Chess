@@ -55,9 +55,9 @@ public class ComplexCPU {
             }
         }
 
-        randomNum1 = random.nextInt(sources.size());
+        randomNum1 = random.nextInt(sources.size() - 1);
         randSource = sources.get(randomNum1);
-        randomNum2 = targetsMap.get(randomNum1).size();
+        randomNum2 = targetsMap.get(randomNum1).size() - 1;
         randTarget = targetsMap.get(randomNum1).get(randomNum2);
 
         if (max > 0) {
@@ -85,7 +85,7 @@ public class ComplexCPU {
             for (int j=0; j<tempBoard.NUM_COLS; j++) {
                 square = tempBoard.getBoardSquareAt(i, j);
                 if (square.isOccupied() && square.getPiece().getColor() == moverColor.other()) {
-                    // TODO: implement
+                    //
                 }
             }
         }
