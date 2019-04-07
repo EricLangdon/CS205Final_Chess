@@ -53,9 +53,10 @@ public class SimpleCPU {
                 }
             }
         }
-        randomNum1 = random.nextInt(sources.size() - 1);
+        //Todo check if something was happening
+        randomNum1 = random.nextInt(sources.size());
         randSource = sources.get(randomNum1);
-        randomNum2 = targetsMap.get(randomNum1).size() - 1;
+        randomNum2 = targetsMap.get(randomNum1).size();
         randTarget = targetsMap.get(randomNum1).get(randomNum2);
 
         board.movePiece(randSource, randTarget);
