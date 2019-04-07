@@ -55,6 +55,21 @@ public class Board {
         getBoardSquareAt(4, 7).setPiece(new King(Color.BLACK));
     }
     /**
+     * Copy Constructor
+     */
+    Board (Board oldBoard) {
+        for (int i=0; i<NUM_ROWS; i++) {
+            board.add(new ArrayList<>(NUM_COLS));
+            for (int j=0; j<NUM_COLS; j++) {
+                BoardSquare boardSquare = new BoardSquare(i, j);
+                board.get(i).add(j, boardSquare);
+                if (oldBoard.getBoardSquareAt(i, j).isOccupied()) {
+                    boardSquare.setPiece(oldBoard.getBoardSquareAt(i, j).getPiece());
+                }
+            }
+        }
+    }
+    /**
      * getCaptured
      *
      * @return an arraylist of the pieces that have been taken out of play
