@@ -17,18 +17,18 @@ public class Board {
      * Default Constructor
      * Sets up boardSquares and pieces on the board
      */
-    Board () {
+    Board() {
         // BoardSquares
-        for (int i=0; i<NUM_ROWS; i++) {
+        for (int i = 0; i < NUM_ROWS; i++) {
             board.add(new ArrayList<>(NUM_COLS));
-            for (int j=0; j<NUM_COLS; j++) {
+            for (int j = 0; j < NUM_COLS; j++) {
                 BoardSquare boardSquare = new BoardSquare(i, j);
                 board.get(i).add(j, boardSquare);
             }
         }
 
         // Pawns
-        for (int i=0; i<NUM_COLS; i++) {
+        for (int i = 0; i < NUM_COLS; i++) {
             getBoardSquareAt(i, 1).setPiece(new Pawn(Color.WHITE));
             getBoardSquareAt(i, 6).setPiece(new Pawn(Color.BLACK));
         }
@@ -54,13 +54,14 @@ public class Board {
         getBoardSquareAt(4, 0).setPiece(new King(Color.WHITE));
         getBoardSquareAt(4, 7).setPiece(new King(Color.BLACK));
     }
+
     /**
      * Copy Constructor
      */
-    Board (Board oldBoard) {
-        for (int i=0; i<NUM_ROWS; i++) {
+    Board(Board oldBoard) {
+        for (int i = 0; i < NUM_ROWS; i++) {
             board.add(new ArrayList<>(NUM_COLS));
-            for (int j=0; j<NUM_COLS; j++) {
+            for (int j = 0; j < NUM_COLS; j++) {
                 BoardSquare boardSquare = new BoardSquare(i, j);
                 board.get(i).add(j, boardSquare);
                 if (oldBoard.getBoardSquareAt(i, j).isOccupied()) {
@@ -69,6 +70,7 @@ public class Board {
             }
         }
     }
+
     /**
      * getCaptured
      *
@@ -112,7 +114,7 @@ public class Board {
                 getBoardSquareAt(5, 7).setPiece(getBoardSquareAt(7, 7).getPiece());
                 getBoardSquareAt(7, 7).setPiece(null);
             }
-            if(target.isOccupied()) {
+            if (target.isOccupied()) {
                 captured.add(target.getPiece());
             }
             target.setPiece(source.getPiece());
@@ -132,6 +134,30 @@ public class Board {
      */
     public boolean colorInCheck(Color color) {
         //TODO: implement
+        ArrayList<BoardSquare> opponentSources = new ArrayList<>();
+        BoardSquare kingSquare = new BoardSquare();
+        BoardSquare square = new BoardSquare();
+        for (int i = 0; i < NUM_ROWS; i++) {
+            for (int j = 0; j < NUM_COLS; j++) {
+                square = getBoardSquareAt(i, j);
+                if (square.isOccupied()) {
+                    if (square.getPiece().getColor() == color && square.getPiece() instanceof King) {
+                        kingSquare = square;
+                    } else if (square.getPiece().getColor() == color.other()) {
+                        opponentSources.add(square);
+                    }
+
+                }
+            }
+        }
+        int k=0;
+        while(k<opponentSources.size()) {
+            if (opponentSources.get(k).getPiece().legalMove(this, opponentSources.get(k), kingSquare)){
+                return true;
+            } else {
+                k++;
+            }
+        }
         return false;
     }
 
@@ -213,8 +239,8 @@ public class Board {
      */
     public ArrayList<Piece> getPieces(Color color) {
         ArrayList<Piece> pieces = new ArrayList<>();
-        for (int i=0; i<NUM_ROWS; i++) {
-            for (int j=0; j<NUM_COLS; j++) {
+        for (int i = 0; i < NUM_ROWS; i++) {
+            for (int j = 0; j < NUM_COLS; j++) {
                 if (getBoardSquareAt(i, j).isOccupied()) {
                     if (getBoardSquareAt(i, j).getPiece().getColor() == color) {
                         pieces.add(getBoardSquareAt(i, j).getPiece());
