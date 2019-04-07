@@ -16,21 +16,27 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class ChessGUI extends Application {
 
     private Game game;
     private GridPane grid;
-    private VBox sidebar;
+    private BorderPane bp;
+
+    private static final Color BACKGROUND_COLOR = Color.DARKSLATEGRAY;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        BorderPane bp = new BorderPane();
-        Scene scene = new Scene(bp, 1000, 800);
+        BorderPane main = new BorderPane();
+        Scene scene = new Scene(main, 900, 800);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Chess");
 
+        bp = new BorderPane();
+        main.setCenter(bp);
 
         // menubars
         MenuBar menuBar = new MenuBar();
@@ -41,7 +47,7 @@ public class ChessGUI extends Application {
         Menu fileMenu = new Menu("File");
 
         Menu newMenu = new Menu("New Game");
-        for (Game.GameMode mode : Game.GameMode.values()){
+        for (Game.GameMode mode : Game.GameMode.values()) {
             MenuItem item = new MenuItem(mode.toString());
             item.setOnAction(event -> {
                 this.game = new Game(mode);
@@ -62,45 +68,42 @@ public class ChessGUI extends Application {
 
         fileMenu.getItems().addAll(newMenu, saveItem, loadItem, exitItem);
         menuBar.getMenus().add(fileMenu);
-        bp.setTop(menuBar);
+        main.setTop(menuBar);
 
-        this.game = new Game(Game.GameMode.DUMB_COMPUTER);
+        this.game = new Game(Game.GameMode.SMART_COMPUTER);
 
         bp.setPadding(new Insets(0));
         bp.setLeft(null);
 
-        // right pane
-        sidebar = new VBox();
-        sidebar.setPrefWidth(200);
-        sidebar.setBackground(new Background(new BackgroundFill(Color.rgb(114, 29, 29), CornerRadii.EMPTY, Insets.EMPTY)));
-        bp.setRight(sidebar);
-
         // center grid with actual board
         this.grid = new GridPane();
         this.grid.setAlignment(Pos.CENTER);
-        this.grid.setBackground(new Background(new BackgroundFill(Color.DARKSLATEGRAY, CornerRadii.EMPTY, Insets.EMPTY)));
+        this.grid.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
         bp.setCenter(grid);
         updateGrid();
 
+        // update player info on a timer so the timer appears to countdown
+        Timer timer = new java.util.Timer();
+        timer.schedule(new TimerTask() {
+            public void run() {
+                Platform.runLater(() -> updatePlayerInfo());
+            }
+        }, 0, 500);
 
         primaryStage.show();
 
     }
 
-    private void updateSidebar() {
-        sidebar.getChildren().clear();
-        sidebar.getChildren().addAll(
-                new PlayerInfoPane(this.game, chess.Color.BLACK),
-                new Separator(),
-                new PlayerInfoPane(this.game, chess.Color.WHITE)
-        );
+    private void updatePlayerInfo() {
+        bp.setTop(new PlayerInfoPane(this.game, chess.Color.BLACK));
+        bp.setBottom(new PlayerInfoPane(this.game, chess.Color.WHITE));
     }
 
     /**
      * Redraw the entire board
      */
     private void updateGrid() {
-        updateSidebar(); // TODO update timer
+        updatePlayerInfo();
         this.grid.getChildren().clear();
         for (int i = 0; i < Board.NUM_COLS + 1; i++) {
             for (int j = 0; j < Board.NUM_ROWS + 1; j++) {
