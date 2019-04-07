@@ -139,32 +139,32 @@ public abstract class Piece {
      * @param board the board
      * @return bool that returns false if the move puts the king in check, true if the move is legal
      */
-    public boolean testCheckAlly(Board board, BoardSquare source, BoardSquare target) {
-        ArrayList<BoardSquare> opponentSources = new ArrayList<>();
-        Board testBoard = new Board(board);
-        BoardSquare kingSquare = new BoardSquare();
-        BoardSquare square;
-        for (int i = 0; i < Board.NUM_ROWS; i++) {
-            for (int j = 0; j < Board.NUM_COLS; j++) {
-                square = board.getBoardSquareAt(i, j);
-                if (square.isOccupied() && square.getPiece().getColor() == color && square.getPiece() instanceof King) {
-                    kingSquare = square;
-                } else if (square.isOccupied() && square.getPiece().getColor() == color.other()) {
-                    opponentSources.add(square);
-                }
-            }
-        }
-        testBoard.movePiece(source, target);    //Todo Think this is causing the problem
-        int k = 0;
-        while (k < opponentSources.size()) {
-            if(opponentSources.get(k).getPiece().legalMove(testBoard, opponentSources.get(k), kingSquare)){
-                return true;
-            } else {
-                k++;
-            }
-        }
-        return false;
-    }
+//    public boolean testCheckAlly(Board board, BoardSquare source, BoardSquare target) {
+//        ArrayList<BoardSquare> opponentSources = new ArrayList<>();
+//        Board testBoard = new Board(board);
+//        BoardSquare kingSquare = new BoardSquare();
+//        BoardSquare square;
+//        for (int i = 0; i < Board.NUM_ROWS; i++) {
+//            for (int j = 0; j < Board.NUM_COLS; j++) {
+//                square = board.getBoardSquareAt(i, j);
+//                if (square.isOccupied() && square.getPiece().getColor() == color && square.getPiece() instanceof King) {
+//                    kingSquare = square;
+//                } else if (square.isOccupied() && square.getPiece().getColor() == color.other()) {
+//                    opponentSources.add(square);
+//                }
+//            }
+//        }
+//        testBoard.movePiece(source, target);    //Todo Think this is causing the problem
+//        int k = 0;
+//        while (k < opponentSources.size()) {
+//            if(opponentSources.get(k).getPiece().legalMove(testBoard, opponentSources.get(k), kingSquare)){
+//                return true;
+//            } else {
+//                k++;
+//            }
+//        }
+//        return false;
+//    }
     //check if king in check from board, handle hypothetical stuff from legalMove
 
 
