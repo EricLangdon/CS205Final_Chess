@@ -93,14 +93,26 @@ public class Board {
     }
 
     /**
-     * movePiece
+     * Call movepiece with checkcheck true
      *
      * @param source where the piece is coming from
      * @param target where the piece is trying to move
      * @return true if the piece is successfully moved, false if the move failed
      */
     public boolean movePiece(BoardSquare source, BoardSquare target) {
-        if (source.isOccupied() && source.getPiece().legalMove(this, source, target)) {
+        return this.movePiece(source, target, true);
+    }
+
+    /**
+     * movePiece
+     *
+     * @param source     where the piece is coming from
+     * @param target     where the piece is trying to move
+     * @param checkCheck should the legalmove consider check when determining if the move is legal
+     * @return true if the piece is successfully moved, false if the move failed
+     */
+    public boolean movePiece(BoardSquare source, BoardSquare target, boolean checkCheck) {
+        if (source.isOccupied() && source.getPiece().legalMove(this, source, target, checkCheck)) {
             if (source.getX() == 4 && source.getY() == 0 && target.getX() == 2) {
                 getBoardSquareAt(3, 0).setPiece(getBoardSquareAt(0, 0).getPiece());
                 getBoardSquareAt(0, 0).setPiece(null);
@@ -151,8 +163,8 @@ public class Board {
             }
         }
         int k = 0;
-        for(BoardSquare sq : opponentSources){
-            if(sq.getPiece().legalMove(this, sq, kingSquare, false)){
+        for (BoardSquare sq : opponentSources) {
+            if (sq.getPiece().legalMove(this, sq, kingSquare, false)) {
                 return true;
             }
         }

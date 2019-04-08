@@ -38,7 +38,7 @@ public abstract class Piece implements Cloneable {
         this.unicode = oldPiece.getUnicode();
     }
 
-    public Piece clone () {
+    public Piece clone() {
         try {
             Piece clonePiece = (Piece) super.clone();
             return clonePiece;
@@ -69,7 +69,7 @@ public abstract class Piece implements Cloneable {
         //Call test in check
         if (checkCheck) {
             Board tempBoard = new Board(board);
-            tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()));
+            tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()), false);
             if (tempBoard.colorInCheck(color)) {
                 return false;
             }
