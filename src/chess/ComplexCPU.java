@@ -19,88 +19,147 @@ public class ComplexCPU {
      * analyzes the board and makes educated move based on piece scores
      */
     public void choiceMove(Board board) {
-        HashMap<Integer,ArrayList<BoardSquare>> targetsMap = new HashMap<>();
-        HashMap<Integer,ArrayList<MoveScore>> scoresMap = new HashMap<>();
-        ArrayList<BoardSquare> sources = new ArrayList<>();
+        // TODO: clean
+
+        int depth = 1;
+
+        BoardSquare square;
+        ArrayList<MoveScore> sourceScores = new ArrayList<>();
+        ArrayList<MoveScore> sourceMaxes = new ArrayList<>();
+        ArrayList<TargetScore> targetScores = new ArrayList<>();
         ArrayList<BoardSquare> moves;
-        BoardSquare square, randSource, randTarget;
-        BoardSquare maxSource = new BoardSquare();
-        BoardSquare maxTarget = new BoardSquare();
-        int counter = 0, max = 0;
+        TargetScore targetMax = new TargetScore();
+        targetMax.score = -127;
+        int sourceMax = -127;
 
-        Random random = new Random();
-        int randomNum1 = 0, randomNum2;
-
-        for (int i = 0; i < Board.NUM_COLS; i++) {
+        for (int i = 0; i < Board.NUM_COLS; i++) { // find sources
             for (int j = 0; j < Board.NUM_ROWS; j++) {
                 square = board.getBoardSquareAt(i, j);
-                if (square.isOccupied() && square.getPiece().getColor() == color) {
-                    if (square.getPiece().getAvailableMoves(board, square).size() != 0) {
-                        sources.add(square);
-                        moves = square.getPiece().getAvailableMoves(board, square);
-                        targetsMap.put(sources.size() - 1, sources.get(counter).getPiece().getAvailableMoves(board, square));
-                        counter++;
-                        for (int k=0; k<moves.size(); k++) { // all available moves for this piece
-                            if (moves.get(k).isOccupied()) {
-                                if (moves.get(k).getPiece().getScore() > max) {
-                                    max = moves.get(k).getPiece().getScore();
-                                    maxSource = square;
-                                    maxTarget = moves.get(k);
-                                    // TODO: scoresMap.put  will replace targetsMap
-                                }
-                            }
+                if (square.isOccupied() && square.getPiece().getColor() == color && square.getPiece().getAvailableMoves(board, square).size() != 0) {
+                    // for each source, choose random of best scores here
+                    moves = square.getPiece().getAvailableMoves(board, square);
+                    for (BoardSquare k : moves) {
+                        targetScores.add(scoreMove(board, square, k, depth));
+                    }
+                    // targetScores to sourceScores
+                    for (int k = 0; k < targetScores.size(); k++) {
+                        if (targetScores.get(k).getScore() > targetMax.score) {
+                            targetMax.score = targetScores.get(k).getScore();
+                            targetMax.target = targetScores.get(k).getTarget();
                         }
                     }
+                    sourceScores.add(new MoveScore(square, targetMax.getTarget(), targetMax.getScore()));
+                    targetScores = new ArrayList<TargetScore>();
+                    targetMax.score = -127;
                 }
             }
         }
 
-        randomNum1 = random.nextInt(sources.size() - 1);
-        randSource = sources.get(randomNum1);
-        randomNum2 = targetsMap.get(randomNum1).size() - 1;
-        randTarget = targetsMap.get(randomNum1).get(randomNum2);
+        // cycle scores, filling an arraylist with the maxes, take random of maxes
+        for (int i = 0; i < sourceScores.size(); i++) {
+            if (sourceScores.get(i).getScore() == sourceMax) {
+                sourceMaxes.add(sourceScores.get(i));
+            } else if (sourceScores.get(i).getScore() > sourceMax) {
+                sourceMax = sourceScores.get(i).getScore();
+                sourceMaxes.clear();
+                sourceMaxes.add(sourceScores.get(i));
+            }
+        }
 
-        if (max > 0) {
-            board.movePiece(maxSource, maxTarget);
+        Random random = new Random();
+        int randomNum = 0;
+
+        if (sourceMaxes.size() == 1) {
+            board.movePiece(sourceMaxes.get(0).getSource(), sourceMaxes.get(0).getTarget());
         } else {
-            board.movePiece(randSource, randTarget);
+            randomNum = random.nextInt(sourceMaxes.size());
+            board.movePiece(sourceMaxes.get(randomNum).getSource(), sourceMaxes.get(randomNum).getTarget());
         }
     }
 
-    public MoveScore findMoveScore(Board board, BoardSquare source, BoardSquare target) {
-        MoveScore tempScore = new MoveScore();
-        BoardSquare square = new BoardSquare();
-        int currScore = 0;
+    /**
+     * scoreMove
+     * returns a score given a move, with choice of how deep to look
+     * @param board
+     * @param source
+     * @param target
+     * @param depth
+     * @return
+     */
+    public TargetScore scoreMove(Board board, BoardSquare source, BoardSquare target, int depth) {
         Board tempBoard = new Board(board);
-        Color moverColor = source.getPiece().getColor();
+        BoardSquare tempSource = new BoardSquare(); // TODO: copy
+        BoardSquare tempTarget = new BoardSquare(); // TODO: copy
+        TargetScore moveScore = new TargetScore(target, 0);
 
-        if (target.isOccupied()) {
-            currScore = target.getPiece().getScore();
-        }
-
-        // simulate move to score possible reaction moves
-        tempBoard.movePiece(source, target);
-
-        for (int i=0; i<tempBoard.NUM_ROWS; i++) {
-            for (int j=0; j<tempBoard.NUM_COLS; j++) {
-                square = tempBoard.getBoardSquareAt(i, j);
-                if (square.isOccupied() && square.getPiece().getColor() == moverColor.other()) {
-                    //
-                }
+        if (depth > 1) {
+            // TODO: implement
+            depth--;
+            //scoreMove(tempBoard, tempSource, tempTarget, depth);
+        } else {
+            if (target.isOccupied()) {
+                moveScore.score = target.getPiece().getScore();
+                moveScore.target = target;
+                return moveScore;
+            } else {
+                return moveScore;
             }
         }
 
-        tempScore.score = currScore;
-        tempScore.target = target;
 
-        return tempScore;
+        return moveScore; // TODO
     }
-}
 
-class MoveScore {
-    BoardSquare target;
-    int score;
+    /**
+     * choiceMove
+     * analyzes the board and makes educated move based on piece scores
+     */
 
-    MoveScore() {
+    class MoveScore {
+        BoardSquare source;
+        BoardSquare target;
+        int score;
+
+        MoveScore() {
+        }
+
+        MoveScore(BoardSquare source, BoardSquare target, int score) {
+            this.source = source;
+            this.target = target;
+            this.score = score;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public BoardSquare getTarget() {
+            return target;
+        }
+
+        public BoardSquare getSource() {
+            return source;
+        }
+    }
+
+    class TargetScore {
+        BoardSquare target;
+        int score;
+
+        TargetScore() {
+        }
+
+        TargetScore(BoardSquare target, int score) {
+            this.target = target;
+            this.score = score;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public BoardSquare getTarget() {
+            return target;
+        }
     }
 }
