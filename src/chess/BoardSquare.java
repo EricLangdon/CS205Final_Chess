@@ -30,6 +30,15 @@ public class BoardSquare {
     }
 
     /**
+     * Copy Constructor
+     */
+    BoardSquare(BoardSquare oldSquare) {
+        x = oldSquare.getX();
+        y = oldSquare.getY();
+        setPiece(oldSquare.getPiece().clone());
+    }
+
+    /**
      * isOccupied
      *
      * @return true if the piece is not null
