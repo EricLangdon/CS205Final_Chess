@@ -35,7 +35,11 @@ public class BoardSquare {
     BoardSquare(BoardSquare oldSquare) {
         x = oldSquare.getX();
         y = oldSquare.getY();
-        setPiece(oldSquare.getPiece().clone());
+        if (oldSquare.isOccupied()) {
+            setPiece(oldSquare.getPiece().clone());
+        } else {
+            setPiece(null);
+        }
     }
 
     /**
