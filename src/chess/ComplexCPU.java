@@ -88,9 +88,9 @@ public class ComplexCPU {
      */
     public TargetScore scoreMove(Board board, BoardSquare source, BoardSquare target, int depth) {
         Board tempBoard = new Board(board);
-        BoardSquare tempSource = new BoardSquare(); // TODO: copy
-        BoardSquare tempTarget = new BoardSquare(); // TODO: copy
-        TargetScore moveScore = new TargetScore(target, 0);
+        BoardSquare tempSource = new BoardSquare(source);
+        BoardSquare tempTarget = new BoardSquare(target);
+        TargetScore moveScore = new TargetScore(target, -127);
 
         if (depth > 1) {
             // TODO: implement
@@ -102,12 +102,13 @@ public class ComplexCPU {
                 moveScore.target = target;
                 return moveScore;
             } else {
+                moveScore.score = 0;
                 return moveScore;
             }
         }
 
 
-        return moveScore; // TODO
+        return moveScore;
     }
 
     /**
