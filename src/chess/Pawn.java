@@ -7,7 +7,7 @@ public class Pawn extends Piece {
     public Pawn(Color color) {
         super(color);
         unicode = 0x2659;
-        score = 3;
+        score = 1;
     }
 
     /**
