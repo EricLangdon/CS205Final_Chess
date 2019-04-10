@@ -197,7 +197,7 @@ public class ChessGUI extends Application {
                     // highlight the target square
                     BoardSquarePane target = getBoardSquarePaneAt(e.getSceneX(), e.getSceneY());
                     if (target != null) {
-                        if (boardSquare.getPiece().legalMove(board, boardSquare, target.getBoardSquare())) {
+                        if (boardSquare.getPiece().legalMove(board, boardSquare, target.getBoardSquare(), true)) {
                             target.setDragTarget(true);
                             target.update();
                         }
