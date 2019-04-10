@@ -260,4 +260,14 @@ public class Board {
         }
         return pieces;
     }
+
+    public ArrayList<BoardSquare> getBoardSquares() {
+        ArrayList<BoardSquare> squares = new ArrayList<>(64);
+        for (int i = 0; i < Board.NUM_COLS; i++) {
+            for (int j = 0; j < Board.NUM_ROWS; j++) {
+                squares.add(getBoardSquareAt(i, j));
+            }
+        }
+        return squares;
+    }
 }
