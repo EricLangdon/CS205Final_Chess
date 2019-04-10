@@ -6,10 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -21,6 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,7 +35,7 @@ public class ChessGUI extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         BorderPane main = new BorderPane();
         Scene scene = new Scene(main, 900, 800);
         primaryStage.setScene(scene);
@@ -145,6 +143,7 @@ public class ChessGUI extends Application {
                 BoardSquare boardSquare = game.getBoard().getBoardSquareAt(i - 1, j - 1);
                 BoardSquarePane bsp = new BoardSquarePane(boardSquare);
                 Board board = this.game.getBoard();
+
                 // event handler for clicking source then target
                 bsp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     // if a square is already selected, move its piece
@@ -177,7 +176,7 @@ public class ChessGUI extends Application {
                 // event handlers for drag and drop movement
                 // triggered when the drag starts on bsp
                 bsp.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
-                    if (!boardSquare.isOccupied()) {
+                    if (!boardSquare.isOccupied() || !boardSquare.getPiece().getColor().equals(game.getCurrentTurn())) {
                         return;
                     }
                     // set the drag state and select/highlight the squares necessary; update the grid to reflect
@@ -228,7 +227,7 @@ public class ChessGUI extends Application {
                 this.grid.add(bsp, i, Board.NUM_ROWS - j);
             }
         }
-
+        handleGameOver();
     }
 
     /**
@@ -288,5 +287,27 @@ public class ChessGUI extends Application {
             return (BoardSquarePane) grid.getNodeByRowColumnIndex(row, col);
         }
         return null;
+    }
+
+    private void handleGameOver() {
+        if (game.isGameOver()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game Over");
+            alert.setHeaderText(null);
+            alert.setContentText(game.getWinner().toString() + " has won!");
+
+            ButtonType exitButtonType = new ButtonType("Exit");
+            ButtonType newGameButtonType = new ButtonType("New Game");
+
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().addAll(exitButtonType, newGameButtonType);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (!result.isPresent() || result.get().equals(exitButtonType)) {
+                System.exit(0);
+            } else if (result.get().equals(newGameButtonType)) {
+                this.game = new Game(game.getMode());
+            }
+        }
     }
 }
