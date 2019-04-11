@@ -13,6 +13,7 @@ public class PlayerInfoPane extends HBox {
 
     private chess.Color player;
     private Game game;
+    private ChessClock timer;
 
     private static final Color TEXT_COLOR = Color.web("#ccc");
     private static final Color BACKGROUND_COLOR = Color.DARKSLATEGRAY;
@@ -21,6 +22,7 @@ public class PlayerInfoPane extends HBox {
         super(0);
         this.player = player;
         this.game = game;
+        this.timer = new ChessClock(player);
         draw();
     }
 
@@ -48,7 +50,7 @@ public class PlayerInfoPane extends HBox {
         }
 
 
-        Label timer = new Label("Time Left: " + "5:00"); // TODO get timer value when implemented
+        Label timer = new Label("Time Left: " + game.getTimeRemaining(player)); //TODO: update time
         timer.setFont(new Font(22));
         timer.setTextFill(TEXT_COLOR);
         timer.setAlignment(Pos.CENTER_RIGHT);
