@@ -3,34 +3,26 @@ package chess;
 import java.time.*;
 
 public class ChessClock {
-    long timeRemaining;
-    final long TIME_ALLOWED = 300;   //seconds
+    Color color;
+    int timeRemaining;
+    final int TIME_ALLOWED = 300;   //seconds
 
     /**
      * Default Constructor
      */
-    public ChessClock() {
+    public ChessClock(Color color) {
+        this.color = color;
         timeRemaining = TIME_ALLOWED;
     }
 
-    /**
-     * countTime
-     *
-     * @param start the start time
-     * @param finish the finish time
-     * @return the time(in seconds) spent by the player
-     */
-    public long countTime(Instant start, Instant finish) {
-        long timeSpent = Duration.between(start, finish).toSeconds();
-        return timeSpent;
-    }
-
+    //TODO: UPDATE TIMER
     /**
      * updateTime
      *
      * @param timeSpent the time (in seconds) used by the player to make their move
      */
-    public void updateTime(long timeSpent) {
+    public void decrementTime(int timeSpent) {
+
         timeRemaining = getTimeRemaining() - timeSpent;
     }
 
@@ -39,21 +31,33 @@ public class ChessClock {
      *
      * @return the remaining time the player has to make their moves
      */
-    public long getTimeRemaining() { return timeRemaining; }
+    public int getTimeRemaining() {
+        return timeRemaining;
+    }
 
     /**
-     * toString
+     * players turn starts
+     * clock starts
+     * redraw clock every second, get time from class
+     * stop clock once turn ends
+     */
+
+    /**
+     * printTime
      *
      * @return formatted string of the time remaining (m:ss)
      */
-     public String toString() {
-        int minutes;
-        int seconds;
+     public String printTime() {
+         int minutes;
+         int seconds;
 
-        minutes = (int)getTimeRemaining() / 60;
-        seconds = (int)getTimeRemaining() % 60;
-
-        return (minutes + ":" + seconds);
+         minutes = getTimeRemaining() / 60;
+         seconds = getTimeRemaining() % 60;
+         if (seconds < 10) {
+             return (minutes + ":0" + seconds);
+         } else {
+             return (minutes + ":" + seconds);
+         }
      }
 
 }

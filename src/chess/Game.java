@@ -20,13 +20,13 @@ public class Game {
     }
 
     private Board board;
-    private ChessClock p1Clock;
-    private ChessClock p2Clock;
 
     private Color currentTurn;
     private Color player1;
     private Color player2;
 
+    private ChessClock p1Clock;
+    private ChessClock p2Clock;
     
     private GameMode mode;
 
@@ -37,10 +37,12 @@ public class Game {
      * @param player1 color of player1
      * @param player2 color of player2
      */
-    public Game(GameMode mode, Color player1, Color player2) {
+    public Game(GameMode mode, Color player1, Color player2, ChessClock p1Clock, ChessClock p2Clock) {
         this.mode = mode;
         this.player1 = player1;
         this.player2 = player2;
+        this.p1Clock = p1Clock;
+        this.p2Clock = p2Clock;
         newGame();
     }
 
@@ -51,7 +53,7 @@ public class Game {
      * @param mode gamemmode
      */
     public Game(GameMode mode) {
-        this(mode, Color.WHITE, Color.BLACK);
+        this(mode, Color.WHITE, Color.BLACK, new ChessClock(Color.WHITE), new ChessClock(Color.BLACK));
     }
 
     /**
@@ -153,6 +155,20 @@ public class Game {
             }
         }
         return score;
+    }
+
+    /**
+     * getTimeRemaining
+     *
+     * @param color
+     * @return the time remaining for the color
+     */
+    public String getTimeRemaining(Color color) {
+        if (player1.equals(color)) {
+            return p1Clock.printTime();
+        } else {
+            return p2Clock.printTime();
+        }
     }
 
 }
