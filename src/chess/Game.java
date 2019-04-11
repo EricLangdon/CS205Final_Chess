@@ -22,13 +22,15 @@ public class Game {
     private Board board;
 
     private Color currentTurn;
+  
     private Color player1;
     private Color player2;
 
     private ChessClock p1Clock;
     private ChessClock p2Clock;
-    
+
     private GameMode mode;
+
 
     /**
      * Constructor
@@ -73,7 +75,6 @@ public class Game {
         // TODO: implement
     }
 
-
     /**
      * Load game from a filepath
      *
@@ -109,9 +110,23 @@ public class Game {
      *
      * @return null if no winner, else the color of the winner
      */
-    Color getWinner() {
+    public Color getWinner() {
         // TODO implement
-        return null;
+        if (!isGameOver()) {
+            return null;
+        }
+        return currentTurn.other();
+    }
+
+    public boolean isGameOver() {
+        // TODO check draw
+        // game is not over if the player can move a piece
+        for (BoardSquare bs : board.getBoardSquares()) {
+            if (bs.isOccupied() && bs.getPiece().getColor().equals(currentTurn) && !bs.getPiece().getAvailableMoves(board, bs).isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

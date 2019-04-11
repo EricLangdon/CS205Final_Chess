@@ -2,7 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 
-public abstract class Piece {
+public abstract class Piece implements Cloneable {
     protected Color color;
     protected boolean hasMoved;
     protected int score;
@@ -28,6 +28,26 @@ public abstract class Piece {
         hasMoved = false;
     }
 
+    /**
+     * Copy Constructor
+     */
+    Piece(Piece oldPiece) {
+        this.color = oldPiece.getColor();
+        this.hasMoved = oldPiece.getHasMoved();
+        this.score = oldPiece.getScore();
+        this.unicode = oldPiece.getUnicode();
+    }
+
+    public Piece clone() {
+        try {
+            Piece clonePiece = (Piece) super.clone();
+            return clonePiece;
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     /**
      * Check if the given move is legal given the board and source and target squares. To be overridden in piece subclasses
@@ -48,7 +68,9 @@ public abstract class Piece {
 
         //Call test in check
         if (checkCheck) {
-            if (board.colorInCheck(color)) {
+            Board tempBoard = new Board(board);
+            tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()), false);
+            if (tempBoard.colorInCheck(color)) {
                 return false;
             }
         }
@@ -131,112 +153,5 @@ public abstract class Piece {
     public int getScore() {
         return score;
     }
-
-    /**
-     * testInCheck
-     * Method checks if a move executed by a piece puts their king in check. Re
-     *
-     * @param board the board
-     * @return bool that returns false if the move puts the king in check, true if the move is legal
-     */
-//    public boolean testCheckAlly(Board board, BoardSquare source, BoardSquare target) {
-//        ArrayList<BoardSquare> opponentSources = new ArrayList<>();
-//        Board testBoard = new Board(board);
-//        BoardSquare kingSquare = new BoardSquare();
-//        BoardSquare square;
-//        for (int i = 0; i < Board.NUM_ROWS; i++) {
-//            for (int j = 0; j < Board.NUM_COLS; j++) {
-//                square = board.getBoardSquareAt(i, j);
-//                if (square.isOccupied() && square.getPiece().getColor() == color && square.getPiece() instanceof King) {
-//                    kingSquare = square;
-//                } else if (square.isOccupied() && square.getPiece().getColor() == color.other()) {
-//                    opponentSources.add(square);
-//                }
-//            }
-//        }
-//        testBoard.movePiece(source, target);    //Todo Think this is causing the problem
-//        int k = 0;
-//        while (k < opponentSources.size()) {
-//            if(opponentSources.get(k).getPiece().legalMove(testBoard, opponentSources.get(k), kingSquare)){
-//                return true;
-//            } else {
-//                k++;
-//            }
-//        }
-//        return false;
-//    }
-    //check if king in check from board, handle hypothetical stuff from legalMove
-
-
-//        ArrayList<BoardSquare> allySources = new ArrayList<>();
-//        ArrayList<BoardSquare> opponentSources = new ArrayList<>();
-//        BoardSquare allyKingSquare = new BoardSquare();
-//        BoardSquare opponentKingSquare = new BoardSquare();
-//        BoardSquare square;
-//        Board testBoard = board;
-//        for (int i = 0; i < Board.NUM_ROWS; i++) {
-//            for (int j = 0; j < Board.NUM_COLS; j++) {
-//                square = board.getBoardSquareAt(i, j);
-//                if (square.isOccupied() && square.getPiece().getColor() == color && square.getPiece() instanceof King) {
-//                    allyKingSquare = square;
-//                } else if (square.isOccupied() && square.getPiece().getColor() == color.other() && square.getPiece() instanceof King)
-//                    opponentKingSquare = square;
-//                else if (square.isOccupied() && square.getPiece().getColor() == color) {
-//                    allySources.add(square);
-//                } else if (square.isOccupied() && square.getPiece().getColor() == color.other()) {
-//                    opponentSources.add(square);
-//                }
-//
-//            }
-//        }
-//        if (source.getPiece().getColor() == color) {
-//
-//        } else {
-//            int k = 0;
-//            while (k < allySources.size()) {
-//                if (allySources.get(k).getPiece().legalMove(board, source, opponentKingSquare)) {
-//                    return true;
-//                } else {
-//                    k++;
-//                }
-//            }
-//            return false;
-//        }
-//
-//
-//        int k = 0;
-//        while (k < opponentSources.size()) {
-//            if (opponentSources.get(k).getPiece().legalMove(board, opponentSources.get(k), kingSquare)) {
-//                return true;
-//            } else {
-//                k++;
-//            }
-//        }
-//        return false;
-//    }
-
-//    public boolean testCheckOpp(Board board, BoardSquare source) {
-//        ArrayList<BoardSquare> allySources = new ArrayList<>();
-//        BoardSquare square = new BoardSquare();
-//        BoardSquare oppKingSquare = new BoardSquare();
-//
-//        for (int i = 0; i < Board.NUM_ROWS; i++) {
-//            for (int j = 0; j < Board.NUM_COLS; j++) {
-//                square = board.getBoardSquareAt(i, j);
-//                if (square.isOccupied() && square.getPiece().getColor() == color.other() && square.getPiece() instanceof King) {
-//                    oppKingSquare = square;
-//                } else if (square.isOccupied() && square.getPiece().getColor() == color) {
-//                    allySources.add(square);
-//                }
-//            }
-//        }
-//        int k = 0;
-//        while (k < allySources.size()) {
-//            if (allySources.get(k).getPiece().legalMove(board, source, oppKingSquare)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 }
 

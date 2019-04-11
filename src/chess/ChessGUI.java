@@ -2,34 +2,40 @@ package chess;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 public class ChessGUI extends Application {
 
+    private static final Color BACKGROUND_COLOR = Color.DARKSLATEGRAY;
     private Game game;
-    private GridPane grid;
+    private CustomGridPane grid;
     private BorderPane bp;
 
-    private static final Color BACKGROUND_COLOR = Color.DARKSLATEGRAY;
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         BorderPane main = new BorderPane();
         Scene scene = new Scene(main, 900, 800);
         primaryStage.setScene(scene);
@@ -51,7 +57,7 @@ public class ChessGUI extends Application {
             MenuItem item = new MenuItem(mode.toString());
             item.setOnAction(event -> {
                 this.game = new Game(mode);
-                updateGrid();
+                redrawGrid();
             });
             newMenu.getItems().add(item);
         }
@@ -76,11 +82,11 @@ public class ChessGUI extends Application {
         bp.setLeft(null);
 
         // center grid with actual board
-        this.grid = new GridPane();
+        this.grid = new CustomGridPane();
         this.grid.setAlignment(Pos.CENTER);
         this.grid.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
         bp.setCenter(grid);
-        updateGrid();
+        redrawGrid();
 
         // update player info on a timer so the timer appears to countdown
         Timer timer = new java.util.Timer();
@@ -102,7 +108,7 @@ public class ChessGUI extends Application {
     /**
      * Redraw the entire board
      */
-    private void updateGrid() {
+    private void redrawGrid() {
         updatePlayerInfo();
         this.grid.getChildren().clear();
         for (int i = 0; i < Board.NUM_COLS + 1; i++) {
@@ -137,6 +143,8 @@ public class ChessGUI extends Application {
                 BoardSquare boardSquare = game.getBoard().getBoardSquareAt(i - 1, j - 1);
                 BoardSquarePane bsp = new BoardSquarePane(boardSquare);
                 Board board = this.game.getBoard();
+
+                // event handler for clicking source then target
                 bsp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     // if a square is already selected, move its piece
                     if (board.getSelectedSquare() != null && !boardSquare.equals(board.getSelectedSquare())) {
@@ -144,29 +152,94 @@ public class ChessGUI extends Application {
                             board.resetHighlightedSquares();
                             board.deselectSquare();
                             this.game.executeTurn();
-                        }
-                    } else {
-                        // Let a user select a source square
-                        if (!boardSquare.isSelected() && boardSquare.isOccupied() && boardSquare.getPiece().getColor().equals(this.game.getCurrentTurn())) {
-                            // select square clicked and highlight all possible moves
-                            board.selectSquare(boardSquare);
-                            board.resetHighlightedSquares();
-                            for (BoardSquare bs : boardSquare.getPiece().getAvailableMoves(board, boardSquare)) {
-                                board.addHighlightedSquare(bs);
-                            }
-                        } else if (boardSquare.isSelected()) {
-                            // deselect and unhighlight everything if same square clicked again
-                            board.deselectSquare();
-                            board.resetHighlightedSquares();
+                            redrawGrid();
+                            return;
                         }
                     }
-                    updateGrid();
+                    // Let a user select a source square
+                    if (!boardSquare.isSelected() && boardSquare.isOccupied() && boardSquare.getPiece().getColor().equals(this.game.getCurrentTurn())) {
+                        // select square clicked and highlight all possible moves
+                        board.selectSquare(boardSquare);
+                        board.resetHighlightedSquares();
+                        for (BoardSquare bs : boardSquare.getPiece().getAvailableMoves(board, boardSquare)) {
+                            board.addHighlightedSquare(bs);
+                        }
+                    } else if (boardSquare.isSelected()) {
+                        // deselect and unhighlight everything if same square clicked again
+                        board.deselectSquare();
+                        board.resetHighlightedSquares();
+                    }
+
+                    redrawGrid();
                 });
+
+                // event handlers for drag and drop movement
+                // triggered when the drag starts on bsp
+                bsp.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
+                    if (!boardSquare.isOccupied() || !boardSquare.getPiece().getColor().equals(game.getCurrentTurn())) {
+                        return;
+                    }
+                    // set the drag state and select/highlight the squares necessary; update the grid to reflect
+                    bsp.setDragActive(true);
+                    board.selectSquare(boardSquare);
+                    board.resetHighlightedSquares();
+                    for (BoardSquare bs : boardSquare.getPiece().getAvailableMoves(board, boardSquare)) {
+                        board.addHighlightedSquare(bs);
+                    }
+                    updateBoardSquares();
+
+                    // have the label follow the cursor
+                    bsp.getLabel().setTranslateX(e.getX() - bsp.getWidth() / 2);
+                    bsp.getLabel().setTranslateY(e.getY() - bsp.getHeight() / 2);
+                    bsp.toFront();
+
+                    // highlight the target square
+                    BoardSquarePane target = getBoardSquarePaneAt(e.getSceneX(), e.getSceneY());
+                    if (target != null) {
+                        if (boardSquare.getPiece().legalMove(board, boardSquare, target.getBoardSquare(), true)) {
+                            target.setDragTarget(true);
+                            target.update();
+                        }
+                    }
+
+                });
+
+                bsp.addEventHandler(MouseEvent.MOUSE_RELEASED, e -> {
+                    if (!bsp.isDragActive()) {
+                        // nothing to do if there is no active drag
+                        return;
+                    }
+                    BoardSquarePane target = getBoardSquarePaneAt(e.getSceneX(), e.getSceneY());
+                    if (target != null && board.movePiece(boardSquare, target.getBoardSquare())) {
+                        board.resetHighlightedSquares();
+                        board.deselectSquare();
+                        this.game.executeTurn();
+                        redrawGrid();
+                    }
+                    bsp.setDragActive(false);
+                    board.resetHighlightedSquares();
+                    board.deselectSquare();
+                    redrawGrid();
+
+                });
+
 
                 this.grid.add(bsp, i, Board.NUM_ROWS - j);
             }
         }
+        handleGameOver();
+    }
 
+    /**
+     * update each boardsquare
+     */
+    private void updateBoardSquares() {
+        for (Node node : grid.getChildren()) {
+            if (node instanceof BoardSquarePane) {
+                ((BoardSquarePane) node).setDragTarget(false);
+                ((BoardSquarePane) node).update();
+            }
+        }
     }
 
     /**
@@ -192,10 +265,49 @@ public class ChessGUI extends Application {
         if (file != null) {
             this.game.load(file);
         }
-        // TODO implement
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    /**
+     * Get the BoardSquarePane at a set of x, y coordinates if it exists
+     *
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return the BoardSquarePane if it exists, else null
+     */
+    private BoardSquarePane getBoardSquarePaneAt(double x, double y) {
+        // top left board square pane
+        Node referenceNode = grid.getNodeByRowColumnIndex(0, 1);
+
+        // adjust the x coordinate from the top left bsp based on the sie of the square label
+        int col = (int) ((x - referenceNode.getLayoutX() + BoardSquarePane.SQUARE_SIZE) / BoardSquarePane.SQUARE_SIZE);
+        // really not sure why things work perfectly with the 2 * layoutY, but they do
+        int row = (int) ((y - referenceNode.getLayoutY() * 2) / BoardSquarePane.SQUARE_SIZE);
+
+        if (grid.getNodeByRowColumnIndex(row, col) instanceof BoardSquarePane) {
+            return (BoardSquarePane) grid.getNodeByRowColumnIndex(row, col);
+        }
+        return null;
+    }
+
+    private void handleGameOver() {
+        if (game.isGameOver()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game Over");
+            alert.setHeaderText(null);
+            alert.setContentText(game.getWinner().toString() + " has won!");
+
+            ButtonType exitButtonType = new ButtonType("Exit");
+            ButtonType newGameButtonType = new ButtonType("New Game");
+
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().addAll(exitButtonType, newGameButtonType);
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (!result.isPresent() || result.get().equals(exitButtonType)) {
+                System.exit(0);
+            } else if (result.get().equals(newGameButtonType)) {
+                this.game = new Game(game.getMode());
+            }
+        }
     }
 }

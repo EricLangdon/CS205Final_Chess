@@ -20,6 +20,10 @@ public class BoardSquarePane extends VBox {
     private static final Color LIGHT_COLOR_SELECTED = Color.rgb(255, 255, 96);
     private static final Color LIGHT_COLOR_HIGHLIGHTED = Color.rgb(215, 215, 255);
 
+    private Label label = new Label();
+    private boolean dragActive = false;
+    private boolean dragTarget = false;
+
     /**
      * Constructor
      *
@@ -38,10 +42,21 @@ public class BoardSquarePane extends VBox {
         this.setMinHeight(SQUARE_SIZE);
         this.setMinWidth(SQUARE_SIZE);
         this.setAlignment(Pos.CENTER);
-        Color color;
 
+
+        label = new Label();
+        label.setFont(Font.font(45));
+        this.getChildren().add(label);
+        update();
+    }
+
+    /**
+     * Update the color and text of the pane
+     */
+    public void update() {
+        Color color;
         if (boardSquare.getX() % 2 == 0 && boardSquare.getY() % 2 == 0 || boardSquare.getX() % 2 == 1 && boardSquare.getY() % 2 == 1) {
-            if (boardSquare.isSelected()) {
+            if (boardSquare.isSelected() || dragTarget) {
                 color = DARK_COLOR_SELECTED;
             } else if (boardSquare.isHighlighted()) {
                 color = DARK_COLOR_HIGHLIGHTED;
@@ -49,7 +64,7 @@ public class BoardSquarePane extends VBox {
                 color = DARK_COLOR;
             }
         } else {
-            if (boardSquare.isSelected()) {
+            if (boardSquare.isSelected() || dragTarget) {
                 color = LIGHT_COLOR_SELECTED;
             } else if (boardSquare.isHighlighted()) {
                 color = LIGHT_COLOR_HIGHLIGHTED;
@@ -59,20 +74,63 @@ public class BoardSquarePane extends VBox {
         }
 
         this.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
-
         if (boardSquare.isOccupied()) {
-            Label label = new Label(Character.toString(boardSquare.getPiece().getUnicode()));
-            label.setFont(Font.font(45));
-            this.getChildren().add(label);
+            label.setText(Character.toString(boardSquare.getPiece().getUnicode()));
         }
     }
 
     /**
-     * get the boardsquare represented by the pane
+     * Get the boardsquare represented by the pane
      *
      * @return the boardsquare represented by the pane
      */
     public BoardSquare getBoardSquare() {
         return boardSquare;
     }
+
+    /**
+     * Get if the drag state is active
+     *
+     * @return true if the drag state is active
+     */
+    public boolean isDragActive() {
+        return dragActive;
+    }
+
+    /**
+     * Set the drag state
+     *
+     * @param dragActive the drag state
+     */
+    public void setDragActive(boolean dragActive) {
+        this.dragActive = dragActive;
+    }
+
+    /**
+     * Get if the BoardSquarePane is a target for a drag and drop
+     *
+     * @return if the BoardSquarePane is a target for a drag and drop
+     */
+    public boolean isDragTarget() {
+        return dragTarget;
+    }
+
+    /**
+     * Set the boardsquare as a target for a drag and drop
+     *
+     * @param dragTarget true if the square is a target
+     */
+    public void setDragTarget(boolean dragTarget) {
+        this.dragTarget = dragTarget;
+    }
+
+    /**
+     * Get the label for the pane
+     *
+     * @return the label
+     */
+    public Label getLabel() {
+        return label;
+    }
+
 }
