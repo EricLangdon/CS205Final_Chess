@@ -1,6 +1,7 @@
-package chess;
+package chess.core.piece;
 
-import java.util.ArrayList;
+import chess.core.board.Board;
+import chess.core.board.BoardSquare;
 
 public class Pawn extends Piece {
 
@@ -32,29 +33,17 @@ public class Pawn extends Piece {
             }
 
             //Handles pawn logic
-            if (target.y == source.y + invert && target.x == source.x && target.getPiece() == null) {
+            if (target.getY() == source.getY() + invert && target.getX() == source.getX() && target.getPiece() == null) {
                 return true;
-            } else if (target.y == source.y + 2 * invert && target.x == source.x && !board.getBoardSquareAt(source.x, source.y + invert).isOccupied()
+            } else if (target.getY() == source.getY() + 2 * invert && target.getX() == source.getX() && !board.getBoardSquareAt(source.getX(), source.getY() + invert).isOccupied()
                     && target.getPiece() == null && !getHasMoved()) {
                 return true;
-            } else if (target.y == source.y + invert && target.x == source.x - invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
+            } else if (target.getY() == source.getY() + invert && target.getX() == source.getX() - invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
                 return true;
-            } else if (target.y == source.y + invert && target.x == source.x + invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
-                return true;
-            } else {
-                return false;
-            }
+            } else
+                return target.getY() == source.getY() + invert && target.getX() == source.getX() + invert && target.isOccupied() && target.getPiece().getColor() == color.other();
         } else {
             return false;
         }
-    }
-
-    /**
-     * getColor
-     *
-     * @return the color of the piece
-     */
-    public Color getColor() {
-        return color;
     }
 }

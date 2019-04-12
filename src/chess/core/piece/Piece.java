@@ -1,4 +1,7 @@
-package chess;
+package chess.core.piece;
+
+import chess.core.board.Board;
+import chess.core.board.BoardSquare;
 
 import java.util.ArrayList;
 

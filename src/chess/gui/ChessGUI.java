@@ -1,5 +1,8 @@
-package chess;
+package chess.gui;
 
+import chess.core.board.Board;
+import chess.core.board.BoardSquare;
+import chess.core.game.Game;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -101,8 +104,8 @@ public class ChessGUI extends Application {
     }
 
     private void updatePlayerInfo() {
-        bp.setTop(new PlayerInfoPane(this.game, chess.Color.BLACK));
-        bp.setBottom(new PlayerInfoPane(this.game, chess.Color.WHITE));
+        bp.setTop(new PlayerInfoPane(this.game, chess.core.piece.Color.BLACK));
+        bp.setBottom(new PlayerInfoPane(this.game, chess.core.piece.Color.WHITE));
     }
 
     /**

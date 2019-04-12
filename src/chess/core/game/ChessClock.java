@@ -1,6 +1,6 @@
-package chess;
+package chess.core.game;
 
-import java.time.*;
+import chess.core.piece.Color;
 
 public class ChessClock {
     Color color;

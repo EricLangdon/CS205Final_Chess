@@ -1,24 +1,25 @@
-package chess;
+package chess.gui;
 
+import chess.core.game.ChessClock;
+import chess.core.game.Game;
+import chess.core.piece.Piece;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.effect.BlendMode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
 
 public class PlayerInfoPane extends HBox {
 
-    private chess.Color player;
+    private chess.core.piece.Color player;
     private Game game;
     private ChessClock timer;
 
     private static final Color TEXT_COLOR = Color.web("#ccc");
     private static final Color BACKGROUND_COLOR = Color.DARKSLATEGRAY;
 
-    public PlayerInfoPane(Game game, chess.Color player) {
+    public PlayerInfoPane(Game game, chess.core.piece.Color player) {
         super(0);
         this.player = player;
         this.game = game;
@@ -41,7 +42,7 @@ public class PlayerInfoPane extends HBox {
             if (piece.getColor() == player) continue;
             Label label = new Label(Character.toString(piece.getUnicode()));
             label.setFont(Font.font(22));
-            if (piece.getColor() == chess.Color.BLACK) {
+            if (piece.getColor() == chess.core.piece.Color.BLACK) {
                 label.setTextFill(Color.web("#111"));
             } else {
                 label.setTextFill(TEXT_COLOR);

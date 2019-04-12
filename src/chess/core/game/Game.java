@@ -1,4 +1,11 @@
-package chess;
+package chess.core.game;
+
+import chess.core.game.cpu.ComplexCPU;
+import chess.core.game.cpu.SimpleCPU;
+import chess.core.piece.Color;
+import chess.core.piece.Piece;
+import chess.core.board.Board;
+import chess.core.board.BoardSquare;
 
 import java.io.File;
 

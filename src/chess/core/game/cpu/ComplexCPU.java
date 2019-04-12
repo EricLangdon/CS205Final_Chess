@@ -1,7 +1,10 @@
-package chess;
+package chess.core.game.cpu;
+
+import chess.core.piece.Color;
+import chess.core.board.Board;
+import chess.core.board.BoardSquare;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 public class ComplexCPU {

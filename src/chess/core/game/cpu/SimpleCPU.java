@@ -1,19 +1,22 @@
-package chess;
+package chess.core.game.cpu;
 
-import java.awt.*;
+import chess.core.piece.Color;
+import chess.core.board.Board;
+import chess.core.board.BoardSquare;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 public class SimpleCPU {
-    private Color color;
+    private chess.core.piece.Color color;
 
     /**
      * Default constructor
      * Sets the color of the CPU to black
      */
     public SimpleCPU() {
-        this.color = Color.BLACK;
+        this.color = chess.core.piece.Color.BLACK;
     }
 
     /**

@@ -1,4 +1,4 @@
-package chess;
+package chess.core.piece;
 
 public enum Color {
     BLACK, WHITE;
@@ -6,7 +6,7 @@ public enum Color {
     /**
      * @return the opposite color
      */
-    Color other(){
+    public Color other(){
         if (this.equals(BLACK)){
             return WHITE;
         }else{

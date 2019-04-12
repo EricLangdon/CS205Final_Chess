@@ -1,6 +1,7 @@
-package chess;
+package chess.core.piece;
 
-import java.util.ArrayList;
+import chess.core.board.Board;
+import chess.core.board.BoardSquare;
 
 public class Knight extends Piece {
 

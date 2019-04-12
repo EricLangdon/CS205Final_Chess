@@ -1,5 +1,6 @@
-package chess;
+package chess.gui;
 
+import chess.core.board.BoardSquare;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

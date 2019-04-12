@@ -1,4 +1,4 @@
-package chess;
+package chess.gui;
 
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;

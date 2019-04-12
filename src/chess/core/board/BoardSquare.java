@@ -1,10 +1,12 @@
-package chess;
+package chess.core.board;
+
+import chess.core.piece.Piece;
 
 public class BoardSquare {
 
-    int x;
-    int y;
-    Piece piece;
+    private int x;
+    private int y;
+    private Piece piece;
 
     private boolean selected = false;
     private boolean highlighted = false;
@@ -12,7 +14,7 @@ public class BoardSquare {
     /**
      * Default Constructor
      */
-    BoardSquare() {
+    public BoardSquare() {
         piece = null;
         x = 0;
         y = 0;
@@ -24,7 +26,7 @@ public class BoardSquare {
      * @param xCoor
      * @param yCoor
      */
-    BoardSquare(int xCoor, int yCoor) {
+    public BoardSquare(int xCoor, int yCoor) {
         x = xCoor;
         y = yCoor;
     }
@@ -32,7 +34,7 @@ public class BoardSquare {
     /**
      * Copy Constructor
      */
-    BoardSquare(BoardSquare oldSquare) {
+    public BoardSquare(BoardSquare oldSquare) {
         x = oldSquare.getX();
         y = oldSquare.getY();
         if (oldSquare.isOccupied()) {
