@@ -1,6 +1,8 @@
 package chess.gui;
 
+import chess.core.board.Board;
 import chess.core.board.BoardSquare;
+import chess.core.piece.King;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -12,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class BoardSquarePane extends VBox {
-    private BoardSquare boardSquare;
     public static final int SQUARE_SIZE = 85;
     private static final Color DARK_COLOR = Color.rgb(192, 192, 192);
     private static final Color DARK_COLOR_SELECTED = Color.rgb(245, 245, 96);
@@ -20,7 +21,8 @@ public class BoardSquarePane extends VBox {
     private static final Color LIGHT_COLOR = Color.rgb(255, 255, 255);
     private static final Color LIGHT_COLOR_SELECTED = Color.rgb(255, 255, 96);
     private static final Color LIGHT_COLOR_HIGHLIGHTED = Color.rgb(215, 215, 255);
-
+    private BoardSquare boardSquare;
+    private Board board;
     private Label label = new Label();
     private boolean dragActive = false;
     private boolean dragTarget = false;
@@ -30,8 +32,9 @@ public class BoardSquarePane extends VBox {
      *
      * @param boardSquare the boardsquare for the pane to represent
      */
-    public BoardSquarePane(BoardSquare boardSquare) {
+    public BoardSquarePane(Board board, BoardSquare boardSquare) {
         super(10);
+        this.board = board;
         this.boardSquare = boardSquare;
         draw();
     }
@@ -55,6 +58,19 @@ public class BoardSquarePane extends VBox {
      * Update the color and text of the pane
      */
     public void update() {
+        Color color = getColor();
+        this.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
+        if (boardSquare.isOccupied()) {
+            label.setText(Character.toString(boardSquare.getPiece().getUnicode()));
+        }
+    }
+
+    /**
+     * Get the color of the piece based on boardsquare, highlighted, selected, etc
+     *
+     * @return the color
+     */
+    private Color getColor() {
         Color color;
         if (boardSquare.getX() % 2 == 0 && boardSquare.getY() % 2 == 0 || boardSquare.getX() % 2 == 1 && boardSquare.getY() % 2 == 1) {
             if (boardSquare.isSelected() || dragTarget) {
@@ -73,11 +89,11 @@ public class BoardSquarePane extends VBox {
                 color = LIGHT_COLOR;
             }
         }
-
-        this.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
-        if (boardSquare.isOccupied()) {
-            label.setText(Character.toString(boardSquare.getPiece().getUnicode()));
+        if (boardSquare.isOccupied() && boardSquare.getPiece() instanceof King && board.colorInCheck(boardSquare.getPiece().getColor())) {
+            color = Color.color(1, color.getGreen() * 0.8, color.getBlue() * 0.8);
         }
+
+        return color;
     }
 
     /**

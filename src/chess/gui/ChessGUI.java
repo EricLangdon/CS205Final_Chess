@@ -144,7 +144,7 @@ public class ChessGUI extends Application {
                 }
                 // boardsquares
                 BoardSquare boardSquare = game.getBoard().getBoardSquareAt(i - 1, j - 1);
-                BoardSquarePane bsp = new BoardSquarePane(boardSquare);
+                BoardSquarePane bsp = new BoardSquarePane(this.game.getBoard(), boardSquare);
                 Board board = this.game.getBoard();
 
                 // event handler for clicking source then target
