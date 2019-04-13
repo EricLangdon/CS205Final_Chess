@@ -1,43 +1,24 @@
 package chess.core.game;
 
+import chess.core.board.Board;
+import chess.core.board.BoardSquare;
 import chess.core.game.cpu.ComplexCPU;
 import chess.core.game.cpu.SimpleCPU;
 import chess.core.piece.Color;
 import chess.core.piece.Piece;
-import chess.core.board.Board;
-import chess.core.board.BoardSquare;
+import chess.gui.ChessGUI;
 
 import java.io.File;
 
 public class Game {
-    public enum GameMode {
-        PVP, DUMB_COMPUTER, SMART_COMPUTER;
-
-        @Override
-        public String toString() {
-            switch (this) {
-                case DUMB_COMPUTER:
-                    return "Dumb Computer";
-                case SMART_COMPUTER:
-                    return "Smart Computer";
-                default:
-                    return this.name();
-            }
-        }
-    }
-
     private Board board;
-
     private Color currentTurn;
-  
     private Color player1;
     private Color player2;
-
     private ChessClock p1Clock;
     private ChessClock p2Clock;
-
     private GameMode mode;
-
+    private ChessGUI ui;
 
     /**
      * Constructor
@@ -55,6 +36,7 @@ public class Game {
         newGame();
     }
 
+
     /**
      * Constructor; calls newGame
      * defaults player1 to white
@@ -63,6 +45,11 @@ public class Game {
      */
     public Game(GameMode mode) {
         this(mode, Color.WHITE, Color.BLACK, new ChessClock(Color.WHITE), new ChessClock(Color.BLACK));
+    }
+
+    public Game(GameMode mode, ChessGUI ui) {
+        this(mode);
+        this.ui = ui;
     }
 
     /**
@@ -100,14 +87,19 @@ public class Game {
         switch (mode) {
             case SMART_COMPUTER:
                 ai.choiceMove(board);
-                currentTurn = player1;
+                currentTurn = currentTurn.other();
+                ui.turnComplete();
+                currentTurn = currentTurn.other();
                 break;
             case DUMB_COMPUTER:
                 computer.choiceMove(board);
-                currentTurn = player1;
+                currentTurn = currentTurn.other();
+                ui.turnComplete();
+                currentTurn = currentTurn.other();
                 break;
             case PVP:
                 currentTurn = currentTurn.other();
+                ui.turnComplete();
                 break;
         }
     }
@@ -190,6 +182,22 @@ public class Game {
             return p1Clock.printTime();
         } else {
             return p2Clock.printTime();
+        }
+    }
+
+    public enum GameMode {
+        PVP, DUMB_COMPUTER, SMART_COMPUTER;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case DUMB_COMPUTER:
+                    return "Dumb Computer";
+                case SMART_COMPUTER:
+                    return "Smart Computer";
+                default:
+                    return this.name();
+            }
         }
     }
 

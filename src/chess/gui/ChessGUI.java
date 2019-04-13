@@ -59,7 +59,7 @@ public class ChessGUI extends Application {
         for (Game.GameMode mode : Game.GameMode.values()) {
             MenuItem item = new MenuItem(mode.toString());
             item.setOnAction(event -> {
-                this.game = new Game(mode);
+                this.game = new Game(mode, this);
                 redrawGrid();
             });
             newMenu.getItems().add(item);
@@ -79,7 +79,7 @@ public class ChessGUI extends Application {
         menuBar.getMenus().add(fileMenu);
         main.setTop(menuBar);
 
-        this.game = new Game(Game.GameMode.SMART_COMPUTER);
+        this.game = new Game(Game.GameMode.SMART_COMPUTER, this);
 
         bp.setPadding(new Insets(0));
         bp.setLeft(null);
@@ -155,7 +155,6 @@ public class ChessGUI extends Application {
                             board.resetHighlightedSquares();
                             board.deselectSquare();
                             this.game.executeTurn();
-                            redrawGrid();
                             return;
                         }
                     }
@@ -172,8 +171,7 @@ public class ChessGUI extends Application {
                         board.deselectSquare();
                         board.resetHighlightedSquares();
                     }
-
-                    redrawGrid();
+                    updateBoardSquares();
                 });
 
                 // event handlers for drag and drop movement
@@ -217,7 +215,6 @@ public class ChessGUI extends Application {
                         board.resetHighlightedSquares();
                         board.deselectSquare();
                         this.game.executeTurn();
-                        redrawGrid();
                     }
                     bsp.setDragActive(false);
                     board.resetHighlightedSquares();
@@ -230,7 +227,6 @@ public class ChessGUI extends Application {
                 this.grid.add(bsp, i, Board.NUM_ROWS - j);
             }
         }
-        handleGameOver();
     }
 
     /**
@@ -309,8 +305,13 @@ public class ChessGUI extends Application {
             if (!result.isPresent() || result.get().equals(exitButtonType)) {
                 System.exit(0);
             } else if (result.get().equals(newGameButtonType)) {
-                this.game = new Game(game.getMode());
+                this.game = new Game(game.getMode(), this);
             }
         }
+    }
+
+    public void turnComplete() {
+        redrawGrid();
+        handleGameOver();
     }
 }

@@ -1,8 +1,8 @@
 package chess.core.game.cpu;
 
-import chess.core.piece.Color;
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
+import chess.core.piece.Color;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -72,17 +72,20 @@ public class ComplexCPU {
         Random random = new Random();
         int randomNum = 0;
 
-        if (sourceMaxes.size() == 1) {
-            board.movePiece(sourceMaxes.get(0).getSource(), sourceMaxes.get(0).getTarget());
-        } else {
-            randomNum = random.nextInt(sourceMaxes.size());
-            board.movePiece(sourceMaxes.get(randomNum).getSource(), sourceMaxes.get(randomNum).getTarget());
+        if (sourceMaxes.size() != 0) {
+            if (sourceMaxes.size() == 1) {
+                board.movePiece(sourceMaxes.get(0).getSource(), sourceMaxes.get(0).getTarget());
+            } else {
+                randomNum = random.nextInt(sourceMaxes.size());
+                board.movePiece(sourceMaxes.get(randomNum).getSource(), sourceMaxes.get(randomNum).getTarget());
+            }
         }
     }
 
     /**
      * scoreMove
      * returns a score given a move, with choice of how deep to look
+     *
      * @param board
      * @param source
      * @param target
