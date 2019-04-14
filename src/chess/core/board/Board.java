@@ -318,4 +318,11 @@ public class Board {
         }
         return null;
     }
+
+    /**
+     * Replace pawn with Piece
+     */
+    public void replacePawn(Piece piece, BoardSquare square){
+        square.setPiece(piece);
+    }
 }
