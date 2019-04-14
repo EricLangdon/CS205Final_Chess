@@ -10,6 +10,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -39,6 +42,7 @@ public class ChessGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        this.game = new Game(Game.GameMode.SMART_COMPUTER, this);
         BorderPane main = new BorderPane();
         Scene scene = new Scene(main, 900, 800);
         primaryStage.setScene(scene);
@@ -49,9 +53,13 @@ public class ChessGUI extends Application {
 
         // menubars
         MenuBar menuBar = new MenuBar();
+        KeyCombination.Modifier modifier;
         final String os = System.getProperty("os.name");
         if (os != null && os.startsWith("Mac")) {
             menuBar.useSystemMenuBarProperty().set(true);
+            modifier = KeyCombination.META_DOWN;
+        }else{
+            modifier = KeyCombination.CONTROL_DOWN;
         }
         Menu fileMenu = new Menu("File");
 
@@ -62,24 +70,37 @@ public class ChessGUI extends Application {
                 this.game = new Game(mode, this);
                 redrawGrid();
             });
+            if (mode == this.game.getMode()){
+                item.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
+            }
             newMenu.getItems().add(item);
         }
+
+
 
         // save
         MenuItem saveItem = new MenuItem("Save Game");
         saveItem.setOnAction(e -> this.save(primaryStage));
+        saveItem.setAccelerator(new KeyCodeCombination(KeyCode.S, modifier));
         // load
         MenuItem loadItem = new MenuItem("Load Game");
         loadItem.setOnAction(e -> this.load(primaryStage));
+        loadItem.setAccelerator(new KeyCodeCombination(KeyCode.O, modifier));
         //exit
         MenuItem exitItem = new MenuItem("Quit");
         exitItem.setOnAction(e -> Platform.exit());
+        exitItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, modifier));
 
         fileMenu.getItems().addAll(newMenu, saveItem, loadItem, exitItem);
-        menuBar.getMenus().add(fileMenu);
-        main.setTop(menuBar);
 
-        this.game = new Game(Game.GameMode.SMART_COMPUTER, this);
+        Menu editMenu = new Menu("Edit");
+        MenuItem undoItem = new MenuItem("Undo");
+        undoItem.setOnAction(e -> this.undo());
+        editMenu.getItems().add(undoItem);
+        undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, modifier));
+
+        menuBar.getMenus().addAll(fileMenu, editMenu);
+        main.setTop(menuBar);
 
         bp.setPadding(new Insets(0));
         bp.setLeft(null);
@@ -264,6 +285,18 @@ public class ChessGUI extends Application {
         if (file != null) {
             this.game.load(file);
         }
+    }
+
+    private void undo(){
+        if(!game.undo()){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Undo Failed");
+            alert.setHeaderText(null);
+            alert.setContentText("Could not undo move.");
+            alert.showAndWait();
+            return;
+        }
+        redrawGrid();
     }
 
     /**

@@ -9,6 +9,7 @@ import chess.core.piece.Piece;
 import chess.gui.ChessGUI;
 
 import java.io.File;
+import java.util.Stack;
 
 public class Game {
     private Board board;
@@ -20,6 +21,8 @@ public class Game {
     private GameMode mode;
     private ChessGUI ui;
 
+    private Stack<Game> states;
+
     /**
      * Constructor
      *
@@ -27,13 +30,16 @@ public class Game {
      * @param player1 color of player1
      * @param player2 color of player2
      */
-    public Game(GameMode mode, Color player1, Color player2, ChessClock p1Clock, ChessClock p2Clock) {
+    public Game(GameMode mode, Color player1, Color player2, ChessClock p1Clock, ChessClock p2Clock, ChessGUI ui) {
         this.mode = mode;
         this.player1 = player1;
         this.player2 = player2;
         this.p1Clock = p1Clock;
         this.p2Clock = p2Clock;
+        this.ui = ui;
         newGame();
+        states = new Stack<>();
+        this.states.push(new Game(this));
     }
 
 
@@ -43,13 +49,21 @@ public class Game {
      *
      * @param mode gamemmode
      */
-    public Game(GameMode mode) {
-        this(mode, Color.WHITE, Color.BLACK, new ChessClock(Color.WHITE), new ChessClock(Color.BLACK));
+    public Game(GameMode mode, ChessGUI ui) {
+        this(mode, Color.WHITE, Color.BLACK, new ChessClock(Color.WHITE), new ChessClock(Color.BLACK), ui);
     }
 
-    public Game(GameMode mode, ChessGUI ui) {
-        this(mode);
-        this.ui = ui;
+    /**
+     * Copy constructor
+     */
+    public Game(Game game) {
+        this.board = new Board(game.board);
+        this.currentTurn = game.currentTurn;
+        this.player1 = game.player1;
+        this.player2 = game.player2;
+        this.mode = game.mode;
+        this.ui = game.ui;
+        this.states = game.states;
     }
 
     /**
@@ -78,6 +92,25 @@ public class Game {
         // TODO: implement
     }
 
+    public boolean undo() {
+        if (states.size() == 0) {
+            return false;
+        }
+
+        Game game = states.pop();
+        this.board = game.board;
+        this.currentTurn = game.currentTurn;
+        this.player1 = game.player1;
+        this.player2 = game.player2;
+        this.mode = game.mode;
+        this.ui = game.ui;
+        if (states.size() == 0) {
+            states.push(new Game(this));
+        }
+        this.states = game.states;
+        return true;
+    }
+
     /**
      * Execute turn
      */
@@ -102,6 +135,7 @@ public class Game {
                 ui.turnComplete();
                 break;
         }
+        this.states.push(new Game(this));
     }
 
     /**
