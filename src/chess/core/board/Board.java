@@ -272,4 +272,57 @@ public class Board {
         }
         return squares;
     }
+
+    /**
+     * check to see if there is a promotable pawn
+     * @return bool
+     */
+    public boolean checkPromotion() {
+        BoardSquare square;
+        for (int i = 0; i < 8; i++) {
+            square = getBoardSquareAt(i, 7);
+            if (square.isOccupied()) {
+                if (square.getPiece() instanceof Pawn) {
+                    return true;
+                }
+            }
+            square = getBoardSquareAt(i, 0);
+            if (square.isOccupied()) {
+                if (square.getPiece() instanceof Pawn) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * find promotable pawn
+     * @return boardsquare
+     */
+    public BoardSquare getPromotablePawn() {
+        BoardSquare square;
+        for (int i=0; i < 8; i++){
+            square=getBoardSquareAt(i, 7);
+            if(square.isOccupied()){
+                if (square.getPiece() instanceof Pawn){
+                    return square;
+                }
+            }
+            square=getBoardSquareAt(i, 0);
+            if(square.isOccupied()){
+                if(square.getPiece() instanceof Pawn){
+                    return square;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Replace pawn with Piece
+     */
+    public void replacePawn(Piece piece, BoardSquare square){
+        square.setPiece(piece);
+    }
 }
