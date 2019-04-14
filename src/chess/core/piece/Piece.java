@@ -79,11 +79,7 @@ public abstract class Piece implements Cloneable {
         }
 
         //Checks if piece in target is the same color as piece in source
-        if (target.isOccupied() && target.getPiece().getColor() == color) {
-            return false;
-        }
-
-        return true;
+        return !target.isOccupied() || target.getPiece().getColor() != color;
     }
 
     /**
