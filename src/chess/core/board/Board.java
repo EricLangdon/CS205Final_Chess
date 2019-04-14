@@ -137,10 +137,26 @@ public class Board {
                 move.setCapturedPiece(target.getPiece());
                 captured.add(target.getPiece());
             }
+
             moves.add(move);
             target.setPiece(source.getPiece());
             source.setPiece(null);
             target.getPiece().setHasMoved(true);
+            if(target.getPiece() instanceof Pawn && ((Pawn) target.getPiece()).getEnPassant()){
+                if(target.getPiece().getColor()==Color.WHITE){
+                    move.setCapturedPiece(getBoardSquareAt(target.getX(), target.getY()-1).getPiece());
+                    captured.add(getBoardSquareAt(target.getX(), target.getY()-1).getPiece());
+                    getBoardSquareAt(target.getX(),target.getY()-1).setPiece(null);
+                    ((Pawn) target.getPiece()).setEnPassant(false);
+
+                } else if (target.getPiece().getColor()==Color.BLACK){
+                    move.setCapturedPiece(getBoardSquareAt(target.getX(), target.getY()+1).getPiece());
+                    captured.add(getBoardSquareAt(target.getX(), target.getY()+1).getPiece());
+                    getBoardSquareAt(target.getX(), target.getY()+1).setPiece(null);
+                    ((Pawn) target.getPiece()).setEnPassant(false);
+                }
+            }
+
             return true;
         }
         return false;
