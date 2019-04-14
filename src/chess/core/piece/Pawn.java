@@ -2,6 +2,10 @@ package chess.core.piece;
 
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
+import chess.core.board.Move;
+
+import java.util.ArrayList;
+
 
 public class Pawn extends Piece {
 
@@ -24,6 +28,8 @@ public class Pawn extends Piece {
         //Checks if target is legal first
         if (super.legalMove(board, source, target, checkCheck)) {
 
+            ArrayList<Move> moves = board.getMoves();
+
             //Creates the inverter that applies the moves to opposite color
             int invert;
             if (color.equals(Color.WHITE)) {
@@ -40,10 +46,32 @@ public class Pawn extends Piece {
                 return true;
             } else if (target.getY() == source.getY() + invert && target.getX() == source.getX() - invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
                 return true;
-            } else
-                return target.getY() == source.getY() + invert && target.getX() == source.getX() + invert && target.isOccupied() && target.getPiece().getColor() == color.other();
-        } else {
-            return false;
+            } else if (target.getY() == source.getY() + invert && target.getX() == source.getX() + invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
+                return true;
+            } else if (source.getY() == 4 && moves.size() != 0) {
+                BoardSquare lastSource = moves.get(moves.size() - 1).getSource();
+                BoardSquare lastTarget = moves.get(moves.size() - 1).getTarget();
+                if (lastSource.getY() == 6 && lastTarget.getX() == source.getX() + invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
+                        && target.getX() == source.getX() + invert) {
+                    return true;
+                } else if (lastSource.getY() == 6 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
+                        && target.getX() == source.getX() - invert) {
+                    return true;
+                }
+            } else if (source.getY() == 3 && moves.size() != 0) {
+                BoardSquare lastSource = moves.get(moves.size() - 1).getSource();
+                BoardSquare lastTarget = moves.get(moves.size() - 1).getTarget();
+                if (lastSource.getY() == 1 && lastTarget.getX() == source.getX() + invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
+                        && target.getX() == source.getX() + invert) {
+                    return true;
+                } else if (lastSource.getY() == 1 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
+                        && target.getX() == source.getX() - invert) {
+                    return true;
+                }
+            } else {
+                return false;
+            }
         }
+        return false;
     }
 }
