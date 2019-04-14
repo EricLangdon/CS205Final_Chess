@@ -7,7 +7,7 @@ import chess.core.piece.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class ComplexCPU {
+public class ComplexCPU extends CPU {
     Color color;
 
     /**
@@ -115,58 +115,5 @@ public class ComplexCPU {
 
 
         return moveScore;
-    }
-
-    /**
-     * choiceMove
-     * analyzes the board and makes educated move based on piece scores
-     */
-
-    class MoveScore {
-        BoardSquare source;
-        BoardSquare target;
-        int score;
-
-        MoveScore() {
-        }
-
-        MoveScore(BoardSquare source, BoardSquare target, int score) {
-            this.source = source;
-            this.target = target;
-            this.score = score;
-        }
-
-        public int getScore() {
-            return score;
-        }
-
-        public BoardSquare getTarget() {
-            return target;
-        }
-
-        public BoardSquare getSource() {
-            return source;
-        }
-    }
-
-    class TargetScore {
-        BoardSquare target;
-        int score;
-
-        TargetScore() {
-        }
-
-        TargetScore(BoardSquare target, int score) {
-            this.target = target;
-            this.score = score;
-        }
-
-        public int getScore() {
-            return score;
-        }
-
-        public BoardSquare getTarget() {
-            return target;
-        }
     }
 }

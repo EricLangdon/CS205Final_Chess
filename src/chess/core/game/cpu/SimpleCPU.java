@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class SimpleCPU {
+public class SimpleCPU extends CPU {
     private chess.core.piece.Color color;
 
     /**
@@ -42,7 +42,8 @@ public class SimpleCPU {
         BoardSquare square, randSource, randTarget;
         Random random = new Random();
         int counter = 0;
-        int randomNum1 = 0, randomNum2;
+        int randomNum1 = 0, randomNum2 = 0;
+        int temp;
 
         for (int i = 0; i < Board.NUM_COLS; i++) {
             for (int j = 0; j < Board.NUM_ROWS; j++) {
@@ -56,12 +57,14 @@ public class SimpleCPU {
                 }
             }
         }
-        //Todo Crash happens when king is put into check
-        randomNum1 = random.nextInt(sources.size()-1);
-        randSource = sources.get(randomNum1);
-        randomNum2 = targetsMap.get(randomNum1).size()-1;
-        randTarget = targetsMap.get(randomNum1).get(randomNum2);
 
-        board.movePiece(randSource, randTarget);
+        if (sources.size() != 0) {
+            randomNum1 = random.nextInt(sources.size());
+            randSource = sources.get(randomNum1);
+            randomNum2 = random.nextInt(targetsMap.get(randomNum1).size());
+            randTarget = targetsMap.get(randomNum1).get(randomNum2);
+
+            board.movePiece(randSource, randTarget);
+        }
     }
 }
