@@ -64,19 +64,7 @@ public class ChessGUI extends Application {
         Menu fileMenu = new Menu("File");
 
         Menu newMenu = new Menu("New Game");
-        for (Game.GameMode mode : Game.GameMode.values()) {
-            MenuItem item = new MenuItem(mode.toString());
-            item.setOnAction(event -> {
-                this.game = new Game(mode, this);
-                redrawGrid();
-            });
-            if (mode == this.game.getMode()){
-                item.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
-            }
-            newMenu.getItems().add(item);
-        }
-
-
+        updateNewMenu(newMenu, modifier);
 
         // save
         MenuItem saveItem = new MenuItem("Save Game");
@@ -297,6 +285,22 @@ public class ChessGUI extends Application {
             return;
         }
         redrawGrid();
+    }
+
+    private void updateNewMenu(Menu newMenu, KeyCombination.Modifier modifier){
+        newMenu.getItems().clear();
+        for (Game.GameMode mode : Game.GameMode.values()) {
+            MenuItem item = new MenuItem(mode.toString());
+            item.setOnAction(event -> {
+                this.game = new Game(mode, this);
+                updateNewMenu(newMenu, modifier);
+                redrawGrid();
+            });
+            if (mode == this.game.getMode()){
+                item.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
+            }
+            newMenu.getItems().add(item);
+        }
     }
 
     /**
