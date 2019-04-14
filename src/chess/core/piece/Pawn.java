@@ -41,35 +41,54 @@ public class Pawn extends Piece {
             }
 
             //Handles pawn logic
+            //Move forward one
             if (target.getY() == source.getY() + invert && target.getX() == source.getX() && target.getPiece() == null) {
                 return true;
-            } else if (target.getY() == source.getY() + 2 * invert && target.getX() == source.getX() && !board.getBoardSquareAt(source.getX(), source.getY() + invert).isOccupied()
-                    && target.getPiece() == null && !getHasMoved()) {
+            }
+            //Move forward two
+            else if (target.getY() == source.getY() + 2 * invert && target.getX() == source.getX()
+                    && !board.getBoardSquareAt(source.getX(), source.getY() + invert).isOccupied() && target.getPiece() == null && !getHasMoved()) {
                 return true;
-            } else if (target.getY() == source.getY() + invert && target.getX() == source.getX() - invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
+            }
+            //Move to take left
+            else if (target.getY() == source.getY() + invert && target.getX() == source.getX() - invert && target.isOccupied()
+                    && target.getPiece().getColor() == color.other()) {
                 return true;
-            } else if (target.getY() == source.getY() + invert && target.getX() == source.getX() + invert && target.isOccupied() && target.getPiece().getColor() == color.other()) {
+            }
+            //Move to take right
+            else if (target.getY() == source.getY() + invert && target.getX() == source.getX() + invert && target.isOccupied()
+                    && target.getPiece().getColor() == color.other()) {
                 return true;
-            } else if (source.getY() == 4 && moves.size() != 0) {
+            }
+            //En passant move for white
+            else if (source.getY() == 4 && moves.size() != 0) {
                 BoardSquare lastSource = moves.get(moves.size() - 1).getSource();
                 BoardSquare lastTarget = moves.get(moves.size() - 1).getTarget();
+                //Target is right
                 if (lastSource.getY() == 6 && lastTarget.getX() == source.getX() + invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
                         && target.getX() == source.getX() + invert) {
                     enPassant=true;
                     return true;
-                } else if (lastSource.getY() == 6 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
+                }
+                //Target is left
+                else if (lastSource.getY() == 6 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
                         && target.getX() == source.getX() - invert) {
                     enPassant=true;
                     return true;
                 }
-            } else if (source.getY() == 3 && moves.size() != 0) {
+            }
+            //En passant move for black
+            else if (source.getY() == 3 && moves.size() != 0) {
                 BoardSquare lastSource = moves.get(moves.size() - 1).getSource();
                 BoardSquare lastTarget = moves.get(moves.size() - 1).getTarget();
+                // Target is left
                 if (lastSource.getY() == 1 && lastTarget.getX() == source.getX() + invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
                         && target.getX() == source.getX() + invert) {
                     enPassant=true;
                     return true;
-                } else if (lastSource.getY() == 1 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
+                }
+                //Target is right
+                else if (lastSource.getY() == 1 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
                         && target.getX() == source.getX() - invert) {
                     enPassant=true;
                     return true;
