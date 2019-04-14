@@ -96,8 +96,13 @@ public class Game {
         if (states.size() == 0) {
             return false;
         }
-
+        if (states.size() == 1 && states.peek().getBoard().getNumMoves() == this.getBoard().getNumMoves()){
+            return false;
+        }
         Game game = states.pop();
+        if (game.getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
+            game = states.pop();
+        }
         this.board = game.board;
         this.currentTurn = game.currentTurn;
         this.player1 = game.player1;
