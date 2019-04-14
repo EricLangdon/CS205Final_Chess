@@ -14,12 +14,15 @@ public class Board {
     private ArrayList<BoardSquare> highlightedSquares = new ArrayList<>();
     private BoardSquare selectedSquare;
 
+    private ArrayList<Move> moves;
+
 
     /**
      * Default Constructor
      * Sets up boardSquares and pieces on the board
      */
     public Board() {
+        moves = new ArrayList<>();
         // BoardSquares
         for (int i = 0; i < NUM_ROWS; i++) {
             board.add(new ArrayList<>(NUM_COLS));
@@ -71,6 +74,7 @@ public class Board {
                 }
             }
         }
+        moves = new ArrayList<>(oldBoard.moves);
     }
 
     /**
@@ -115,6 +119,7 @@ public class Board {
      */
     public boolean movePiece(BoardSquare source, BoardSquare target, boolean checkCheck) {
         if (source.isOccupied() && source.getPiece().legalMove(this, source, target, checkCheck)) {
+            Move move = new Move(source, target);
             if (source.getX() == 4 && source.getY() == 0 && target.getX() == 2) {
                 getBoardSquareAt(3, 0).setPiece(getBoardSquareAt(0, 0).getPiece());
                 getBoardSquareAt(0, 0).setPiece(null);
@@ -129,14 +134,15 @@ public class Board {
                 getBoardSquareAt(7, 7).setPiece(null);
             }
             if (target.isOccupied()) {
+                move.setCapturedPiece(target.getPiece());
                 captured.add(target.getPiece());
             }
+            moves.add(move);
             target.setPiece(source.getPiece());
             source.setPiece(null);
             target.getPiece().setHasMoved(true);
             return true;
         }
-        // TODO: implement
         return false;
     }
 
@@ -324,5 +330,21 @@ public class Board {
      */
     public void replacePawn(Piece piece, BoardSquare square){
         square.setPiece(piece);
+    }
+
+    /**
+     * Get arraylist of moves
+     * @return arraylist of moves
+     */
+    public ArrayList<Move> getMoves() {
+        return moves;
+    }
+
+    /**
+     * Get number of moves
+     * @return number of moves
+     */
+    public int getNumMoves(){
+        return moves.size();
     }
 }
