@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class Pawn extends Piece {
 
+    public boolean enPassant=false;
+
     public Pawn(Color color) {
         super(color);
         unicode = 0x2659;
@@ -53,9 +55,11 @@ public class Pawn extends Piece {
                 BoardSquare lastTarget = moves.get(moves.size() - 1).getTarget();
                 if (lastSource.getY() == 6 && lastTarget.getX() == source.getX() + invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
                         && target.getX() == source.getX() + invert) {
+                    enPassant=true;
                     return true;
                 } else if (lastSource.getY() == 6 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
                         && target.getX() == source.getX() - invert) {
+                    enPassant=true;
                     return true;
                 }
             } else if (source.getY() == 3 && moves.size() != 0) {
@@ -63,9 +67,11 @@ public class Pawn extends Piece {
                 BoardSquare lastTarget = moves.get(moves.size() - 1).getTarget();
                 if (lastSource.getY() == 1 && lastTarget.getX() == source.getX() + invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
                         && target.getX() == source.getX() + invert) {
+                    enPassant=true;
                     return true;
                 } else if (lastSource.getY() == 1 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
                         && target.getX() == source.getX() - invert) {
+                    enPassant=true;
                     return true;
                 }
             } else {
@@ -74,4 +80,8 @@ public class Pawn extends Piece {
         }
         return false;
     }
+
+    public boolean getEnPassant(){ return enPassant; }
+
+    public void setEnPassant(boolean enPassant){this.enPassant=enPassant;}
 }
