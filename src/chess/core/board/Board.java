@@ -120,6 +120,7 @@ public class Board {
     public boolean movePiece(BoardSquare source, BoardSquare target, boolean checkCheck) {
         if (source.isOccupied() && source.getPiece().legalMove(this, source, target, checkCheck)) {
             Move move = new Move(source, target);
+            //Castling logic
             if (source.getX() == 4 && source.getY() == 0 && target.getX() == 2) {
                 getBoardSquareAt(3, 0).setPiece(getBoardSquareAt(0, 0).getPiece());
                 getBoardSquareAt(0, 0).setPiece(null);
@@ -142,6 +143,8 @@ public class Board {
             target.setPiece(source.getPiece());
             source.setPiece(null);
             target.getPiece().setHasMoved(true);
+
+            //En passant pawn take
             if(target.getPiece() instanceof Pawn && ((Pawn) target.getPiece()).getEnPassant()){
                 if(target.getPiece().getColor()==Color.WHITE){
                     move.setCapturedPiece(getBoardSquareAt(target.getX(), target.getY()-1).getPiece());
@@ -157,6 +160,16 @@ public class Board {
                 }
             }
 
+            //Pawn promotion
+            //TODO figure out how to select type
+            if(target.getPiece() instanceof Pawn){
+                if(target.getY()==7){
+                    replacePawn(new Rook(Color.WHITE), target);
+                } else if(target.getY()==0){
+                    replacePawn(new Rook(Color.BLACK), target);
+                }
+            }
+
             return true;
         }
         return false;
@@ -169,10 +182,9 @@ public class Board {
      * @return true if the player of 'color' is in check
      */
     public boolean colorInCheck(Color color) {
-        //TODO: implement
         ArrayList<BoardSquare> opponentSources = new ArrayList<>();
         BoardSquare kingSquare = new BoardSquare();
-        BoardSquare square = new BoardSquare();
+        BoardSquare square;
         for (int i = 0; i < NUM_COLS; i++) {
             for (int j = 0; j < NUM_ROWS; j++) {
                 square = getBoardSquareAt(j, i);
