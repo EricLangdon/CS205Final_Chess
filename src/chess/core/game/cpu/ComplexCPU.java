@@ -3,6 +3,7 @@ package chess.core.game.cpu;
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
 import chess.core.piece.Color;
+import chess.core.piece.*;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,6 +21,8 @@ public class ComplexCPU extends CPU {
     /**
      * choiceMove
      * analyzes the board and makes educated move based on piece scores
+     *
+     * @param board game board
      */
     public void choiceMove(Board board) {
         int depth = 2;
@@ -77,7 +80,6 @@ public class ComplexCPU extends CPU {
                 sourceMaxes.add(s);
             }
         }
-        randomNum = 0;
         if (sourceMaxes.size() != 0) {
             if (sourceMaxes.size() == 1) {
                 board.movePiece(sourceMaxes.get(0).getSource(), sourceMaxes.get(0).getTarget());
@@ -105,14 +107,26 @@ public class ComplexCPU extends CPU {
         int sourceMax = 0;
         TargetScore moveScore = new TargetScore(target, -127);
 
-        if (depth > 1) {
+        if (depth == 3) {
+            // TODO: go deeper
+
+            return moveScore;
+
+        } else if (depth == 2) {
             if (target.isOccupied()) {
                 moveScore.score = target.getPiece().getScore();
             } else {
                 moveScore.score = 0;
             }
-
+            // simulate move
             tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()));
+            // specific tweaks
+            if (tempBoard.colorInCheck(color.other())) {
+                moveScore.score += 1;
+            } else if (source.getPiece() instanceof King && !source.getPiece().getHasMoved() && !board.colorInCheck(color) &&
+                    target.getX() - source.getX() != 2 && target.getX() - source.getX() != -2) {
+                moveScore.score -= 1;
+            }
             for (int i = 0; i < Board.NUM_COLS; i++) { // find sources
                 for (int j = 0; j < Board.NUM_ROWS; j++) {
                     square = tempBoard.getBoardSquareAt(i, j);
@@ -129,7 +143,8 @@ public class ComplexCPU extends CPU {
             }
             moveScore.score -= sourceMax;
             return moveScore;
-        } else {
+
+        } else { // depth == 1
             if (target.isOccupied()) {
                 moveScore.score = target.getPiece().getScore();
                 return moveScore;
