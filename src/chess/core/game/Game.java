@@ -9,7 +9,11 @@ import chess.core.piece.Piece;
 import chess.gui.ChessGUI;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Stack;
+
+import static chess.core.game.GameResult.BLACKWIN;
 
 public class Game {
     private Board board;
@@ -96,7 +100,7 @@ public class Game {
         if (states.size() == 0) {
             return false;
         }
-        if (states.size() == 1 && states.peek().getBoard().getNumMoves() == this.getBoard().getNumMoves()){
+        if (states.size() == 1 && states.peek().getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
             return false;
         }
         Game game = states.pop();
@@ -148,12 +152,44 @@ public class Game {
      *
      * @return null if no winner, else the color of the winner
      */
-    public Color getWinner() {
+    public GameResult getWinner() {
         // TODO implement
         if (!isGameOver()) {
             return null;
+        } else if (board.colorInCheck(Color.WHITE)) {
+            ArrayList<BoardSquare> holder;
+            int totalMoves = 0;
+            for (BoardSquare bs : board.getBoardSquares()) {
+                if (bs.isOccupied() && bs.getPiece().getColor() == Color.WHITE) {
+                    holder = bs.getPiece().getAvailableMoves(board, bs);
+                    totalMoves += holder.size();
+                }
+            }
+            if (totalMoves == 0) {
+                return GameResult.BLACKWIN;
+            } else {
+                return null;
+            }
+
+        } else if (board.colorInCheck(Color.BLACK)) {
+            ArrayList<BoardSquare> holder;
+            int totalMoves = 0;
+            for (BoardSquare bs : board.getBoardSquares()) {
+                if (bs.isOccupied() && bs.getPiece().getColor() == Color.BLACK) {
+                    holder = bs.getPiece().getAvailableMoves(board, bs);
+                    totalMoves += holder.size();
+                }
+            }
+            if (totalMoves == 0) {
+                return GameResult.WHITEWIN;
+            } else {
+                return null;
+            }
+
+        } else {
+            //Todo implement draws
+            return GameResult.DRAW;
         }
-        return currentTurn.other();
     }
 
     public boolean isGameOver() {
@@ -226,18 +262,6 @@ public class Game {
 
     public enum GameMode {
         PVP, DUMB_COMPUTER, SMART_COMPUTER;
-
-        @Override
-        public String toString() {
-            switch (this) {
-                case DUMB_COMPUTER:
-                    return "Dumb Computer";
-                case SMART_COMPUTER:
-                    return "Smart Computer";
-                default:
-                    return this.name();
-            }
-        }
     }
 
 }
