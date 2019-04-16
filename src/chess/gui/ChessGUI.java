@@ -3,6 +3,7 @@ package chess.gui;
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
 import chess.core.game.Game;
+import chess.core.game.GameResult;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -330,7 +331,11 @@ public class ChessGUI extends Application {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game Over");
             alert.setHeaderText(null);
-            alert.setContentText(game.getWinner().toString() + " has won!");
+            if(game.getWinner()== GameResult.DRAW){
+                alert.setContentText("The game is a " + game.getWinner().toString()+ "!");
+            } else {
+                alert.setContentText(game.getWinner().toString() + " has won!");
+            }
 
             ButtonType exitButtonType = new ButtonType("Exit");
             ButtonType newGameButtonType = new ButtonType("New Game");
