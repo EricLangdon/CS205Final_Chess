@@ -132,12 +132,14 @@ public class Game {
                 currentTurn = currentTurn.other();
                 ui.turnComplete();
                 currentTurn = currentTurn.other();
+                ui.turnComplete();
                 break;
             case DUMB_COMPUTER:
                 computer.choiceMove(board);
                 currentTurn = currentTurn.other();
                 ui.turnComplete();
                 currentTurn = currentTurn.other();
+                ui.turnComplete();t
                 break;
             case PVP:
                 currentTurn = currentTurn.other();
