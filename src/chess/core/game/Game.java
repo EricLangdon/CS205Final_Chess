@@ -139,7 +139,7 @@ public class Game {
                 currentTurn = currentTurn.other();
                 ui.turnComplete();
                 currentTurn = currentTurn.other();
-                ui.turnComplete();t
+                ui.turnComplete();
                 break;
             case PVP:
                 currentTurn = currentTurn.other();
