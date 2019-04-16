@@ -96,7 +96,7 @@ public class Game {
         if (states.size() == 0) {
             return false;
         }
-        if (states.size() == 1 && states.peek().getBoard().getNumMoves() == this.getBoard().getNumMoves()){
+        if (states.size() == 1 && states.peek().getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
             return false;
         }
         Game game = states.pop();
@@ -109,9 +109,7 @@ public class Game {
         this.player2 = game.player2;
         this.mode = game.mode;
         this.ui = game.ui;
-        if (states.size() == 0) {
-            states.push(new Game(this));
-        }
+        states.push(new Game(this));
         this.states = game.states;
         return true;
     }
