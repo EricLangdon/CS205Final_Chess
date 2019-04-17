@@ -4,8 +4,7 @@ import chess.core.board.Board;
 import chess.core.board.BoardSquare;
 import chess.core.game.cpu.ComplexCPU;
 import chess.core.game.cpu.SimpleCPU;
-import chess.core.piece.Color;
-import chess.core.piece.Piece;
+import chess.core.piece.*;
 import chess.gui.ChessGUI;
 
 import java.io.File;
@@ -188,16 +187,56 @@ public class Game {
 
         } else {
             //Todo implement draws
+            //call board.get pieces and have an array.
+            //if statements
+            //eg. pop king and bishop out of array
             return GameResult.DRAW;
         }
     }
-
+    @SuppressWarnings("Duplicates")
     public boolean isGameOver() {
         // TODO check draw
         // game is not over if the player can move a piece
+        ArrayList<Piece> blackLeft = board.getPieces(Color.BLACK);
+        ArrayList<Piece> whiteLeft = board.getPieces(Color.WHITE);
         for (BoardSquare bs : board.getBoardSquares()) {
             if (bs.isOccupied() && bs.getPiece().getColor().equals(currentTurn) && !bs.getPiece().getAvailableMoves(board, bs).isEmpty()) {
                 return false;
+            } else if (blackLeft.size() <= 2 && whiteLeft.size() <= 2) {
+                if (blackLeft.size() == 1 && whiteLeft.size() == 1) {
+                    return true;
+                } else if (blackLeft.size() == 1 && whiteLeft.size() == 2) {
+                    if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Bishop
+                            || whiteLeft.get(0) instanceof Bishop && whiteLeft.get(1) instanceof King) {
+                        return true;
+                    } else if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Knight
+                            || whiteLeft.get(0) instanceof Knight && whiteLeft.get(1) instanceof King) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                } else if (blackLeft.size() == 2 && whiteLeft.size() == 1) {
+                    if(blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Bishop
+                            || blackLeft.get(0) instanceof Bishop && blackLeft.get(1) instanceof King){
+                        return true;
+                    } else if(blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Knight
+                            || blackLeft.get(0) instanceof Knight && blackLeft.get(1) instanceof King){
+                        return true;
+                    } else{
+                        return false;
+                    }
+                } else if (blackLeft.size() == 2 && whiteLeft.size() == 2) {
+                    if(blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Bishop
+                            || blackLeft.get(0) instanceof Bishop && blackLeft.get(1) instanceof King){
+                        if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Bishop
+                                || whiteLeft.get(0) instanceof Bishop && whiteLeft.get(1) instanceof King){
+                            return true;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
             }
         }
         return true;
@@ -236,6 +275,7 @@ public class Game {
      * @param color color
      * @return the score for the color
      */
+    //Todo throwing null pointer exception
     public int getScore(Color color) {
         int score = 0;
         for (Piece piece : board.getCaptured()) {
