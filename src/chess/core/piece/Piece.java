@@ -152,5 +152,10 @@ public abstract class Piece implements Cloneable {
     public int getScore() {
         return score;
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + " " + this.getUnicode();
+    }
 }
 

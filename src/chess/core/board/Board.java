@@ -160,16 +160,6 @@ public class Board {
                 }
             }
 
-            //Pawn promotion
-            //TODO figure out how to select type
-            if(target.getPiece() instanceof Pawn){
-                if(target.getY()==7){
-                    replacePawn(new Rook(Color.WHITE), target);
-                } else if(target.getY()==0){
-                    replacePawn(new Rook(Color.BLACK), target);
-                }
-            }
-
             return true;
         }
         return false;
@@ -357,7 +347,9 @@ public class Board {
      * Replace pawn with Piece
      */
     public void replacePawn(Piece piece, BoardSquare square){
-        square.setPiece(piece);
+        if(square.isOccupied() && square.getPiece() instanceof  Pawn) {
+            square.setPiece(piece);
+        }
     }
 
     /**
