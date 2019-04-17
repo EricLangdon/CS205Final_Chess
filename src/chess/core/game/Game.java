@@ -121,7 +121,7 @@ public class Game {
      * Execute turn
      */
     public void executeTurn() {
-        SimpleCPU computer = new SimpleCPU();    //Todo Reset execute turn when done
+        SimpleCPU computer = new SimpleCPU();
         ComplexCPU ai = new ComplexCPU();
         switch (mode) {
             case SMART_COMPUTER:
@@ -152,7 +152,6 @@ public class Game {
      * @return null if no winner, else the color of the winner
      */
     public GameResult getWinner() {
-        // TODO implement
         if (!isGameOver()) {
             return null;
         } else if (board.colorInCheck(Color.WHITE)) {
@@ -186,10 +185,6 @@ public class Game {
             }
 
         } else {
-            //Todo implement draws
-            //call board.get pieces and have an array.
-            //if statements
-            //eg. pop king and bishop out of array
             return GameResult.DRAW;
         }
     }
