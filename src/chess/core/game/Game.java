@@ -188,53 +188,61 @@ public class Game {
             return GameResult.DRAW;
         }
     }
+
     @SuppressWarnings("Duplicates")
     public boolean isGameOver() {
         // TODO check draw
-        // game is not over if the player can move a piece
-        ArrayList<Piece> blackLeft = board.getPieces(Color.BLACK);
-        ArrayList<Piece> whiteLeft = board.getPieces(Color.WHITE);
+        // Checks if player can move a piece
         for (BoardSquare bs : board.getBoardSquares()) {
             if (bs.isOccupied() && bs.getPiece().getColor().equals(currentTurn) && !bs.getPiece().getAvailableMoves(board, bs).isEmpty()) {
                 return false;
-            } else if (blackLeft.size() <= 2 && whiteLeft.size() <= 2) {
-                if (blackLeft.size() == 1 && whiteLeft.size() == 1) {
+            }
+        }
+
+        ArrayList<Piece> blackLeft = board.getPieces(Color.BLACK);
+        ArrayList<Piece> whiteLeft = board.getPieces(Color.WHITE);
+        Game currentGame=states.peek();
+        Game threeEarlier= states.get(9);
+        if (blackLeft.size() <= 2 && whiteLeft.size() <= 2) {
+            if (blackLeft.size() == 1 && whiteLeft.size() == 1) {
+                return true;
+            } else if (blackLeft.size() == 1 && whiteLeft.size() == 2) {
+                if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Bishop
+                        || whiteLeft.get(0) instanceof Bishop && whiteLeft.get(1) instanceof King) {
                     return true;
-                } else if (blackLeft.size() == 1 && whiteLeft.size() == 2) {
+                } else if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Knight
+                        || whiteLeft.get(0) instanceof Knight && whiteLeft.get(1) instanceof King) {
+                    return true;
+                } else {
+                    return false;
+                }
+
+            } else if (blackLeft.size() == 2 && whiteLeft.size() == 1) {
+                if (blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Bishop
+                        || blackLeft.get(0) instanceof Bishop && blackLeft.get(1) instanceof King) {
+                    return true;
+                } else if (blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Knight
+                        || blackLeft.get(0) instanceof Knight && blackLeft.get(1) instanceof King) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (blackLeft.size() == 2 && whiteLeft.size() == 2) {
+                if (blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Bishop
+                        || blackLeft.get(0) instanceof Bishop && blackLeft.get(1) instanceof King) {
                     if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Bishop
                             || whiteLeft.get(0) instanceof Bishop && whiteLeft.get(1) instanceof King) {
                         return true;
-                    } else if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Knight
-                            || whiteLeft.get(0) instanceof Knight && whiteLeft.get(1) instanceof King) {
-                        return true;
-                    } else {
-                        return false;
                     }
-
-                } else if (blackLeft.size() == 2 && whiteLeft.size() == 1) {
-                    if(blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Bishop
-                            || blackLeft.get(0) instanceof Bishop && blackLeft.get(1) instanceof King){
-                        return true;
-                    } else if(blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Knight
-                            || blackLeft.get(0) instanceof Knight && blackLeft.get(1) instanceof King){
-                        return true;
-                    } else{
-                        return false;
-                    }
-                } else if (blackLeft.size() == 2 && whiteLeft.size() == 2) {
-                    if(blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Bishop
-                            || blackLeft.get(0) instanceof Bishop && blackLeft.get(1) instanceof King){
-                        if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Bishop
-                                || whiteLeft.get(0) instanceof Bishop && whiteLeft.get(1) instanceof King){
-                            return true;
-                        }
-                    } else {
-                        return false;
-                    }
+                } else {
+                    return false;
                 }
             }
+        //Todo review in meeting
+        } else if (states.peek().equals(states.get(9))) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
