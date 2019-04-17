@@ -4,6 +4,7 @@ import chess.core.board.Board;
 import chess.core.board.BoardSquare;
 import chess.core.game.Game;
 import chess.core.game.GameResult;
+import chess.core.piece.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -59,7 +60,7 @@ public class ChessGUI extends Application {
         if (os != null && os.startsWith("Mac")) {
             menuBar.useSystemMenuBarProperty().set(true);
             modifier = KeyCombination.META_DOWN;
-        }else{
+        } else {
             modifier = KeyCombination.CONTROL_DOWN;
         }
         Menu fileMenu = new Menu("File");
@@ -164,6 +165,9 @@ public class ChessGUI extends Application {
                         if (board.movePiece(board.getSelectedSquare(), boardSquare)) {
                             board.resetHighlightedSquares();
                             board.deselectSquare();
+                            if (board.checkPromotion()) {
+                                handlePawnPromotion();
+                            }
                             this.game.executeTurn();
                             return;
                         }
@@ -224,6 +228,9 @@ public class ChessGUI extends Application {
                     if (target != null && board.movePiece(boardSquare, target.getBoardSquare())) {
                         board.resetHighlightedSquares();
                         board.deselectSquare();
+                        if (board.checkPromotion()) {
+                            handlePawnPromotion();
+                        }
                         this.game.executeTurn();
                     }
                     bsp.setDragActive(false);
@@ -237,6 +244,25 @@ public class ChessGUI extends Application {
                 this.grid.add(bsp, i, Board.NUM_ROWS - j);
             }
         }
+    }
+
+    private void handlePawnPromotion() {
+        BoardSquare bs = game.getBoard().getPromotablePawn();
+        chess.core.piece.Color color = bs.getPiece().getColor();
+        Piece queen = new Queen(color);
+        Piece rook = new Rook(color);
+        Piece bishop = new Bishop(color);
+        Piece knight = new Knight(color);
+
+        ChoiceDialog<Piece> dialog = new ChoiceDialog<Piece>(queen, rook, bishop, knight);
+
+        dialog.setTitle("Pawn Promotion");
+        dialog.setHeaderText("Select a new piece:");
+        dialog.setContentText("Piece:");
+
+        Optional<Piece> result = dialog.showAndWait();
+
+        result.ifPresent(piece -> this.game.getBoard().replacePawn(piece, bs));
     }
 
     /**
@@ -276,8 +302,8 @@ public class ChessGUI extends Application {
         }
     }
 
-    private void undo(){
-        if(!game.undo()){
+    private void undo() {
+        if (!game.undo()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Undo Failed");
             alert.setHeaderText(null);
@@ -288,7 +314,7 @@ public class ChessGUI extends Application {
         redrawGrid();
     }
 
-    private void updateNewMenu(Menu newMenu, KeyCombination.Modifier modifier){
+    private void updateNewMenu(Menu newMenu, KeyCombination.Modifier modifier) {
         newMenu.getItems().clear();
         for (Game.GameMode mode : Game.GameMode.values()) {
             MenuItem item = new MenuItem(mode.toString());
@@ -297,7 +323,7 @@ public class ChessGUI extends Application {
                 updateNewMenu(newMenu, modifier);
                 redrawGrid();
             });
-            if (mode == this.game.getMode()){
+            if (mode == this.game.getMode()) {
                 item.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
             }
             newMenu.getItems().add(item);
@@ -331,8 +357,8 @@ public class ChessGUI extends Application {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game Over");
             alert.setHeaderText(null);
-            if(game.getWinner()== GameResult.DRAW){
-                alert.setContentText("The game is a " + game.getWinner().toString()+ "!");
+            if (game.getWinner() == GameResult.DRAW) {
+                alert.setContentText("The game is a " + game.getWinner().toString() + "!");
             } else {
                 alert.setContentText(game.getWinner().toString() + " has won!");
             }
