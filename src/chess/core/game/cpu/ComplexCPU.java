@@ -26,6 +26,7 @@ public class ComplexCPU extends CPU {
      */
     public void choiceMove(Board board) {
         int depth = 2;
+        boolean endGame = false;
 
         BoardSquare square;
         ArrayList<MoveScore> sourceScores = new ArrayList<>();
@@ -106,10 +107,33 @@ public class ComplexCPU extends CPU {
         ArrayList<BoardSquare> moves;
         int sourceMax = 0;
         TargetScore moveScore = new TargetScore(target, -127);
+        boolean checkmate = false;
 
         if (depth == 3) {
             // TODO: go deeper
+            if (target.isOccupied()) {
+                moveScore.score = target.getPiece().getScore();
+            } else {
+                moveScore.score = 0;
+            }
+            // simulate move
+            tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()));
+            Board tempBoard2 = new Board(tempBoard);
+            for (BoardSquare bs : tempBoard.getBoardSquares()) {
+                if (bs.isOccupied() && bs.getPiece().getColor() == color.other() &&
+                        bs.getPiece().getAvailableMoves(board, bs).size() != 0) {
+                    moves = bs.getPiece().getAvailableMoves(tempBoard, bs);
+                    for (BoardSquare m : moves) {
+                        // analyze next opponent move
+                        if (m.isOccupied()) {
+                            moveScore.score -= m.getPiece().getScore();
+                        }
 
+                        tempBoard2.movePiece(tempBoard2.getBoardSquareAt(bs.getX(), bs.getY()), tempBoard2.getBoardSquareAt(m.getX(), m.getY()));
+                        // TODO: analyze next domestic move
+                    }
+                }
+            }
             return moveScore;
 
         } else if (depth == 2) {
@@ -120,23 +144,31 @@ public class ComplexCPU extends CPU {
             }
             // simulate move
             tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()));
+            // checkmate
+            checkmate = true;
+            for (BoardSquare bs : tempBoard.getBoardSquares()) {
+                if (bs.isOccupied() && bs.getPiece().getColor() == color.other() && bs.getPiece().getAvailableMoves(tempBoard, bs).size() > 0) {
+                    checkmate = false;
+                }
+            }
+            if (checkmate) {
+                moveScore.score += 100;
+                return moveScore;
+            }
             // specific tweaks
             if (tempBoard.colorInCheck(color.other())) {
                 moveScore.score += 1;
-            } else if (source.getPiece() instanceof King && !source.getPiece().getHasMoved() && !board.colorInCheck(color) &&
+            } else if (source.getPiece() instanceof King && !source.getPiece().getHasMoved() && !tempBoard.colorInCheck(color) &&
                     target.getX() - source.getX() != 2 && target.getX() - source.getX() != -2) {
                 moveScore.score -= 1;
             }
-            for (int i = 0; i < Board.NUM_COLS; i++) { // find sources
-                for (int j = 0; j < Board.NUM_ROWS; j++) {
-                    square = tempBoard.getBoardSquareAt(i, j);
-                    if (square.isOccupied() && square.getPiece().getColor() == color.other() &&
-                            square.getPiece().getAvailableMoves(board, square).size() != 0) {
-                        moves = square.getPiece().getAvailableMoves(tempBoard, square);
-                        for (BoardSquare m : moves) {
-                            if (m.isOccupied() && m.getPiece().getScore() > sourceMax) {
-                                sourceMax = m.getPiece().getScore();
-                            }
+            for (BoardSquare bs : tempBoard.getBoardSquares()) {
+                if (bs.isOccupied() && bs.getPiece().getColor() == color.other() &&
+                        bs.getPiece().getAvailableMoves(tempBoard, bs).size() != 0) {
+                    moves = bs.getPiece().getAvailableMoves(tempBoard, bs);
+                    for (BoardSquare m : moves) {
+                        if (m.isOccupied() && m.getPiece().getScore() > sourceMax) {
+                            sourceMax = m.getPiece().getScore();
                         }
                     }
                 }
