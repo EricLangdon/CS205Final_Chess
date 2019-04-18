@@ -201,8 +201,8 @@ public class Game {
 
         ArrayList<Piece> blackLeft = board.getPieces(Color.BLACK);
         ArrayList<Piece> whiteLeft = board.getPieces(Color.WHITE);
-        Game currentGame=states.peek();
-        Game threeEarlier= states.get(9);
+//        Game currentGame=states.peek();
+        //Game threeEarlier= states.get(9);
         if (blackLeft.size() <= 2 && whiteLeft.size() <= 2) {
             if (blackLeft.size() == 1 && whiteLeft.size() == 1) {
                 return true;
@@ -239,10 +239,14 @@ public class Game {
                 }
             }
         //Todo review in meeting
-        } else if (states.peek().equals(states.get(9))) {
-            return true;
+        } else if (states.size()>=9) {
+            if(states.peek().equals(states.get(9))){
+                return true;
+            }else{
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
     /**
