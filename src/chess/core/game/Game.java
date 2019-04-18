@@ -2,18 +2,19 @@ package chess.core.game;
 
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
+import chess.core.game.cpu.CPU;
 import chess.core.game.cpu.ComplexCPU;
 import chess.core.game.cpu.SimpleCPU;
 import chess.core.piece.Color;
 import chess.core.piece.Piece;
 import chess.gui.ChessGUI;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Stack;
-
-import static chess.core.game.GameResult.BLACKWIN;
 
 public class Game {
     private Board board;
@@ -24,6 +25,7 @@ public class Game {
     private ChessClock p2Clock;
     private GameMode mode;
     private ChessGUI ui;
+    private static Timeline cpuTimer;
 
     private Stack<Game> states;
 
@@ -44,6 +46,12 @@ public class Game {
         newGame();
         states = new Stack<>();
         this.states.push(new Game(this));
+        if(cpuTimer != null){
+            cpuTimer.stop();
+        }
+        if (mode != GameMode.PVP) {
+            this.startCPU();
+        }
     }
 
 
@@ -60,7 +68,7 @@ public class Game {
     /**
      * Copy constructor
      */
-    public Game(Game game) {
+    private Game(Game game) {
         this.board = new Board(game.board);
         this.currentTurn = game.currentTurn;
         this.player1 = game.player1;
@@ -73,9 +81,31 @@ public class Game {
     /**
      * Setup game and board for a game
      */
-    public void newGame() {
+    private void newGame() {
         board = new Board();
         currentTurn = Color.WHITE;
+    }
+
+
+    /**
+     * Start the computer player on another thread
+     */
+    private void startCPU() {
+        CPU cpu;
+        if (mode == GameMode.SMART_COMPUTER) {
+            cpu = new ComplexCPU();
+        } else {
+            cpu = new SimpleCPU();
+        }
+        CPU finalCpu = cpu;
+        cpuTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if (currentTurn == player2) {
+                finalCpu.choiceMove(board);
+                executeTurn();
+            }
+        }));
+        cpuTimer.setCycleCount(Timeline.INDEFINITE);
+        cpuTimer.play();
     }
 
     /**
@@ -107,6 +137,9 @@ public class Game {
         if (game.getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
             game = states.pop();
         }
+        if(mode == GameMode.SMART_COMPUTER || mode == GameMode.DUMB_COMPUTER){
+            game = states.pop();
+        }
         this.board = game.board;
         this.currentTurn = game.currentTurn;
         this.player1 = game.player1;
@@ -121,30 +154,10 @@ public class Game {
     /**
      * Execute turn
      */
-    public void executeTurn() {
-        SimpleCPU computer = new SimpleCPU();    //Todo Reset execute turn when done
-        ComplexCPU ai = new ComplexCPU();
-        switch (mode) {
-            case SMART_COMPUTER:
-                ai.choiceMove(board);
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                break;
-            case DUMB_COMPUTER:
-                computer.choiceMove(board);
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                break;
-            case PVP:
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                break;
-        }
+    public synchronized void executeTurn() {
+        ui.turnComplete();
         this.states.push(new Game(this));
+        currentTurn = currentTurn.other();
     }
 
     /**
