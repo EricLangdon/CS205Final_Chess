@@ -98,6 +98,9 @@ public class Game {
         }
         CPU finalCpu = cpu;
         cpuTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if(isGameOver()){
+                return;
+            }
             if (currentTurn == player2) {
                 finalCpu.choiceMove(board);
                 executeTurn();
