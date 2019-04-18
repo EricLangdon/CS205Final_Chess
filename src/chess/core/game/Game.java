@@ -132,11 +132,16 @@ public class Game {
         if (states.size() == 1 && states.peek().getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
             return false;
         }
+
+        if(currentTurn == player2 && mode != GameMode.PVP){
+            return false;
+        }
+
         Game game = states.pop();
         if (game.getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
             game = states.pop();
         }
-        if(mode == GameMode.SMART_COMPUTER || mode == GameMode.DUMB_COMPUTER){
+        if(mode != GameMode.PVP){
             game = states.pop();
         }
         this.board = game.board;
@@ -154,9 +159,9 @@ public class Game {
      * Execute turn
      */
     public synchronized void executeTurn() {
-        ui.turnComplete();
-        this.states.push(new Game(this));
         currentTurn = currentTurn.other();
+        this.states.push(new Game(this));
+        ui.turnComplete();
     }
 
     /**
@@ -287,6 +292,14 @@ public class Game {
      */
     public Color getCurrentTurn() {
         return currentTurn;
+    }
+
+    public Color getPlayer1Color() {
+        return player1;
+    }
+
+    public Color getPlayer2Color() {
+        return player2;
     }
 
     /**

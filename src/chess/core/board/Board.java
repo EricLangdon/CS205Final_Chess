@@ -74,6 +74,7 @@ public class Board {
                 }
             }
         }
+        captured = new ArrayList<>(oldBoard.captured);
         moves = new ArrayList<>(oldBoard.moves);
     }
 
