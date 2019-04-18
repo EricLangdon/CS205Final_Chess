@@ -4,6 +4,7 @@ import chess.core.board.Board;
 import chess.core.board.BoardSquare;
 import chess.core.game.Game;
 import chess.core.game.GameResult;
+import chess.core.game.JsonLoader;
 import chess.core.piece.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -282,10 +283,11 @@ public class ChessGUI extends Application {
      */
     private void save(Stage stage) {
         FileChooser fc = new FileChooser();
-        fc.setTitle("Load from file");
+        fc.setTitle("Save to file");
         File file = fc.showSaveDialog(stage);
         if (file != null) {
-            this.game.save(file);
+            JsonLoader loader = this.game.getLoader();
+            this.game.save(loader);
         }
     }
 
@@ -294,11 +296,12 @@ public class ChessGUI extends Application {
      */
     private void load(Stage stage) {
         FileChooser fc = new FileChooser();
-        fc.setTitle("Save to file");
+        fc.setTitle("Load from file");
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
         File file = fc.showOpenDialog(stage);
         if (file != null) {
-            this.game.load(file);
+            JsonLoader loader = this.game.getLoader();
+            this.game.load(loader, file);
         }
     }
 

@@ -23,6 +23,7 @@ public class Game {
     private ChessClock p2Clock;
     private GameMode mode;
     private ChessGUI ui;
+    private JsonLoader loader;
 
     private Stack<Game> states;
 
@@ -33,13 +34,14 @@ public class Game {
      * @param player1 color of player1
      * @param player2 color of player2
      */
-    public Game(GameMode mode, Color player1, Color player2, ChessClock p1Clock, ChessClock p2Clock, ChessGUI ui) {
+    public Game(GameMode mode, Color player1, Color player2, ChessClock p1Clock, ChessClock p2Clock, ChessGUI ui, JsonLoader loader) {
         this.mode = mode;
         this.player1 = player1;
         this.player2 = player2;
         this.p1Clock = p1Clock;
         this.p2Clock = p2Clock;
         this.ui = ui;
+        this.loader = loader;
         newGame();
         states = new Stack<>();
         this.states.push(new Game(this));
@@ -53,7 +55,7 @@ public class Game {
      * @param mode gamemmode
      */
     public Game(GameMode mode, ChessGUI ui) {
-        this(mode, Color.WHITE, Color.BLACK, new ChessClock(Color.WHITE), new ChessClock(Color.BLACK), ui);
+        this(mode, Color.WHITE, Color.BLACK, new ChessClock(Color.WHITE), new ChessClock(Color.BLACK), ui, new JsonLoader());
     }
 
     /**
@@ -80,19 +82,21 @@ public class Game {
     /**
      * Save game to file
      *
-     * @param file file to save to
+     * @param loader the Json object used to parse and save the data
+     * @return the file to be saved
      */
-    public void save(File file) {
-        // TODO: implement
+    public File save(JsonLoader loader) {
+        return loader.save();
     }
 
     /**
      * Load game from a filepath
      *
-     * @param file file to load from
+     * @param loader Json loader
+     * @param file the file to be loaded
      */
-    public void load(File file) {
-        // TODO: implement
+    public void load(JsonLoader loader, File file) {
+        loader.load(file);
     }
 
     public boolean undo() {
@@ -305,6 +309,24 @@ public class Game {
         } else {
             return p2Clock.printTime();
         }
+    }
+
+    /**
+     * getLoader
+     *
+     * @return the Json object used to save/load
+     */
+    public JsonLoader getLoader() {
+        return loader;
+    }
+
+    /**
+     * setLoader
+     *
+     * @param newLoader the new Json object to be used
+     */
+    public void setLoader(JsonLoader newLoader) {
+        this.loader = newLoader;
     }
 
     public enum GameMode {
