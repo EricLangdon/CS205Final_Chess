@@ -13,7 +13,7 @@ public class King extends Piece {
     public King(Color color) {
         super(color);
         unicode = 0x2654;
-        score = 99;
+        score = 999;
     }
 
     /**

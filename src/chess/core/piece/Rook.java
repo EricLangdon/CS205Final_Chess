@@ -13,7 +13,7 @@ public class Rook extends Piece {
     public Rook(Color color) {
         super(color);
         unicode = 0x2656;
-        score = 5;
+        score = 50;
     }
 
     /**

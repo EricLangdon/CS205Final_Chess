@@ -34,7 +34,7 @@ public class ComplexCPU extends CPU {
         ArrayList<TargetScore> targetScores = new ArrayList<>();
         ArrayList<TargetScore> targetMaxes = new ArrayList<>();
         ArrayList<BoardSquare> moves;
-        int sourceMax = -127, targetMax = -127;
+        int sourceMax = -9999, targetMax = -9999;
         Random random = new Random();
         int randomNum = 0;
 
@@ -67,7 +67,7 @@ public class ComplexCPU extends CPU {
                         }
                     }
                     targetScores = new ArrayList<TargetScore>();
-                    targetMax = -127;
+                    targetMax = -9999;
                 }
             }
         }
@@ -106,7 +106,7 @@ public class ComplexCPU extends CPU {
         BoardSquare square;
         ArrayList<BoardSquare> moves;
         int sourceMax = 0;
-        TargetScore moveScore = new TargetScore(target, -127);
+        TargetScore moveScore = new TargetScore(target, -9999);
         boolean checkmate = false;
 
         if (depth == 3) {
@@ -152,7 +152,7 @@ public class ComplexCPU extends CPU {
                 }
             }
             if (checkmate) {
-                moveScore.score += 100;
+                moveScore.score += 1000;
                 return moveScore;
             }
             // specific tweaks
