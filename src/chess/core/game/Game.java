@@ -18,6 +18,7 @@ import java.util.Stack;
 
 public class Game {
     private Board board;
+    private boolean threeFoldDraw;
     private Color currentTurn;
     private Color player1;
     private Color player2;
@@ -70,6 +71,7 @@ public class Game {
      */
     private Game(Game game) {
         this.board = new Board(game.board);
+        this.threeFoldDraw=false;
         this.currentTurn = game.currentTurn;
         this.player1 = game.player1;
         this.player2 = game.player2;
@@ -176,7 +178,7 @@ public class Game {
     public GameResult getWinner() {
         if (!isGameOver()) {
             return null;
-        } else if (board.colorInCheck(Color.WHITE)) {
+        } else if (board.colorInCheck(Color.WHITE) && !threeFoldDraw) {
             ArrayList<BoardSquare> holder;
             int totalMoves = 0;
             for (BoardSquare bs : board.getBoardSquares()) {
@@ -191,7 +193,7 @@ public class Game {
                 return null;
             }
 
-        } else if (board.colorInCheck(Color.BLACK)) {
+        } else if (board.colorInCheck(Color.BLACK) && !threeFoldDraw) {
             ArrayList<BoardSquare> holder;
             int totalMoves = 0;
             for (BoardSquare bs : board.getBoardSquares()) {
@@ -257,9 +259,13 @@ public class Game {
             if(gameMoves.get(gameMoves.size()-2).getTarget() == gameMoves.get(gameMoves.size() - 4).getSource()
                     && gameMoves.get(gameMoves.size()-4).getTarget()==gameMoves.get(gameMoves.size()-6).getSource()
                     && gameMoves.get(gameMoves.size()-6).getTarget()==gameMoves.get(gameMoves.size()-8).getSource()){
-                return true;
+                if(gameMoves.get(gameMoves.size()-1).getTarget() == gameMoves.get(gameMoves.size() - 3).getSource()
+                        && gameMoves.get(gameMoves.size()-3).getTarget()==gameMoves.get(gameMoves.size()-5).getSource()
+                        && gameMoves.get(gameMoves.size()-5).getTarget()==gameMoves.get(gameMoves.size()-7).getSource()) {
+                    threeFoldDraw=true;
+                    return true;
+                }
             }
-
         }
         // Checks if player can move a piece
         for (BoardSquare bs : board.getBoardSquares()) {
