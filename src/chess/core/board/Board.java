@@ -199,6 +199,27 @@ public class Board {
     }
 
     /**
+     * checkmate
+     *
+     * @param color color to check
+     * @return true if side is in checkmate
+     */
+    public boolean checkmate (Color color) {
+        boolean checkmate = true;
+
+        if (!colorInCheck(color)) {
+            return false;
+        } else {
+            for (BoardSquare bs : this.getBoardSquares()) {
+                if (bs.isOccupied() && bs.getPiece().getColor() == color && bs.getPiece().getAvailableMoves(this, bs).size() > 0) {
+                    checkmate = false;
+                }
+            }
+        }
+        return checkmate;
+    }
+
+    /**
      * isCaptured
      *
      * @param p the piece that has been captured
