@@ -255,7 +255,7 @@ public class Game {
                 }
             }
         //Threefold repetition draw check
-        } else if (gameMoves.size()>=4) {
+        } else if (gameMoves.size()>=8) {
             if(gameMoves.get(gameMoves.size()-2).getTarget() == gameMoves.get(gameMoves.size() - 4).getSource()
                     && gameMoves.get(gameMoves.size()-4).getTarget()==gameMoves.get(gameMoves.size()-6).getSource()
                     && gameMoves.get(gameMoves.size()-6).getTarget()==gameMoves.get(gameMoves.size()-8).getSource()){
