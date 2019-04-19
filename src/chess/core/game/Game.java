@@ -2,6 +2,7 @@ package chess.core.game;
 
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
+import chess.core.board.Move;
 import chess.core.game.cpu.ComplexCPU;
 import chess.core.game.cpu.SimpleCPU;
 import chess.core.piece.*;
@@ -191,18 +192,10 @@ public class Game {
 
     @SuppressWarnings("Duplicates")
     public boolean isGameOver() {
-        // TODO check draw
-        // Checks if player can move a piece
-        for (BoardSquare bs : board.getBoardSquares()) {
-            if (bs.isOccupied() && bs.getPiece().getColor().equals(currentTurn) && !bs.getPiece().getAvailableMoves(board, bs).isEmpty()) {
-                return false;
-            }
-        }
-
         ArrayList<Piece> blackLeft = board.getPieces(Color.BLACK);
         ArrayList<Piece> whiteLeft = board.getPieces(Color.WHITE);
-//        Game currentGame=states.peek();
-        //Game threeEarlier= states.get(9);
+        ArrayList<Move> gameMoves = getBoard().getMoves();
+        //Piece deficit stalemate check
         if (blackLeft.size() <= 2 && whiteLeft.size() <= 2) {
             if (blackLeft.size() == 1 && whiteLeft.size() == 1) {
                 return true;
@@ -238,11 +231,18 @@ public class Game {
                     return false;
                 }
             }
-        //Todo review in meeting
-        } else if (states.size()>=9) {
-            if(states.peek().equals(states.get(9))){
+        //Threefold repetition draw check
+        } else if (gameMoves.size()>=4) {
+            if(gameMoves.get(gameMoves.size()-2).getTarget() == gameMoves.get(gameMoves.size() - 4).getSource()
+                    && gameMoves.get(gameMoves.size()-4).getTarget()==gameMoves.get(gameMoves.size()-6).getSource()
+                    && gameMoves.get(gameMoves.size()-6).getTarget()==gameMoves.get(gameMoves.size()-8).getSource()){
                 return true;
-            }else{
+            }
+
+        }
+        // Checks if player can move a piece
+        for (BoardSquare bs : board.getBoardSquares()) {
+            if (bs.isOccupied() && bs.getPiece().getColor().equals(currentTurn) && !bs.getPiece().getAvailableMoves(board, bs).isEmpty()) {
                 return false;
             }
         }
@@ -310,5 +310,14 @@ public class Game {
     public enum GameMode {
         PVP, DUMB_COMPUTER, SMART_COMPUTER;
     }
+
+    public boolean equals(Game oldGame) {
+        if (this.getBoard().equals(oldGame.getBoard())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 }
