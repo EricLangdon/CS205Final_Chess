@@ -74,6 +74,7 @@ public class Board {
                 }
             }
         }
+        captured = new ArrayList<>(oldBoard.captured);
         moves = new ArrayList<>(oldBoard.moves);
     }
 
@@ -121,16 +122,16 @@ public class Board {
         if (source.isOccupied() && source.getPiece().legalMove(this, source, target, checkCheck)) {
             Move move = new Move(source, target);
             //Castling logic
-            if (source.getX() == 4 && source.getY() == 0 && target.getX() == 2) {
+            if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 0 && target.getX() == 2) {
                 getBoardSquareAt(3, 0).setPiece(getBoardSquareAt(0, 0).getPiece());
                 getBoardSquareAt(0, 0).setPiece(null);
-            } else if (source.getX() == 4 && source.getY() == 0 && target.getX() == 6) {
+            } else if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 0 && target.getX() == 6) {
                 getBoardSquareAt(5, 0).setPiece(getBoardSquareAt(7, 0).getPiece());
                 getBoardSquareAt(7, 0).setPiece(null);
-            } else if (source.getX() == 4 && source.getY() == 7 && target.getX() == 2) {
+            } else if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 7 && target.getX() == 2) {
                 getBoardSquareAt(3, 7).setPiece(getBoardSquareAt(0, 7).getPiece());
                 getBoardSquareAt(0, 7).setPiece(null);
-            } else if (source.getX() == 4 && source.getY() == 7 && target.getX() == 6) {
+            } else if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 7 && target.getX() == 6) {
                 getBoardSquareAt(5, 7).setPiece(getBoardSquareAt(7, 7).getPiece());
                 getBoardSquareAt(7, 7).setPiece(null);
             }

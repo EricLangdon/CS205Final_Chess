@@ -3,17 +3,18 @@ package chess.core.game;
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
 import chess.core.board.Move;
+import chess.core.game.cpu.CPU;
 import chess.core.game.cpu.ComplexCPU;
 import chess.core.game.cpu.SimpleCPU;
 import chess.core.piece.*;
 import chess.gui.ChessGUI;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Stack;
-
-import static chess.core.game.GameResult.BLACKWIN;
 
 public class Game {
     private Board board;
@@ -24,6 +25,7 @@ public class Game {
     private ChessClock p2Clock;
     private GameMode mode;
     private ChessGUI ui;
+    private static Timeline cpuTimer;
 
     private Stack<Game> states;
 
@@ -44,6 +46,12 @@ public class Game {
         newGame();
         states = new Stack<>();
         this.states.push(new Game(this));
+        if(cpuTimer != null){
+            cpuTimer.stop();
+        }
+        if (mode != GameMode.PVP) {
+            this.startCPU();
+        }
     }
 
 
@@ -60,7 +68,7 @@ public class Game {
     /**
      * Copy constructor
      */
-    public Game(Game game) {
+    private Game(Game game) {
         this.board = new Board(game.board);
         this.currentTurn = game.currentTurn;
         this.player1 = game.player1;
@@ -73,9 +81,34 @@ public class Game {
     /**
      * Setup game and board for a game
      */
-    public void newGame() {
+    private void newGame() {
         board = new Board();
         currentTurn = Color.WHITE;
+    }
+
+
+    /**
+     * Start the computer player on another thread
+     */
+    private void startCPU() {
+        CPU cpu;
+        if (mode == GameMode.SMART_COMPUTER) {
+            cpu = new ComplexCPU();
+        } else {
+            cpu = new SimpleCPU();
+        }
+        CPU finalCpu = cpu;
+        cpuTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            if(isGameOver()){
+                return;
+            }
+            if (currentTurn == player2) {
+                finalCpu.choiceMove(board);
+                executeTurn();
+            }
+        }));
+        cpuTimer.setCycleCount(Timeline.INDEFINITE);
+        cpuTimer.play();
     }
 
     /**
@@ -103,8 +136,16 @@ public class Game {
         if (states.size() == 1 && states.peek().getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
             return false;
         }
+
+        if(currentTurn == player2 && mode != GameMode.PVP){
+            return false;
+        }
+
         Game game = states.pop();
         if (game.getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
+            game = states.pop();
+        }
+        if(mode != GameMode.PVP){
             game = states.pop();
         }
         this.board = game.board;
@@ -121,30 +162,10 @@ public class Game {
     /**
      * Execute turn
      */
-    public void executeTurn() {
-        SimpleCPU computer = new SimpleCPU();
-        ComplexCPU ai = new ComplexCPU();
-        switch (mode) {
-            case SMART_COMPUTER:
-                ai.choiceMove(board);
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                break;
-            case DUMB_COMPUTER:
-                computer.choiceMove(board);
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                break;
-            case PVP:
-                currentTurn = currentTurn.other();
-                ui.turnComplete();
-                break;
-        }
+    public synchronized void executeTurn() {
+        currentTurn = currentTurn.other();
         this.states.push(new Game(this));
+        ui.turnComplete();
     }
 
     /**
@@ -274,6 +295,14 @@ public class Game {
      */
     public Color getCurrentTurn() {
         return currentTurn;
+    }
+
+    public Color getPlayer1Color() {
+        return player1;
+    }
+
+    public Color getPlayer2Color() {
+        return player2;
     }
 
     /**

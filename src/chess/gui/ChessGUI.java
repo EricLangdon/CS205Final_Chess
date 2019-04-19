@@ -160,6 +160,9 @@ public class ChessGUI extends Application {
 
                 // event handler for clicking source then target
                 bsp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                    if (game.getMode() != Game.GameMode.PVP && game.getCurrentTurn() != game.getPlayer1Color()) {
+                        return;
+                    }
                     // if a square is already selected, move its piece
                     if (board.getSelectedSquare() != null && !boardSquare.equals(board.getSelectedSquare())) {
                         if (board.movePiece(board.getSelectedSquare(), boardSquare)) {
@@ -191,6 +194,9 @@ public class ChessGUI extends Application {
                 // event handlers for drag and drop movement
                 // triggered when the drag starts on bsp
                 bsp.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
+                    if (game.getMode() != Game.GameMode.PVP && game.getCurrentTurn() != game.getPlayer1Color()) {
+                        return;
+                    }
                     if (!boardSquare.isOccupied() || !boardSquare.getPiece().getColor().equals(game.getCurrentTurn())) {
                         return;
                     }
