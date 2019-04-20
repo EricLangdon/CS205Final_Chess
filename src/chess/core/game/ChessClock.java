@@ -2,62 +2,66 @@ package chess.core.game;
 
 import chess.core.piece.Color;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+
 public class ChessClock {
-    Color color;
-    int timeRemaining;
-    final int TIME_ALLOWED = 300;   //seconds
+    private static final int DEFAULT_TIME = 5 * 60 * 1000;
+    private Color color;
+    private Game game;
+    private int time;
+    private boolean active;
+    private ScheduledFuture<?> timer;
 
-    /**
-     * Default Constructor
-     */
-    public ChessClock(Color color) {
+    public ChessClock(Game game, Color color) {
+        this(game, color, DEFAULT_TIME);
+    }
+
+    public ChessClock(Game game, Color color, int time) {
+        this.time = time;
         this.color = color;
-        timeRemaining = TIME_ALLOWED;
+        this.active = false;
+        this.game = game;
+
+        ScheduledExecutorService exec = Executors.newScheduledThreadPool(10);
+        timer = exec.scheduleAtFixedRate(() -> {
+            if (this.game.getCurrentTurn() == color) {
+                this.time -= 100;
+            }
+        }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
-    //TODO: UPDATE TIMER
-    /**
-     * updateTime
-     *
-     * @param timeSpent the time (in seconds) used by the player to make their move
-     */
-    public void decrementTime(int timeSpent) {
-
-        timeRemaining = getTimeRemaining() - timeSpent;
+    public void start() {
+        this.active = true;
     }
 
-    /**
-     * getTimeRemaining
-     *
-     * @return the remaining time the player has to make their moves
-     */
-    public int getTimeRemaining() {
-        return timeRemaining;
+    public void pause() {
+        this.active = false;
     }
 
-    /**
-     * players turn starts
-     * clock starts
-     * redraw clock every second, get time from class
-     * stop clock once turn ends
-     */
+    public void cancel() {
+        timer.cancel(false);
+    }
 
-    /**
-     * printTime
-     *
-     * @return formatted string of the time remaining (m:ss)
-     */
-     public String printTime() {
-         int minutes;
-         int seconds;
+    public boolean isActive() {
+        return active;
+    }
 
-         minutes = getTimeRemaining() / 60;
-         seconds = getTimeRemaining() % 60;
-         if (seconds < 10) {
-             return (minutes + ":0" + seconds);
-         } else {
-             return (minutes + ":" + seconds);
-         }
-     }
+    public Color getColor() {
+        return color;
+    }
 
+    public int getTime() {
+        return time;
+    }
+
+    @Override
+    public String toString() {
+        int minutes = (this.time / 1000) / 60;
+        int seconds = (this.time / 1000) % 60;
+        return String.format("%d", minutes) + ":" + String.format("%02d", seconds);
+    }
 }

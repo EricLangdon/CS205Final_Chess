@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Game {
+    private static Timeline cpuTimer;
     private Board board;
     private boolean threeFoldDraw;
     private Color currentTurn;
@@ -26,8 +27,6 @@ public class Game {
     private ChessClock p2Clock;
     private GameMode mode;
     private ChessGUI ui;
-    private static Timeline cpuTimer;
-
     private Stack<Game> states;
 
     /**
@@ -37,17 +36,17 @@ public class Game {
      * @param player1 color of player1
      * @param player2 color of player2
      */
-    public Game(GameMode mode, Color player1, Color player2, ChessClock p1Clock, ChessClock p2Clock, ChessGUI ui) {
+    public Game(GameMode mode, Color player1, Color player2, ChessGUI ui) {
         this.mode = mode;
         this.player1 = player1;
         this.player2 = player2;
-        this.p1Clock = p1Clock;
-        this.p2Clock = p2Clock;
+        this.p1Clock = new ChessClock(this, player1);
+        this.p2Clock = new ChessClock(this, player2);
         this.ui = ui;
         newGame();
         states = new Stack<>();
         this.states.push(new Game(this));
-        if(cpuTimer != null){
+        if (cpuTimer != null) {
             cpuTimer.stop();
         }
         if (mode != GameMode.PVP) {
@@ -63,7 +62,7 @@ public class Game {
      * @param mode gamemmode
      */
     public Game(GameMode mode, ChessGUI ui) {
-        this(mode, Color.WHITE, Color.BLACK, new ChessClock(Color.WHITE), new ChessClock(Color.BLACK), ui);
+        this(mode, Color.WHITE, Color.BLACK, ui);
     }
 
     /**
@@ -71,7 +70,7 @@ public class Game {
      */
     private Game(Game game) {
         this.board = new Board(game.board);
-        this.threeFoldDraw=false;
+        this.threeFoldDraw = false;
         this.currentTurn = game.currentTurn;
         this.player1 = game.player1;
         this.player2 = game.player2;
@@ -88,6 +87,21 @@ public class Game {
         currentTurn = Color.WHITE;
     }
 
+    /**
+     * End all timers and threads that are connected to this game
+     */
+    public void end() {
+        if (p1Clock != null) {
+            p1Clock.cancel();
+        }
+        if (p2Clock != null) {
+            p2Clock.cancel();
+        }
+        if (cpuTimer != null) {
+            cpuTimer.stop();
+        }
+    }
+
 
     /**
      * Start the computer player on another thread
@@ -101,7 +115,7 @@ public class Game {
         }
         CPU finalCpu = cpu;
         cpuTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-            if(isGameOver()){
+            if (isGameOver()) {
                 return;
             }
             if (currentTurn == player2) {
@@ -139,7 +153,7 @@ public class Game {
             return false;
         }
 
-        if(currentTurn == player2 && mode != GameMode.PVP){
+        if (currentTurn == player2 && mode != GameMode.PVP) {
             return false;
         }
 
@@ -147,7 +161,7 @@ public class Game {
         if (game.getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
             game = states.pop();
         }
-        if(mode != GameMode.PVP){
+        if (mode != GameMode.PVP) {
             game = states.pop();
         }
         this.board = game.board;
@@ -254,15 +268,15 @@ public class Game {
                     return false;
                 }
             }
-        //Threefold repetition draw check
-        } else if (gameMoves.size()>=8) {
-            if(gameMoves.get(gameMoves.size()-2).getTarget() == gameMoves.get(gameMoves.size() - 4).getSource()
-                    && gameMoves.get(gameMoves.size()-4).getTarget()==gameMoves.get(gameMoves.size()-6).getSource()
-                    && gameMoves.get(gameMoves.size()-6).getTarget()==gameMoves.get(gameMoves.size()-8).getSource()){
-                if(gameMoves.get(gameMoves.size()-1).getTarget() == gameMoves.get(gameMoves.size() - 3).getSource()
-                        && gameMoves.get(gameMoves.size()-3).getTarget()==gameMoves.get(gameMoves.size()-5).getSource()
-                        && gameMoves.get(gameMoves.size()-5).getTarget()==gameMoves.get(gameMoves.size()-7).getSource()) {
-                    threeFoldDraw=true;
+            //Threefold repetition draw check
+        } else if (gameMoves.size() >= 8) {
+            if (gameMoves.get(gameMoves.size() - 2).getTarget() == gameMoves.get(gameMoves.size() - 4).getSource()
+                    && gameMoves.get(gameMoves.size() - 4).getTarget() == gameMoves.get(gameMoves.size() - 6).getSource()
+                    && gameMoves.get(gameMoves.size() - 6).getTarget() == gameMoves.get(gameMoves.size() - 8).getSource()) {
+                if (gameMoves.get(gameMoves.size() - 1).getTarget() == gameMoves.get(gameMoves.size() - 3).getSource()
+                        && gameMoves.get(gameMoves.size() - 3).getTarget() == gameMoves.get(gameMoves.size() - 5).getSource()
+                        && gameMoves.get(gameMoves.size() - 5).getTarget() == gameMoves.get(gameMoves.size() - 7).getSource()) {
+                    threeFoldDraw = true;
                     return true;
                 }
             }
@@ -336,14 +350,10 @@ public class Game {
      */
     public String getTimeRemaining(Color color) {
         if (player1.equals(color)) {
-            return p1Clock.printTime();
+            return p1Clock.toString();
         } else {
-            return p2Clock.printTime();
+            return p2Clock.toString();
         }
-    }
-
-    public enum GameMode {
-        PVP, DUMB_COMPUTER, SMART_COMPUTER;
     }
 
     public boolean equals(Game oldGame) {
@@ -352,6 +362,10 @@ public class Game {
         } else {
             return false;
         }
+    }
+
+    public enum GameMode {
+        PVP, DUMB_COMPUTER, SMART_COMPUTER;
     }
 
 

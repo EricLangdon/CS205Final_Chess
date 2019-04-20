@@ -102,28 +102,30 @@ public class ChessGUI extends Application {
         bp.setCenter(grid);
         redrawGrid();
 
+        bp.setTop(new PlayerInfoPane(this.game, chess.core.piece.Color.BLACK));
+        bp.setBottom(new PlayerInfoPane(this.game, chess.core.piece.Color.WHITE));
+
         // update player info on a timer so the timer appears to countdown
         Timer timer = new java.util.Timer();
         timer.schedule(new TimerTask() {
             public void run() {
                 Platform.runLater(() -> updatePlayerInfo());
             }
-        }, 0, 500);
+        }, 0, 100);
 
         primaryStage.show();
 
     }
 
     private void updatePlayerInfo() {
-        bp.setTop(new PlayerInfoPane(this.game, chess.core.piece.Color.BLACK));
-        bp.setBottom(new PlayerInfoPane(this.game, chess.core.piece.Color.WHITE));
+        ((PlayerInfoPane) bp.getBottom()).updateTimer();
+        ((PlayerInfoPane) bp.getTop()).updateTimer();
     }
 
     /**
      * Redraw the entire board
      */
     private void redrawGrid() {
-        updatePlayerInfo();
         this.grid.getChildren().clear();
         for (int i = 0; i < Board.NUM_COLS + 1; i++) {
             for (int j = 0; j < Board.NUM_ROWS + 1; j++) {
@@ -325,6 +327,7 @@ public class ChessGUI extends Application {
         for (Game.GameMode mode : Game.GameMode.values()) {
             MenuItem item = new MenuItem(mode.toString());
             item.setOnAction(event -> {
+                this.game.end();
                 this.game = new Game(mode, this);
                 updateNewMenu(newMenu, modifier);
                 redrawGrid();
@@ -379,6 +382,7 @@ public class ChessGUI extends Application {
             if (!result.isPresent() || result.get().equals(exitButtonType)) {
                 System.exit(0);
             } else if (result.get().equals(newGameButtonType)) {
+                this.game.end();
                 this.game = new Game(game.getMode(), this);
             }
         }
