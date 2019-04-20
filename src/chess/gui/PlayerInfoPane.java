@@ -29,7 +29,7 @@ public class PlayerInfoPane extends HBox {
         this.setPadding(new Insets(0));
         this.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        Label scoreLabel = new Label("Score: " + this.game.getScore(player));
+        Label scoreLabel = new Label("Score: " + this.game.getScore(player) / 10);
         scoreLabel.setFont(new Font(22));
         scoreLabel.setTextFill(TEXT_COLOR);
 
