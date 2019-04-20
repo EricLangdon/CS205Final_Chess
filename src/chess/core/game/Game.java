@@ -192,6 +192,10 @@ public class Game {
     public GameResult getWinner() {
         if (!isGameOver()) {
             return null;
+        } else if (p1Clock.getTime() == -1) {
+            return (p1Clock.getColor() == Color.BLACK) ? GameResult.WHITEWIN_TIME : GameResult.WHITEWIN_TIME;
+        } else if (p2Clock.getTime() == -1) {
+            return (p1Clock.getColor() == Color.BLACK) ? GameResult.WHITEWIN_TIME : GameResult.WHITEWIN_TIME;
         } else if (board.colorInCheck(Color.WHITE) && !threeFoldDraw) {
             ArrayList<BoardSquare> holder;
             int totalMoves = 0;
@@ -229,6 +233,9 @@ public class Game {
 
     @SuppressWarnings("Duplicates")
     public boolean isGameOver() {
+        if (p1Clock.getTime() == -1 || p2Clock.getTime() == -1) {
+            return true;
+        }
         ArrayList<Piece> blackLeft = board.getPieces(Color.BLACK);
         ArrayList<Piece> whiteLeft = board.getPieces(Color.WHITE);
         ArrayList<Move> gameMoves = getBoard().getMoves();
@@ -356,6 +363,12 @@ public class Game {
         }
     }
 
+    public void disableTimer(Color color){
+        ChessClock clock = color == player1 ? p1Clock : p2Clock;
+        clock.setTime(0);
+        clock.cancel();
+    }
+
     public boolean equals(Game oldGame) {
         if (this.getBoard().equals(oldGame.getBoard())) {
             return true;
@@ -368,5 +381,11 @@ public class Game {
         PVP, DUMB_COMPUTER, SMART_COMPUTER;
     }
 
+    public ChessClock getP1Clock() {
+        return p1Clock;
+    }
 
+    public ChessClock getP2Clock() {
+        return p2Clock;
+    }
 }

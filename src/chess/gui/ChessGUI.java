@@ -102,7 +102,7 @@ public class ChessGUI extends Application {
         bp.setCenter(grid);
         redrawGrid();
 
-       redrawPlayerInfo();
+        redrawPlayerInfo();
 
         // update player info on a timer so the timer appears to countdown
         Timer timer = new java.util.Timer();
@@ -254,7 +254,7 @@ public class ChessGUI extends Application {
         }
     }
 
-    private void redrawPlayerInfo(){
+    private void redrawPlayerInfo() {
         bp.setTop(new PlayerInfoPane(this.game, chess.core.piece.Color.BLACK));
         bp.setBottom(new PlayerInfoPane(this.game, chess.core.piece.Color.WHITE));
     }
@@ -368,14 +368,42 @@ public class ChessGUI extends Application {
 
     private void handleGameOver() {
 
-        if (game.isGameOver()) {
+        if (!game.isGameOver()) {
+            return;
+        }
+        GameResult winner = game.getWinner();
+        if(winner == GameResult.BLACKWIN_TIME || winner == GameResult.WHITEWIN_TIME){
+            game.getP1Clock().pause();
+            game.getP2Clock().pause();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            chess.core.piece.Color color = winner == GameResult.WHITEWIN_TIME ? chess.core.piece.Color.WHITE : chess.core.piece.Color.BLACK;
+            alert.setContentText(color + " has run out of time. Continue playing?");
+
+            ButtonType continueButtonType = new ButtonType("Continue");
+            ButtonType exitButtonType = new ButtonType("Exit");
+
+            alert.getButtonTypes().clear();
+            alert.getButtonTypes().addAll(exitButtonType, continueButtonType);
+
+            Platform.runLater(() -> {
+                Optional<ButtonType> result = alert.showAndWait();
+                if (!result.isPresent() || result.get().equals(exitButtonType)) {
+                    System.exit(0);
+                } else if (result.get().equals(continueButtonType)) {
+                    this.game.disableTimer(color);
+                }
+            });
+
+        }else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game Over");
             alert.setHeaderText(null);
-            if (game.getWinner() == GameResult.DRAW) {
-                alert.setContentText("The game is a " + game.getWinner().toString() + "!");
+            if (winner == GameResult.DRAW) {
+                alert.setContentText("The game is a " + winner.toString() + "!");
             } else {
-                alert.setContentText(game.getWinner().toString() + " has won!");
+                alert.setContentText(winner.toString() + " has won!");
             }
 
             ButtonType exitButtonType = new ButtonType("Exit");
