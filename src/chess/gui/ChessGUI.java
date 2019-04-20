@@ -102,8 +102,7 @@ public class ChessGUI extends Application {
         bp.setCenter(grid);
         redrawGrid();
 
-        bp.setTop(new PlayerInfoPane(this.game, chess.core.piece.Color.BLACK));
-        bp.setBottom(new PlayerInfoPane(this.game, chess.core.piece.Color.WHITE));
+       redrawPlayerInfo();
 
         // update player info on a timer so the timer appears to countdown
         Timer timer = new java.util.Timer();
@@ -126,6 +125,7 @@ public class ChessGUI extends Application {
      * Redraw the entire board
      */
     private void redrawGrid() {
+        redrawPlayerInfo();
         this.grid.getChildren().clear();
         for (int i = 0; i < Board.NUM_COLS + 1; i++) {
             for (int j = 0; j < Board.NUM_ROWS + 1; j++) {
@@ -254,6 +254,11 @@ public class ChessGUI extends Application {
         }
     }
 
+    private void redrawPlayerInfo(){
+        bp.setTop(new PlayerInfoPane(this.game, chess.core.piece.Color.BLACK));
+        bp.setBottom(new PlayerInfoPane(this.game, chess.core.piece.Color.WHITE));
+    }
+
     private void handlePawnPromotion() {
         BoardSquare bs = game.getBoard().getPromotablePawn();
         chess.core.piece.Color color = bs.getPiece().getColor();
@@ -362,6 +367,7 @@ public class ChessGUI extends Application {
     }
 
     private void handleGameOver() {
+
         if (game.isGameOver()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game Over");
@@ -378,13 +384,16 @@ public class ChessGUI extends Application {
             alert.getButtonTypes().clear();
             alert.getButtonTypes().addAll(exitButtonType, newGameButtonType);
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (!result.isPresent() || result.get().equals(exitButtonType)) {
-                System.exit(0);
-            } else if (result.get().equals(newGameButtonType)) {
-                this.game.end();
-                this.game = new Game(game.getMode(), this);
-            }
+            Platform.runLater(() -> {
+                Optional<ButtonType> result = alert.showAndWait();
+                if (!result.isPresent() || result.get().equals(exitButtonType)) {
+                    System.exit(0);
+                } else if (result.get().equals(newGameButtonType)) {
+                    this.game.end();
+                    this.game = new Game(game.getMode(), this);
+                    redrawGrid();
+                }
+            });
         }
     }
 
