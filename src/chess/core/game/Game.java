@@ -193,9 +193,9 @@ public class Game {
         if (!isGameOver()) {
             return null;
         } else if (p1Clock.getTime() == -1) {
-            return (p1Clock.getColor() == Color.BLACK) ? GameResult.WHITEWIN_TIME : GameResult.WHITEWIN_TIME;
+            return (p1Clock.getColor() == Color.BLACK) ? GameResult.BLACKWIN_TIME : GameResult.WHITEWIN_TIME;
         } else if (p2Clock.getTime() == -1) {
-            return (p1Clock.getColor() == Color.BLACK) ? GameResult.WHITEWIN_TIME : GameResult.WHITEWIN_TIME;
+            return (p2Clock.getColor() == Color.BLACK) ? GameResult.BLACKWIN_TIME : GameResult.WHITEWIN_TIME;
         } else if (board.colorInCheck(Color.WHITE) && !threeFoldDraw) {
             ArrayList<BoardSquare> holder;
             int totalMoves = 0;
