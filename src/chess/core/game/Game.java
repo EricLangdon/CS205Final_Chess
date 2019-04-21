@@ -158,9 +158,11 @@ public class Game {
         }
 
         Game game = states.pop();
+        // pop again if the game state is the same (ie the first press of undo)
         if (game.getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
             game = states.pop();
         }
+        // pop again if the gamemode is not pvp, since computer's move AND player's move need to be undone
         if (mode != GameMode.PVP) {
             game = states.pop();
         }
