@@ -5,6 +5,7 @@ import chess.core.board.BoardSquare;
 import chess.core.piece.Color;
 import chess.core.piece.*;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,6 +17,14 @@ public class ComplexCPU extends CPU {
      */
     public ComplexCPU() {
         this.color = Color.BLACK;
+    }
+
+    /**
+     * Color Constructor
+     * @param newColor
+     */
+    public ComplexCPU(Color newColor) {
+        this.color = newColor;
     }
 
     /**
@@ -103,11 +112,11 @@ public class ComplexCPU extends CPU {
      */
     public TargetScore scoreMove(Board board, BoardSquare source, BoardSquare target, int depth) {
         Board tempBoard = new Board(board);
-        BoardSquare square;
         ArrayList<BoardSquare> moves;
         int sourceMax = 0;
+        int opp = 0;
         TargetScore moveScore = new TargetScore(target, -9999);
-        boolean checkmate = false;
+        ArrayList<TargetScore> oppMaxes = new ArrayList<>();
 
         if (depth == 3) {
             // TODO: go deeper
@@ -118,20 +127,38 @@ public class ComplexCPU extends CPU {
             }
             // simulate move
             tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()));
-            Board tempBoard2 = new Board(tempBoard);
             for (BoardSquare bs : tempBoard.getBoardSquares()) {
                 if (bs.isOccupied() && bs.getPiece().getColor() == color.other() &&
                         bs.getPiece().getAvailableMoves(board, bs).size() != 0) {
                     moves = bs.getPiece().getAvailableMoves(tempBoard, bs);
                     for (BoardSquare m : moves) {
                         // analyze next opponent move
-                        if (m.isOccupied()) {
-                            moveScore.score -= m.getPiece().getScore();
+                        TargetScore oppMax = new TargetScore(m, -9999);
+                        if (m.isOccupied() && m.getPiece().getScore() > oppMax.getScore()) {
+                            oppMax.score = m.getPiece().getScore();
+                            oppMax.target = m;
+                        } else {
+                            opp = 0;
                         }
-
+                        Board tempBoard2 = new Board(tempBoard);
+                        // simulate your next move
                         tempBoard2.movePiece(tempBoard2.getBoardSquareAt(bs.getX(), bs.getY()), tempBoard2.getBoardSquareAt(m.getX(), m.getY()));
-                        // TODO: analyze next domestic move
+                        if (tempBoard2.checkmate(color)) { // if opponent can put you in checkmate
+                            moveScore.score -= 1100;
+                        } else {
+                            for (BoardSquare bs2 : tempBoard2.getBoardSquares()) {
+                                if (bs2.isOccupied() && bs2.getPiece().getColor() == color &&
+                                        bs2.getPiece().getAvailableMoves(tempBoard2, bs2).size() != 0) {
+                                    for (BoardSquare m2 : moves) { // all possible domestic moves
+                                        if (m2.isOccupied() && m2.getPiece().getScore() - opp > sourceMax) {
+                                            sourceMax = m2.getPiece().getScore() - opp;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
+                    moveScore.score += sourceMax;
                 }
             }
             return moveScore;
@@ -145,13 +172,7 @@ public class ComplexCPU extends CPU {
             // simulate move
             tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()));
             // checkmate
-            checkmate = true;
-            for (BoardSquare bs : tempBoard.getBoardSquares()) {
-                if (bs.isOccupied() && bs.getPiece().getColor() == color.other() && bs.getPiece().getAvailableMoves(tempBoard, bs).size() > 0) {
-                    checkmate = false;
-                }
-            }
-            if (checkmate) {
+            if (tempBoard.checkmate(color)) {
                 moveScore.score += 1000;
                 return moveScore;
             }
