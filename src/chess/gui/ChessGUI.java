@@ -7,6 +7,7 @@ import chess.core.game.GameResult;
 import chess.core.piece.*;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -49,6 +50,11 @@ public class ChessGUI extends Application {
         Scene scene = new Scene(main, 900, 800);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Chess");
+        primaryStage.setMinHeight(700);
+        primaryStage.setMinWidth(700);
+
+        primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> resizeListener(primaryStage, obs, oldVal, newVal));
+        primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> resizeListener(primaryStage, obs, oldVal, newVal));
 
         bp = new BorderPane();
         main.setCenter(bp);
@@ -428,5 +434,12 @@ public class ChessGUI extends Application {
     public void turnComplete() {
         redrawGrid();
         handleGameOver();
+    }
+
+    public void resizeListener(Stage stage, ObservableValue observable, Number oldValue, Number newValue){
+        double size = Math.min(stage.getHeight(), stage.getWidth());
+        BoardSquarePane.SQUARE_SIZE = (int) size / 10;
+
+        redrawGrid();
     }
 }
