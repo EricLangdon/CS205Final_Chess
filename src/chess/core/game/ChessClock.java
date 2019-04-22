@@ -39,7 +39,7 @@ public class ChessClock {
 
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(10);
         timer = exec.scheduleAtFixedRate(() -> {
-            if (this.game.getCurrentTurn() == color && this.active) {
+            if (this.game.getCurrentTurn() == color && this.active && !this.game.isGameOver()) {
                 this.time -= 100;
             }
             if (this.time <= -1) {
