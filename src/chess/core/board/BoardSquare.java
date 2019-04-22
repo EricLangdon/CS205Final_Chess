@@ -125,6 +125,11 @@ public class BoardSquare {
     public void setHighlighted(boolean highlighted) {
         this.highlighted = highlighted;
     }
-    
+
+    @Override
+    public String toString() {
+        return Character.toString((char) (x + 1 +64)) + (y + 1);
+    }
+
 
 }

@@ -2,6 +2,7 @@ package chess.gui;
 
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
+import chess.core.board.Move;
 import chess.core.game.Game;
 import chess.core.game.GameResult;
 import chess.core.piece.*;
@@ -17,10 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
@@ -96,7 +94,12 @@ public class ChessGUI extends Application {
         editMenu.getItems().add(undoItem);
         undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, modifier));
 
-        menuBar.getMenus().addAll(fileMenu, editMenu);
+        Menu viewMenu = new Menu("View");
+        MenuItem movesItem = new MenuItem("Game Log");
+        movesItem.setOnAction(e -> this.showGameLog());
+        viewMenu.getItems().add(movesItem);
+
+        menuBar.getMenus().addAll(fileMenu, editMenu, viewMenu);
         main.setTop(menuBar);
 
         bp.setPadding(new Insets(0));
@@ -334,6 +337,24 @@ public class ChessGUI extends Application {
         redrawGrid();
     }
 
+    private void showGameLog() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Log");
+        alert.setHeaderText(null);
+        alert.setContentText(null);
+
+        Label label = new Label("Game Log:");
+        VBox content = new VBox();
+        ListView<Label> list = new ListView<>();
+        content.getChildren().addAll(label, list);
+        for (Move move : game.getBoard().getMoves()) {
+            Label l = new Label(move.toString());
+            list.getItems().add(l);
+        }
+        alert.getDialogPane().setContent(content);
+        alert.showAndWait();
+    }
+
     private void updateNewMenu(Menu newMenu, KeyCombination.Modifier modifier) {
         newMenu.getItems().clear();
         for (Game.GameMode mode : Game.GameMode.values()) {
@@ -362,9 +383,9 @@ public class ChessGUI extends Application {
 
         // top left board square pane
         Node referenceNode = grid.getNodeByRowColumnIndex(0, 1);
-        x = x - referenceNode.getLayoutX() + BoardSquarePane.SQUARE_SIZE ;
+        x = x - referenceNode.getLayoutX() + BoardSquarePane.SQUARE_SIZE;
         y = y - referenceNode.getLayoutY() * 2;
-        if(!menuBar.isUseSystemMenuBar()){
+        if (!menuBar.isUseSystemMenuBar()) {
             // offset if menubar is not system
             y -= 40;
         }
@@ -386,7 +407,7 @@ public class ChessGUI extends Application {
             return;
         }
         GameResult winner = game.getWinner();
-        if(winner == GameResult.BLACKWIN_TIME || winner == GameResult.WHITEWIN_TIME){
+        if (winner == GameResult.BLACKWIN_TIME || winner == GameResult.WHITEWIN_TIME) {
             game.getP1Clock().pause();
             game.getP2Clock().pause();
 
@@ -410,7 +431,7 @@ public class ChessGUI extends Application {
                 }
             });
 
-        }else {
+        } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game Over");
             alert.setHeaderText(null);
@@ -444,7 +465,7 @@ public class ChessGUI extends Application {
         handleGameOver();
     }
 
-    public void resizeListener(Stage stage, ObservableValue observable, Number oldValue, Number newValue){
+    public void resizeListener(Stage stage, ObservableValue observable, Number oldValue, Number newValue) {
         double size = Math.min(stage.getHeight(), stage.getWidth());
         BoardSquarePane.SQUARE_SIZE = (int) size / 10;
 
