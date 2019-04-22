@@ -38,6 +38,7 @@ public class ChessGUI extends Application {
     private Game game;
     private CustomGridPane grid;
     private BorderPane bp;
+    private MenuBar menuBar;
 
     public static void main(String[] args) {
         launch(args);
@@ -60,7 +61,7 @@ public class ChessGUI extends Application {
         main.setCenter(bp);
 
         // menubars
-        MenuBar menuBar = new MenuBar();
+        menuBar = new MenuBar();
         KeyCombination.Modifier modifier;
         final String os = System.getProperty("os.name");
         if (os != null && os.startsWith("Mac")) {
@@ -358,13 +359,20 @@ public class ChessGUI extends Application {
      * @return the BoardSquarePane if it exists, else null
      */
     private BoardSquarePane getBoardSquarePaneAt(double x, double y) {
+
         // top left board square pane
         Node referenceNode = grid.getNodeByRowColumnIndex(0, 1);
+        x = x - referenceNode.getLayoutX() + BoardSquarePane.SQUARE_SIZE ;
+        y = y - referenceNode.getLayoutY() * 2;
+        if(!menuBar.isUseSystemMenuBar()){
+            // offset if menubar is not system
+            y -= 40;
+        }
 
         // adjust the x coordinate from the top left bsp based on the sie of the square label
-        int col = (int) ((x - referenceNode.getLayoutX() + BoardSquarePane.SQUARE_SIZE) / BoardSquarePane.SQUARE_SIZE);
+        int col = (int) x / BoardSquarePane.SQUARE_SIZE;
         // really not sure why things work perfectly with the 2 * layoutY, but they do
-        int row = (int) ((y - referenceNode.getLayoutY() * 2) / BoardSquarePane.SQUARE_SIZE);
+        int row = (int) y / BoardSquarePane.SQUARE_SIZE;
 
         if (grid.getNodeByRowColumnIndex(row, col) instanceof BoardSquarePane) {
             return (BoardSquarePane) grid.getNodeByRowColumnIndex(row, col);
