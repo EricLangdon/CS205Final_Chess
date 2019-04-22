@@ -17,24 +17,25 @@ public class ChessClock {
     private ScheduledFuture<?> timer;
 
     /**
-     * Default constructor, uses DEFAULT_TIME
+     * Default constructor, uses DEFAULT_TIME and starts clock inactive
      *
      * @param game  the game the timer is attached to
      * @param color the color of the player
      */
     public ChessClock(Game game, Color color) {
-        this(game, color, DEFAULT_TIME);
+        this(game, color, DEFAULT_TIME, false);
     }
 
     /**
-     * @param game  the game the timer is attached to
-     * @param color the color of the player
-     * @param time  the initial time
+     * @param game   the game the timer is attached to
+     * @param color  the color of the player
+     * @param time   the initial time
+     * @param active should the timer be started on creation?
      */
-    public ChessClock(Game game, Color color, int time) {
+    public ChessClock(Game game, Color color, int time, boolean active) {
         this.time = time;
         this.color = color;
-        this.active = true;
+        this.active = active;
         this.game = game;
 
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(10);

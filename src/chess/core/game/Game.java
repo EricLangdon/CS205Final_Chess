@@ -199,6 +199,11 @@ public class Game {
      * Execute turn
      */
     public synchronized void executeTurn() {
+        // activate timer on first move
+        if(board.getNumMoves() == 1){
+            p1Clock.start();
+            p2Clock.start();
+        }
         currentTurn = currentTurn.other();
         this.states.push(new Game(this));
         ui.turnComplete();
