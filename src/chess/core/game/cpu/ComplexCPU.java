@@ -39,21 +39,20 @@ public class ComplexCPU extends CPU {
      */
     public void choiceMove(Board board) {
         int depth = 2;
-        gameStage = Stage.MIDGAME;
-        int count = 0;
-        for (Piece p : board.getCaptured()) {
-            if (p.getColor() == color.other()) {
-                count++;
-            }
-        }
-//        if (count < 8) {
+        gameStage = Stage.MIDGAME; // TODO: remove line when opening operational
+//        int count = 0;
+//        for (Piece p : board.getCaptured()) {
+//            if (p.getColor() == color.other()) {
+//                count++;
+//            }
+//        }
+//        if (count > 8) {
 //            gameStage = Stage.ENDGAME;
 //        }
 
         if (gameStage == Stage.OPENING) {
             // TODO: opening moves
         } else if (gameStage == Stage.MIDGAME) {
-            BoardSquare square;
             ArrayList<MoveScore> sourceScores = new ArrayList<>();
             ArrayList<MoveScore> sourceMaxes = new ArrayList<>();
             ArrayList<TargetScore> targetScores = new ArrayList<>();
@@ -63,37 +62,34 @@ public class ComplexCPU extends CPU {
             Random random = new Random();
             int randomNum = 0;
 
-            for (int i = 0; i < Board.NUM_COLS; i++) { // find sources
-                for (int j = 0; j < Board.NUM_ROWS; j++) {
-                    square = board.getBoardSquareAt(i, j);
-                    if (square.isOccupied() && square.getPiece().getColor() == color &&
-                            square.getPiece().getAvailableMoves(board, square).size() != 0) {
-                        // for each source, choose random of best scores here
-                        moves = square.getPiece().getAvailableMoves(board, square);
-                        for (BoardSquare m : moves) {
-                            targetScores.add(scoreMove(board, square, m, depth));
-                        }
-                        // targetScores to sourceScores
-                        for (TargetScore t : targetScores) {
-                            if (t.getScore() == targetMax) {
-                                targetMaxes.add(t);
-                            } else if (t.getScore() > targetMax) {
-                                targetMax = t.getScore();
-                                targetMaxes.clear();
-                                targetMaxes.add(t);
-                            }
-                        }
-                        if (targetMaxes.size() != 0) {
-                            if (targetMaxes.size() == 1) {
-                                sourceScores.add(new MoveScore(square, targetMaxes.get(0).getTarget(), targetMax));
-                            } else {
-                                randomNum = random.nextInt(targetMaxes.size());
-                                sourceScores.add(new MoveScore(square, targetMaxes.get(randomNum).getTarget(), targetMax));
-                            }
-                        }
-                        targetScores = new ArrayList<TargetScore>();
-                        targetMax = -9999;
+            for (BoardSquare square : board.getBoardSquares()) {
+                if (square.isOccupied() && square.getPiece().getColor() == color &&
+                        square.getPiece().getAvailableMoves(board, square).size() != 0) {
+                    // for each source, choose random of best scores here
+                    moves = square.getPiece().getAvailableMoves(board, square);
+                    for (BoardSquare m : moves) {
+                        targetScores.add(scoreMove(board, square, m, depth));
                     }
+                    // targetScores to sourceScores
+                    for (TargetScore t : targetScores) {
+                        if (t.getScore() == targetMax) {
+                            targetMaxes.add(t);
+                        } else if (t.getScore() > targetMax) {
+                            targetMax = t.getScore();
+                            targetMaxes.clear();
+                            targetMaxes.add(t);
+                        }
+                    }
+                    if (targetMaxes.size() != 0) {
+                        if (targetMaxes.size() == 1) {
+                            sourceScores.add(new MoveScore(square, targetMaxes.get(0).getTarget(), targetMax));
+                        } else {
+                            randomNum = random.nextInt(targetMaxes.size());
+                            sourceScores.add(new MoveScore(square, targetMaxes.get(randomNum).getTarget(), targetMax));
+                        }
+                    }
+                    targetScores = new ArrayList<TargetScore>();
+                    targetMax = -9999;
                 }
             }
             // cycle scores, filling an arraylist with the maxes, take random of maxes
@@ -116,6 +112,7 @@ public class ComplexCPU extends CPU {
             }
         } else if (gameStage == Stage.ENDGAME) {
             // TODO: end game strategy
+
         }
     }
 
@@ -196,6 +193,7 @@ public class ComplexCPU extends CPU {
             return moveScore;
 
         } else if (depth == 2) {
+            // TODO: use game stage
             if (target.isOccupied()) {
                 moveScore.score = target.getPiece().getScore();
             } else {
@@ -209,11 +207,15 @@ public class ComplexCPU extends CPU {
                 return moveScore;
             }
             // specific tweaks
-            if (tempBoard.colorInCheck(color.other())) {
-                moveScore.score += 1;
-            } else if (source.getPiece() instanceof King && !source.getPiece().getHasMoved() && !tempBoard.colorInCheck(color) &&
-                    target.getX() - source.getX() != 2 && target.getX() - source.getX() != -2) {
-                moveScore.score -= 1;
+            if (gameStage == Stage.MIDGAME) {
+                if (tempBoard.colorInCheck(color.other())) {
+                    moveScore.score += 1;
+                } else if (source.getPiece() instanceof King && !source.getPiece().getHasMoved() && !tempBoard.colorInCheck(color) &&
+                        target.getX() - source.getX() != 2 && target.getX() - source.getX() != -2) {
+                    moveScore.score -= 1;
+                }
+            } else if (gameStage == Stage.ENDGAME) {
+                // TODO : end game strategy
             }
             for (BoardSquare bs : tempBoard.getBoardSquares()) {
                 if (bs.isOccupied() && bs.getPiece().getColor() == color.other() &&
