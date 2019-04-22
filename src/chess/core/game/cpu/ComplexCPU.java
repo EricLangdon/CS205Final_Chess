@@ -105,9 +105,17 @@ public class ComplexCPU extends CPU {
             if (sourceMaxes.size() != 0) {
                 if (sourceMaxes.size() == 1) {
                     board.movePiece(sourceMaxes.get(0).getSource(), sourceMaxes.get(0).getTarget());
+                    if(board.checkPromotion()){
+                        chess.core.piece.Piece queen =new Queen(color);
+                        board.replacePawn(queen,sourceMaxes.get(0).getTarget());
+                    }
                 } else {
                     randomNum = random.nextInt(sourceMaxes.size());
                     board.movePiece(sourceMaxes.get(randomNum).getSource(), sourceMaxes.get(randomNum).getTarget());
+                    if(board.checkPromotion()){
+                        chess.core.piece.Piece queen =new Queen(color);
+                        board.replacePawn(queen, sourceMaxes.get(randomNum).getTarget());
+                    }
                 }
             }
         } else if (gameStage == Stage.ENDGAME) {
