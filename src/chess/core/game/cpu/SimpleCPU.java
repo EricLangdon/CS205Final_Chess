@@ -3,6 +3,8 @@ package chess.core.game.cpu;
 import chess.core.piece.Color;
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
+import chess.core.piece.Queen;
+import chess.gui.ChessGUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +67,10 @@ public class SimpleCPU extends CPU {
             randTarget = targetsMap.get(randomNum1).get(randomNum2);
 
             board.movePiece(randSource, randTarget);
+            if(board.checkPromotion()){
+                chess.core.piece.Piece queen =new Queen(color);
+                board.replacePawn(queen, randTarget);
+            }
         }
     }
 }
