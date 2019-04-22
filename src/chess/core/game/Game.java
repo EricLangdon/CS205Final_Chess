@@ -50,7 +50,7 @@ public class Game {
             cpuTimer.stop();
         }
         if (mode != GameMode.PVP) {
-            this.startCPU();
+            this.startCPU(player2);
         }
     }
 
@@ -106,22 +106,40 @@ public class Game {
     /**
      * Start the computer player on another thread
      */
-    private void startCPU() {
+    private void startCPU(Color color) {
         CPU cpu;
-        if (mode == GameMode.SMART_COMPUTER) {
-            cpu = new ComplexCPU();
-        } else {
-            cpu = new SimpleCPU();
+        CPU cpu2 = null;
+
+        switch (mode) {
+            case SMART_COMPUTER:
+                cpu = new ComplexCPU(color);
+                break;
+            case DUMB_COMPUTER:
+                cpu = new SimpleCPU(color);
+                break;
+            case CVC:
+                cpu = new ComplexCPU(color);
+                cpu2 = new ComplexCPU(color.other());
+                break;
+            default:
+                return;
         }
-        CPU finalCpu = cpu;
+
+        CPU finalCpu = cpu2;
         cpuTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             if (isGameOver()) {
                 return;
             }
-            if (currentTurn == player2) {
-                finalCpu.choiceMove(board);
+            if (currentTurn == color) {
+                cpu.choiceMove(board);
                 executeTurn();
+            } else {
+                if (mode == GameMode.CVC) {
+                    finalCpu.choiceMove(board);
+                    executeTurn();
+                }
             }
+
         }));
         cpuTimer.setCycleCount(Timeline.INDEFINITE);
         cpuTimer.play();
@@ -158,9 +176,11 @@ public class Game {
         }
 
         Game game = states.pop();
+        // pop again if the game state is the same (ie the first press of undo)
         if (game.getBoard().getNumMoves() == this.getBoard().getNumMoves()) {
             game = states.pop();
         }
+        // pop again if the gamemode is not pvp, since computer's move AND player's move need to be undone
         if (mode != GameMode.PVP) {
             game = states.pop();
         }
@@ -363,7 +383,7 @@ public class Game {
         }
     }
 
-    public void disableTimer(Color color){
+    public void disableTimer(Color color) {
         ChessClock clock = color == player1 ? p1Clock : p2Clock;
         clock.setTime(0);
         clock.cancel();
@@ -377,15 +397,15 @@ public class Game {
         }
     }
 
-    public enum GameMode {
-        PVP, DUMB_COMPUTER, SMART_COMPUTER;
-    }
-
     public ChessClock getP1Clock() {
         return p1Clock;
     }
 
     public ChessClock getP2Clock() {
         return p2Clock;
+    }
+
+    public enum GameMode {
+        PVP, DUMB_COMPUTER, SMART_COMPUTER, CVC;
     }
 }

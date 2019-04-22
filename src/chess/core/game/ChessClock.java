@@ -9,17 +9,28 @@ import java.util.concurrent.TimeUnit;
 
 
 public class ChessClock {
-        private static final int DEFAULT_TIME = 5 * 60 * 1000;
+    private static final int DEFAULT_TIME = 5 * 60 * 1000;
     private Color color;
     private Game game;
     private int time;
     private boolean active;
     private ScheduledFuture<?> timer;
 
+    /**
+     * Default constructor, uses DEFAULT_TIME
+     *
+     * @param game  the game the timer is attached to
+     * @param color the color of the player
+     */
     public ChessClock(Game game, Color color) {
         this(game, color, DEFAULT_TIME);
     }
 
+    /**
+     * @param game  the game the timer is attached to
+     * @param color the color of the player
+     * @param time  the initial time
+     */
     public ChessClock(Game game, Color color, int time) {
         this.time = time;
         this.color = color;
@@ -28,7 +39,7 @@ public class ChessClock {
 
         ScheduledExecutorService exec = Executors.newScheduledThreadPool(10);
         timer = exec.scheduleAtFixedRate(() -> {
-            if (this.game.getCurrentTurn() == color && this.active) {
+            if (this.game.getCurrentTurn() == color && this.active && !this.game.isGameOver()) {
                 this.time -= 100;
             }
             if (this.time <= -1) {
@@ -38,34 +49,67 @@ public class ChessClock {
         }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Start the timer counting
+     */
     public void start() {
         this.active = true;
     }
 
+    /**
+     * Temporarily pause the timer from counting down, but allow it to be started again with start()
+     */
     public void pause() {
         this.active = false;
     }
 
+    /**
+     * Stop the timer from counting down, and prevent future usage
+     */
     public void cancel() {
         timer.cancel(false);
+        active = false;
     }
 
+    /**
+     * @return true if the timer is active
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Get the color associated with the timer
+     *
+     * @return the color
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * Get the time left
+     *
+     * @return the time left in ms
+     */
     public int getTime() {
         return time;
     }
 
+    /**
+     * Set the time left
+     *
+     * @param time the time left in ms
+     */
     public void setTime(int time) {
         this.time = time;
     }
 
+    /**
+     * Get string rep of timer formatted as m:ss
+     *
+     * @return string representation
+     */
     @Override
     public String toString() {
         int time = this.time >= 0 ? this.time : 0;
