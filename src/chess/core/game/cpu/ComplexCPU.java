@@ -21,6 +21,7 @@ public class ComplexCPU extends CPU {
 
     /**
      * Color Constructor
+     *
      * @param newColor
      */
     public ComplexCPU(Color newColor) {
@@ -34,7 +35,7 @@ public class ComplexCPU extends CPU {
      * @param board game board
      */
     public void choiceMove(Board board) {
-        int depth = 2;
+        int depth = 3;
         boolean endGame = false;
 
         BoardSquare square;
@@ -104,17 +105,16 @@ public class ComplexCPU extends CPU {
      * scoreMove
      * returns a score given a move, with choice of how deep to look
      *
-     * @param board game board
+     * @param board  game board
      * @param source source square
      * @param target source target
-     * @param depth how deep to check
+     * @param depth  how deep to check
      * @return score for given move
      */
     public TargetScore scoreMove(Board board, BoardSquare source, BoardSquare target, int depth) {
         Board tempBoard = new Board(board);
         ArrayList<BoardSquare> moves;
         int sourceMax = 0;
-        int opp = 0;
         TargetScore moveScore = new TargetScore(target, -9999);
         ArrayList<TargetScore> oppMaxes = new ArrayList<>();
 
@@ -133,16 +133,19 @@ public class ComplexCPU extends CPU {
                     moves = bs.getPiece().getAvailableMoves(tempBoard, bs);
                     for (BoardSquare m : moves) {
                         // analyze next opponent move
-                        TargetScore oppMax = new TargetScore(m, -9999);
-                        if (m.isOccupied() && m.getPiece().getScore() > oppMax.getScore()) {
+                        TargetScore oppMax = new TargetScore(m, 0);
+                        if (m.isOccupied() && m.getPiece().getScore() == oppMax.getScore()) {
+                            oppMaxes.add(oppMax);
+                        } else if (m.isOccupied() && m.getPiece().getScore() > oppMax.getScore()) {
                             oppMax.score = m.getPiece().getScore();
-                            oppMax.target = m;
-                        } else {
-                            opp = 0;
+                            oppMaxes.clear();
+                            oppMaxes.add(oppMax);
                         }
-                        Board tempBoard2 = new Board(tempBoard);
+                    }
+                    Board tempBoard2 = new Board(tempBoard);
+                    for (TargetScore opp : oppMaxes) {
                         // simulate your next move
-                        tempBoard2.movePiece(tempBoard2.getBoardSquareAt(bs.getX(), bs.getY()), tempBoard2.getBoardSquareAt(m.getX(), m.getY()));
+                        tempBoard2.movePiece(tempBoard2.getBoardSquareAt(bs.getX(), bs.getY()), tempBoard2.getBoardSquareAt(opp.getTarget().getX(), opp.getTarget().getY()));
                         if (tempBoard2.checkmate(color)) { // if opponent can put you in checkmate
                             moveScore.score -= 1100;
                         } else {
@@ -150,17 +153,17 @@ public class ComplexCPU extends CPU {
                                 if (bs2.isOccupied() && bs2.getPiece().getColor() == color &&
                                         bs2.getPiece().getAvailableMoves(tempBoard2, bs2).size() != 0) {
                                     for (BoardSquare m2 : moves) { // all possible domestic moves
-                                        if (m2.isOccupied() && m2.getPiece().getScore() - opp > sourceMax) {
-                                            sourceMax = m2.getPiece().getScore() - opp;
+                                        if (m2.isOccupied() && m2.getPiece().getScore() > sourceMax) {
+                                            sourceMax = m2.getPiece().getScore() - opp.getScore();
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    moveScore.score += sourceMax;
                 }
             }
+            // alter moveScore
             return moveScore;
 
         } else if (depth == 2) {
