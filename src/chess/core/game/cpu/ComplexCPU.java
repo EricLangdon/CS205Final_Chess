@@ -52,6 +52,30 @@ public class ComplexCPU extends CPU {
 
         if (gameStage == Stage.OPENING) {
             // TODO: opening moves
+//            Random randomNum = new Random();
+//            int randOpening = randomNum.nextInt(6);
+//            boolean moveComplete=false;
+//            if(color==Color.WHITE){
+//                while(!moveComplete){
+//                    if (randOpening == 0 && !board.getBoardSquareAt(4,1).getPiece().getHasMoved()) {
+//                        board.movePiece(board.getBoardSquareAt(4,1), board.getBoardSquareAt(4,3));
+//                    } else if (randOpening == 1 &&!board.getBoardSquareAt(3,1).getPiece().getHasMoved()) {
+//                        board.movePiece(board.getBoardSquareAt())
+//                    } else if (randOpening == 2) {
+//
+//                    } else if (randOpening == 3) {
+//
+//                    } else if (randOpening == 4) {
+//
+//                    } else if (randOpening == 5) {
+//
+//                    } else{
+//                        randOpening+=1;
+//                    }
+//                }
+//            }else if(color==Color.BLACK){
+//
+//            }
         } else if (gameStage == Stage.MIDGAME) {
             ArrayList<MoveScore> sourceScores = new ArrayList<>();
             ArrayList<MoveScore> sourceMaxes = new ArrayList<>();
@@ -105,15 +129,15 @@ public class ComplexCPU extends CPU {
             if (sourceMaxes.size() != 0) {
                 if (sourceMaxes.size() == 1) {
                     board.movePiece(sourceMaxes.get(0).getSource(), sourceMaxes.get(0).getTarget());
-                    if(board.checkPromotion()){
-                        chess.core.piece.Piece queen =new Queen(color);
-                        board.replacePawn(queen,sourceMaxes.get(0).getTarget());
+                    if (board.checkPromotion()) {
+                        chess.core.piece.Piece queen = new Queen(color);
+                        board.replacePawn(queen, sourceMaxes.get(0).getTarget());
                     }
                 } else {
                     randomNum = random.nextInt(sourceMaxes.size());
                     board.movePiece(sourceMaxes.get(randomNum).getSource(), sourceMaxes.get(randomNum).getTarget());
-                    if(board.checkPromotion()){
-                        chess.core.piece.Piece queen =new Queen(color);
+                    if (board.checkPromotion()) {
+                        chess.core.piece.Piece queen = new Queen(color);
                         board.replacePawn(queen, sourceMaxes.get(randomNum).getTarget());
                     }
                 }
