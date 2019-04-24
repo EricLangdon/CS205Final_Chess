@@ -39,21 +39,103 @@ public class ComplexCPU extends CPU {
      */
     public void choiceMove(Board board) {
         int depth = 2;
-        gameStage = Stage.MIDGAME;
-        int count = 0;
-        for (Piece p : board.getCaptured()) {
-            if (p.getColor() == color.other()) {
-                count++;
-            }
+        if(board.getMoves().size()<7){
+            gameStage=Stage.OPENING;
+        } else{
+            gameStage = Stage.MIDGAME;
         }
-//        if (count < 8) {
+         // TODO: remove line when opening operational
+//        int count = 0;
+//        for (Piece p : board.getCaptured()) {
+//            if (p.getColor() == color.other()) {
+//                count++;
+//            }
+//        }
+//        if (count > 8) {
 //            gameStage = Stage.ENDGAME;
 //        }
 
         if (gameStage == Stage.OPENING) {
             // TODO: opening moves
+            Random randomNum = new Random();
+            int randOpening = randomNum.nextInt(6);
+            boolean moveComplete = false;
+            if (color == Color.WHITE) {
+                while (!moveComplete) {
+                    //E2 to E4
+                    if (randOpening == 0 && board.getBoardSquareAt(4, 1).isOccupied() && !board.getBoardSquareAt(4, 1).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(4, 1), board.getBoardSquareAt(4, 3));
+                        moveComplete = true;
+
+                        //D2 to D3
+                    } else if (randOpening == 1 && board.getBoardSquareAt(3, 1).isOccupied() && !board.getBoardSquareAt(3, 1).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(3, 1), board.getBoardSquareAt(3, 2));
+                        moveComplete = true;
+
+                        //B2 to B3
+                    } else if (randOpening == 2 && board.getBoardSquareAt(1, 1).isOccupied() && !board.getBoardSquareAt(1, 1).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(1, 1), board.getBoardSquareAt(1, 2));
+                        moveComplete = true;
+
+                        //G2 to G3
+                    } else if (randOpening == 3 && board.getBoardSquareAt(6, 1).isOccupied() && !board.getBoardSquareAt(6, 1).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(6, 1), board.getBoardSquareAt(6, 2));
+                        moveComplete = true;
+
+                        //B1 to C3
+                    } else if (randOpening == 4 && board.getBoardSquareAt(1, 0).isOccupied() && !board.getBoardSquareAt(1, 0).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(1, 0), board.getBoardSquareAt(2, 2));
+                        moveComplete = true;
+
+                        //G1 to F3
+                    } else if (randOpening == 5 && board.getBoardSquareAt(6, 0).isOccupied() && !board.getBoardSquareAt(6, 0).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(6, 0), board.getBoardSquareAt(5, 2));
+                        moveComplete = true;
+
+                        //Select a different move
+                    } else {
+                        randOpening += 1;
+                    }
+                }
+            } else if (color == Color.BLACK) {
+                while (!moveComplete) {
+                    //E7 to E5
+                    if (randOpening == 0 && board.getBoardSquareAt(4, 6).isOccupied() && !board.getBoardSquareAt(4, 6).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(4, 6), board.getBoardSquareAt(4, 4));
+                        moveComplete = true;
+
+                        //D7 to D6
+                    } else if (randOpening == 1 && board.getBoardSquareAt(3, 6).isOccupied() && !board.getBoardSquareAt(3, 6).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(3, 6), board.getBoardSquareAt(3, 4));
+                        moveComplete = true;
+
+                        //B7 to B6
+                    } else if (randOpening == 2 && board.getBoardSquareAt(1, 6).isOccupied() && !board.getBoardSquareAt(1, 6).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(1,6), board.getBoardSquareAt(1,5));
+                        moveComplete = true;
+
+                        //G7 to G6
+                    } else if (randOpening == 3 && board.getBoardSquareAt(6, 6).isOccupied() && !board.getBoardSquareAt(6, 6).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(6,6), board.getBoardSquareAt(6, 5));
+                        moveComplete = true;
+
+                        //B8 to C6
+                    } else if (randOpening == 4 && board.getBoardSquareAt(1, 7).isOccupied() && !board.getBoardSquareAt(1, 7).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(1,7), board.getBoardSquareAt(2, 5));
+                        moveComplete = true;
+
+                        //G8 to F6
+                    } else if (randOpening == 5 && board.getBoardSquareAt(6, 7).isOccupied() && !board.getBoardSquareAt(6, 7).getPiece().getHasMoved()) {
+                        board.movePiece(board.getBoardSquareAt(6,7), board.getBoardSquareAt(5,5));
+                        moveComplete = true;
+
+                        //Select different move
+                    } else {
+                        randOpening += 1;
+                    }
+                }
+            }
         } else if (gameStage == Stage.MIDGAME) {
-            BoardSquare square;
             ArrayList<MoveScore> sourceScores = new ArrayList<>();
             ArrayList<MoveScore> sourceMaxes = new ArrayList<>();
             ArrayList<TargetScore> targetScores = new ArrayList<>();
@@ -63,37 +145,34 @@ public class ComplexCPU extends CPU {
             Random random = new Random();
             int randomNum = 0;
 
-            for (int i = 0; i < Board.NUM_COLS; i++) { // find sources
-                for (int j = 0; j < Board.NUM_ROWS; j++) {
-                    square = board.getBoardSquareAt(i, j);
-                    if (square.isOccupied() && square.getPiece().getColor() == color &&
-                            square.getPiece().getAvailableMoves(board, square).size() != 0) {
-                        // for each source, choose random of best scores here
-                        moves = square.getPiece().getAvailableMoves(board, square);
-                        for (BoardSquare m : moves) {
-                            targetScores.add(scoreMove(board, square, m, depth));
-                        }
-                        // targetScores to sourceScores
-                        for (TargetScore t : targetScores) {
-                            if (t.getScore() == targetMax) {
-                                targetMaxes.add(t);
-                            } else if (t.getScore() > targetMax) {
-                                targetMax = t.getScore();
-                                targetMaxes.clear();
-                                targetMaxes.add(t);
-                            }
-                        }
-                        if (targetMaxes.size() != 0) {
-                            if (targetMaxes.size() == 1) {
-                                sourceScores.add(new MoveScore(square, targetMaxes.get(0).getTarget(), targetMax));
-                            } else {
-                                randomNum = random.nextInt(targetMaxes.size());
-                                sourceScores.add(new MoveScore(square, targetMaxes.get(randomNum).getTarget(), targetMax));
-                            }
-                        }
-                        targetScores = new ArrayList<TargetScore>();
-                        targetMax = -9999;
+            for (BoardSquare square : board.getBoardSquares()) {
+                if (square.isOccupied() && square.getPiece().getColor() == color &&
+                        square.getPiece().getAvailableMoves(board, square).size() != 0) {
+                    // for each source, choose random of best scores here
+                    moves = square.getPiece().getAvailableMoves(board, square);
+                    for (BoardSquare m : moves) {
+                        targetScores.add(scoreMove(board, square, m, depth));
                     }
+                    // targetScores to sourceScores
+                    for (TargetScore t : targetScores) {
+                        if (t.getScore() == targetMax) {
+                            targetMaxes.add(t);
+                        } else if (t.getScore() > targetMax) {
+                            targetMax = t.getScore();
+                            targetMaxes.clear();
+                            targetMaxes.add(t);
+                        }
+                    }
+                    if (targetMaxes.size() != 0) {
+                        if (targetMaxes.size() == 1) {
+                            sourceScores.add(new MoveScore(square, targetMaxes.get(0).getTarget(), targetMax));
+                        } else {
+                            randomNum = random.nextInt(targetMaxes.size());
+                            sourceScores.add(new MoveScore(square, targetMaxes.get(randomNum).getTarget(), targetMax));
+                        }
+                    }
+                    targetScores = new ArrayList<TargetScore>();
+                    targetMax = -9999;
                 }
             }
             // cycle scores, filling an arraylist with the maxes, take random of maxes
@@ -109,13 +188,22 @@ public class ComplexCPU extends CPU {
             if (sourceMaxes.size() != 0) {
                 if (sourceMaxes.size() == 1) {
                     board.movePiece(sourceMaxes.get(0).getSource(), sourceMaxes.get(0).getTarget());
+                    if (board.checkPromotion()) {
+                        chess.core.piece.Piece queen = new Queen(color);
+                        board.replacePawn(queen, sourceMaxes.get(0).getTarget());
+                    }
                 } else {
                     randomNum = random.nextInt(sourceMaxes.size());
                     board.movePiece(sourceMaxes.get(randomNum).getSource(), sourceMaxes.get(randomNum).getTarget());
+                    if (board.checkPromotion()) {
+                        chess.core.piece.Piece queen = new Queen(color);
+                        board.replacePawn(queen, sourceMaxes.get(randomNum).getTarget());
+                    }
                 }
             }
         } else if (gameStage == Stage.ENDGAME) {
             // TODO: end game strategy
+
         }
     }
 
@@ -196,6 +284,7 @@ public class ComplexCPU extends CPU {
             return moveScore;
 
         } else if (depth == 2) {
+            // TODO: use game stage
             if (target.isOccupied()) {
                 moveScore.score = target.getPiece().getScore();
             } else {
@@ -209,11 +298,15 @@ public class ComplexCPU extends CPU {
                 return moveScore;
             }
             // specific tweaks
-            if (tempBoard.colorInCheck(color.other())) {
-                moveScore.score += 1;
-            } else if (source.getPiece() instanceof King && !source.getPiece().getHasMoved() && !tempBoard.colorInCheck(color) &&
-                    target.getX() - source.getX() != 2 && target.getX() - source.getX() != -2) {
-                moveScore.score -= 1;
+            if (gameStage == Stage.MIDGAME) {
+                if (tempBoard.colorInCheck(color.other())) {
+                    moveScore.score += 1;
+                } else if (source.getPiece() instanceof King && !source.getPiece().getHasMoved() && !tempBoard.colorInCheck(color) &&
+                        target.getX() - source.getX() != 2 && target.getX() - source.getX() != -2) {
+                    moveScore.score -= 1;
+                }
+            } else if (gameStage == Stage.ENDGAME) {
+                // TODO : end game strategy
             }
             for (BoardSquare bs : tempBoard.getBoardSquares()) {
                 if (bs.isOccupied() && bs.getPiece().getColor() == color.other() &&
