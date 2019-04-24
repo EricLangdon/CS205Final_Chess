@@ -157,5 +157,13 @@ public abstract class Piece implements Cloneable {
     public String toString() {
         return this.getClass().getSimpleName() + " " + this.getUnicode();
     }
+
+    /**
+     * @param other the other piece
+     * @return returns true if the piece is the same class, color, and hasMoved state
+     */
+    public boolean equals(Piece other){
+        return this.color == other.color && this.hasMoved == other.hasMoved && this.getClass() == other.getClass();
+    }
 }
 
