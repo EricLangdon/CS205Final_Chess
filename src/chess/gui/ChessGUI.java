@@ -359,15 +359,15 @@ public class ChessGUI extends Application {
             i++;
         }
 
-        ButtonType cancelButtonType = new ButtonType("Cancel");
-        ButtonType revertButtonType = new ButtonType("Revert");
+        ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType revertButtonType = new ButtonType("Revert", ButtonBar.ButtonData.OK_DONE);
 
         alert.getButtonTypes().clear();
-        alert.getButtonTypes().addAll(cancelButtonType, revertButtonType);
+        alert.getButtonTypes().addAll(revertButtonType, cancelButtonType);
         alert.getDialogPane().setContent(content);
-
+        
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get().equals(revertButtonType)) {
+        if (result.isPresent() && result.get().equals(revertButtonType) && list.getSelectionModel().getSelectedItem() != null) {
             MoveLabel ml = list.getSelectionModel().getSelectedItem();
             Move move = ml.getMove();
             if (!ml.isDisable()) {
