@@ -163,7 +163,12 @@ public class Game {
         // TODO: implement
     }
 
-    public boolean undo() {
+    /**
+     * Undo the last move
+     * @param limit true if undo should be limited to one move by the player, false allows computer undo
+     * @return true if successful
+     */
+    public boolean undo(boolean limit){
         if (states.size() == 0) {
             return false;
         }
@@ -171,7 +176,7 @@ public class Game {
             return false;
         }
 
-        if (currentTurn == player2 && mode != GameMode.PVP) {
+        if (currentTurn == player2 && mode != GameMode.PVP && !limit) {
             return false;
         }
 
@@ -181,7 +186,7 @@ public class Game {
             game = states.pop();
         }
         // pop again if the gamemode is not pvp, since computer's move AND player's move need to be undone
-        if (mode != GameMode.PVP) {
+        if (mode != GameMode.PVP && !limit) {
             game = states.pop();
         }
         this.board = game.board;
@@ -193,6 +198,14 @@ public class Game {
         states.push(new Game(this));
         this.states = game.states;
         return true;
+    }
+
+    /**
+     * Undo the last move, call undo(false)
+     * @return true if able to undo
+     */
+    public boolean undo() {
+        return undo(false);
     }
 
     /**
@@ -363,7 +376,6 @@ public class Game {
      * @param color color
      * @return the score for the color
      */
-    //Todo throwing null pointer exception
     public int getScore(Color color) {
         int score = 0;
         for (Piece piece : board.getCaptured()) {
@@ -388,6 +400,10 @@ public class Game {
         }
     }
 
+    /**
+     * Stops the timer from ticking down and sets time to 0
+     * @param color the color to have its timer disabled
+     */
     public void disableTimer(Color color) {
         ChessClock clock = color == player1 ? p1Clock : p2Clock;
         clock.setTime(0);
@@ -412,5 +428,13 @@ public class Game {
 
     public enum GameMode {
         PVP, DUMB_COMPUTER, SMART_COMPUTER, CVC;
+    }
+
+    /**
+     * Get the states stack
+     * @return the states stack
+     */
+    public Stack<Game> getStates() {
+        return states;
     }
 }

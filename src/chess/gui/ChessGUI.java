@@ -25,6 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -95,9 +96,10 @@ public class ChessGUI extends Application {
         undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, modifier));
 
         Menu viewMenu = new Menu("View");
-        MenuItem movesItem = new MenuItem("Game Log");
-        movesItem.setOnAction(e -> this.showGameLog());
-        viewMenu.getItems().add(movesItem);
+        MenuItem logItem = new MenuItem("Game Log");
+        logItem.setAccelerator(new KeyCodeCombination(KeyCode.L, modifier));
+        logItem.setOnAction(e -> this.showGameLog());
+        viewMenu.getItems().add(logItem);
 
         menuBar.getMenus().addAll(fileMenu, editMenu, viewMenu);
         main.setTop(menuBar);
@@ -345,14 +347,39 @@ public class ChessGUI extends Application {
 
         Label label = new Label("Game Log:");
         VBox content = new VBox();
-        ListView<Label> list = new ListView<>();
+        ListView<MoveLabel> list = new ListView<>();
         content.getChildren().addAll(label, list);
+        int i = 0;
         for (Move move : game.getBoard().getMoves()) {
-            Label l = new Label(move.toString());
-            list.getItems().add(l);
+            MoveLabel ml = new MoveLabel(move);
+            list.getItems().add(ml);
+            if(i % 2 == 1 && game.getMode() != Game.GameMode.PVP){
+                ml.setDisable(true);
+            }
+            i++;
         }
+
+        ButtonType cancelButtonType = new ButtonType("Cancel");
+        ButtonType revertButtonType = new ButtonType("Revert");
+
+        alert.getButtonTypes().clear();
+        alert.getButtonTypes().addAll(cancelButtonType, revertButtonType);
         alert.getDialogPane().setContent(content);
-        alert.showAndWait();
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get().equals(revertButtonType)) {
+            MoveLabel ml = list.getSelectionModel().getSelectedItem();
+            Move move = ml.getMove();
+            if (!ml.isDisable()) {
+                // undo until move is the last move
+                ArrayList<Move> moves = game.getStates().peek().getBoard().getMoves();
+                int index = moves.indexOf(move);
+                while (index <= moves.size() - 1 && game.undo(true)){
+                    moves = game.getStates().peek().getBoard().getMoves();
+                }
+                redrawGrid();
+            }
+        }
     }
 
     private void updateNewMenu(Menu newMenu, KeyCombination.Modifier modifier) {
