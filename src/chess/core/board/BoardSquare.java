@@ -128,7 +128,16 @@ public class BoardSquare {
 
     @Override
     public String toString() {
-        return Character.toString((char) (x + 1 +64)) + (y + 1);
+        return Character.toString((char) (x + 1 + 64)) + (y + 1);
+    }
+
+    /**
+     *
+     * @param other the other BoardSquare
+     * @return returns true if the coordinates are the same
+     */
+    public boolean equals(BoardSquare other) {
+        return this.x == other.x && this.y == other.y;
     }
 
 

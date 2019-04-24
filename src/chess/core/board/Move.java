@@ -91,4 +91,13 @@ public class Move implements Cloneable {
         }
         return s;
     }
+
+    /**
+
+     * @param other the other move
+     * @return true if the source, target, and captured piece are all equal
+     */
+    public boolean equals(Move other) {
+        return this.source == other.source && this.target == other.target && this.capturedPiece == other.capturedPiece;
+    }
 }
