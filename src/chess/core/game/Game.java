@@ -34,12 +34,11 @@ public class Game {
      *
      * @param mode    gamemode
      * @param player1 color of player1
-     * @param player2 color of player2
      */
-    public Game(GameMode mode, Color player1, Color player2, ChessGUI ui) {
+    public Game(GameMode mode, ChessGUI ui, Color player1) {
         this.mode = mode;
         this.player1 = player1;
-        this.player2 = player2;
+        this.player2 = player1.other();
         this.p1Clock = new ChessClock(this, player1);
         this.p2Clock = new ChessClock(this, player2);
         this.ui = ui;
@@ -62,7 +61,7 @@ public class Game {
      * @param mode gamemmode
      */
     public Game(GameMode mode, ChessGUI ui) {
-        this(mode, Color.WHITE, Color.BLACK, ui);
+        this(mode, ui, Color.WHITE);
     }
 
     /**
@@ -422,6 +421,7 @@ public class Game {
 
     public enum GameMode {
         PVP, DUMB_COMPUTER, SMART_COMPUTER, CVC;
+        public static GameMode DEFAULT = SMART_COMPUTER;
     }
 
     /**
