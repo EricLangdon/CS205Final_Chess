@@ -45,7 +45,6 @@ public class Game {
         this.p1Clock = new ChessClock(this, player1);
         this.p2Clock = new ChessClock(this, player2);
         this.ui = ui;
-        this.loader = loader;
         this.chessObj = new ChessJson();
         newGame();
         states = new Stack<>();
