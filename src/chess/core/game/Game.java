@@ -27,6 +27,9 @@ public class Game {
     private ChessClock p2Clock;
     private GameMode mode;
     private ChessGUI ui;
+    private JsonLoader loader;
+    private ChessJson chessObj;
+
     private Stack<Game> states;
 
     /**
@@ -42,6 +45,7 @@ public class Game {
         this.p1Clock = new ChessClock(this, player1);
         this.p2Clock = new ChessClock(this, player2);
         this.ui = ui;
+        this.chessObj = new ChessJson();
         newGame();
         states = new Stack<>();
         this.states.push(new Game(this));
@@ -147,19 +151,24 @@ public class Game {
     /**
      * Save game to file
      *
-     * @param file file to save to
+     * @param loader the Json object used to parse and save the data
+     * @return the file to be saved
      */
-    public void save(File file) {
-        // TODO: implement
+    public void save(JsonLoader loader, File f) {
+        chessObj.setMoveList(getBoard().getMoves());
+        chessObj.setPlayer1Clock(p1Clock);
+        chessObj.setPlayer2Clock(p2Clock);
+        loader.save(chessObj, f);
     }
 
     /**
      * Load game from a filepath
      *
-     * @param file file to load from
+     * @param loader Json loader
+     * @param file the file to be loaded
      */
-    public void load(File file) {
-        // TODO: implement
+    public void load(JsonLoader loader, File file) {
+        loader.load(file);
     }
 
     /**
@@ -428,6 +437,24 @@ public class Game {
         return p2Clock;
     }
 
+    /**
+     * getLoader
+     *
+     * @return the Json object used to save/load
+     */
+    public JsonLoader getLoader() {
+        return loader;
+    }
+
+    /**
+     * setLoader
+     *
+     * @param newLoader the new Json object to be used
+     */
+    public void setLoader(JsonLoader newLoader) {
+        this.loader = newLoader;
+    }
+  
     /**
      * Get the states stack
      *
