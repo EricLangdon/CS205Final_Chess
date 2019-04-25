@@ -175,7 +175,8 @@ public class ChessGUI extends Application {
 
                 // event handler for clicking source then target
                 bsp.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    if (game.getMode() != Game.GameMode.PVP && game.getCurrentTurn() != game.getPlayer1Color()) {
+                    // dont allow click if not player's turn or it's computer vs computer
+                    if ((game.getMode() != Game.GameMode.PVP && game.getCurrentTurn() != game.getPlayer1Color()) || game.getMode() == Game.GameMode.CVC) {
                         return;
                     }
                     // if a square is already selected, move its piece
@@ -209,7 +210,8 @@ public class ChessGUI extends Application {
                 // event handlers for drag and drop movement
                 // triggered when the drag starts on bsp
                 bsp.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
-                    if (game.getMode() != Game.GameMode.PVP && game.getCurrentTurn() != game.getPlayer1Color()) {
+                    // dont allow click if not player's turn or it's computer vs computer
+                    if ((game.getMode() != Game.GameMode.PVP && game.getCurrentTurn() != game.getPlayer1Color()) || game.getMode() == Game.GameMode.CVC) {
                         return;
                     }
                     if (!boardSquare.isOccupied() || !boardSquare.getPiece().getColor().equals(game.getCurrentTurn())) {
@@ -358,7 +360,7 @@ public class ChessGUI extends Application {
         for (Move move : game.getBoard().getMoves()) {
             MoveLabel ml = new MoveLabel(move);
             list.getItems().add(ml);
-            if (i % 2 == 1 && game.getMode() != Game.GameMode.PVP) {
+            if (i % 2 == game.getPlayer1Color().ordinal() && game.getMode() != Game.GameMode.PVP && game.getMode() != Game.GameMode.CVC) {
                 ml.setDisable(true);
             }
             i++;
