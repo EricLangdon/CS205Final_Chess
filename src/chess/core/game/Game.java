@@ -164,10 +164,11 @@ public class Game {
 
     /**
      * Undo the last move
+     *
      * @param limit true if undo should be limited to one move by the player, false allows computer undo
      * @return true if successful
      */
-    public boolean undo(boolean limit){
+    public boolean undo(boolean limit) {
         if (states.size() == 0) {
             return false;
         }
@@ -175,7 +176,13 @@ public class Game {
             return false;
         }
 
+        // dont allow player to undo when playing against the computer if it's the computer's move
         if (currentTurn == player2 && mode != GameMode.PVP && !limit) {
+            return false;
+        }
+
+        // dont allow undo if player is black it's black's first move and it's not pvp
+        if (currentTurn == player1 && player1 == Color.BLACK && mode != GameMode.PVP && !limit && states.size() <= 2) {
             return false;
         }
 
@@ -201,6 +208,7 @@ public class Game {
 
     /**
      * Undo the last move, call undo(false)
+     *
      * @return true if able to undo
      */
     public boolean undo() {
@@ -212,7 +220,7 @@ public class Game {
      */
     public synchronized void executeTurn() {
         // activate timer on first move
-        if(board.getNumMoves() == 1){
+        if (board.getNumMoves() == 1) {
             p1Clock.start();
             p2Clock.start();
         }
@@ -395,6 +403,7 @@ public class Game {
 
     /**
      * Stops the timer from ticking down and sets time to 0
+     *
      * @param color the color to have its timer disabled
      */
     public void disableTimer(Color color) {
@@ -419,16 +428,17 @@ public class Game {
         return p2Clock;
     }
 
-    public enum GameMode {
-        PVP, DUMB_COMPUTER, SMART_COMPUTER, CVC;
-        public static GameMode DEFAULT = SMART_COMPUTER;
-    }
-
     /**
      * Get the states stack
+     *
      * @return the states stack
      */
     public Stack<Game> getStates() {
         return states;
+    }
+
+    public enum GameMode {
+        PVP, DUMB_COMPUTER, SMART_COMPUTER, CVC;
+        public static GameMode DEFAULT = SMART_COMPUTER;
     }
 }
