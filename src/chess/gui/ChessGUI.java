@@ -353,7 +353,7 @@ public class ChessGUI extends Application {
         for (Move move : game.getBoard().getMoves()) {
             MoveLabel ml = new MoveLabel(move);
             list.getItems().add(ml);
-            if (i % 2 == 1 && game.getMode() != Game.GameMode.PVP) {
+            if (i % 2 == game.getPlayer1Color().ordinal() && game.getMode() != Game.GameMode.PVP) {
                 ml.setDisable(true);
             }
             i++;
