@@ -288,8 +288,6 @@ public class Game {
                 } else if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Knight
                         || whiteLeft.get(0) instanceof Knight && whiteLeft.get(1) instanceof King) {
                     return true;
-                } else {
-                    return false;
                 }
 
             } else if (blackLeft.size() == 2 && whiteLeft.size() == 1) {
@@ -299,8 +297,6 @@ public class Game {
                 } else if (blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Knight
                         || blackLeft.get(0) instanceof Knight && blackLeft.get(1) instanceof King) {
                     return true;
-                } else {
-                    return false;
                 }
             } else if (blackLeft.size() == 2 && whiteLeft.size() == 2) {
                 if (blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Bishop
@@ -309,8 +305,6 @@ public class Game {
                             || whiteLeft.get(0) instanceof Bishop && whiteLeft.get(1) instanceof King) {
                         return true;
                     }
-                } else {
-                    return false;
                 }
             }
             //Threefold repetition draw check
