@@ -45,7 +45,7 @@ public class ChessGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        this.game = new Game(Game.GameMode.SMART_COMPUTER, this);
+        newGame(Game.GameMode.DEFAULT);
         BorderPane main = new BorderPane();
         Scene scene = new Scene(main, 900, 800);
         primaryStage.setScene(scene);
@@ -353,7 +353,7 @@ public class ChessGUI extends Application {
         for (Move move : game.getBoard().getMoves()) {
             MoveLabel ml = new MoveLabel(move);
             list.getItems().add(ml);
-            if(i % 2 == 1 && game.getMode() != Game.GameMode.PVP){
+            if (i % 2 == 1 && game.getMode() != Game.GameMode.PVP) {
                 ml.setDisable(true);
             }
             i++;
@@ -365,7 +365,7 @@ public class ChessGUI extends Application {
         alert.getButtonTypes().clear();
         alert.getButtonTypes().addAll(revertButtonType, cancelButtonType);
         alert.getDialogPane().setContent(content);
-        
+
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get().equals(revertButtonType) && list.getSelectionModel().getSelectedItem() != null) {
             MoveLabel ml = list.getSelectionModel().getSelectedItem();
@@ -374,7 +374,7 @@ public class ChessGUI extends Application {
                 // undo until move is the last move
                 ArrayList<Move> moves = game.getStates().peek().getBoard().getMoves();
                 int index = moves.indexOf(move);
-                while (index <= moves.size() - 1 && game.undo(true)){
+                while (index <= moves.size() - 1 && game.undo(true)) {
                     moves = game.getStates().peek().getBoard().getMoves();
                 }
                 redrawGrid();
@@ -388,7 +388,7 @@ public class ChessGUI extends Application {
             MenuItem item = new MenuItem(mode.toString());
             item.setOnAction(event -> {
                 this.game.end();
-                this.game = new Game(mode, this);
+                newGame(mode);
                 updateNewMenu(newMenu, modifier);
                 redrawGrid();
             });
@@ -480,7 +480,7 @@ public class ChessGUI extends Application {
                     System.exit(0);
                 } else if (result.get().equals(newGameButtonType)) {
                     this.game.end();
-                    this.game = new Game(game.getMode(), this);
+                    newGame(this.game.getMode());
                     redrawGrid();
                 }
             });
@@ -497,5 +497,20 @@ public class ChessGUI extends Application {
         BoardSquarePane.SQUARE_SIZE = (int) size / 10;
 
         redrawGrid();
+    }
+
+    private void newGame(Game.GameMode mode) {
+        if (mode != Game.GameMode.PVP && mode != Game.GameMode.CVC) {
+            ChoiceDialog<chess.core.piece.Color> dialog = new ChoiceDialog<>(chess.core.piece.Color.WHITE, chess.core.piece.Color.BLACK);
+
+            dialog.setTitle("Select Color");
+            dialog.setHeaderText("Select your color: ");
+            dialog.setContentText("Color:");
+
+            Optional<chess.core.piece.Color> result = dialog.showAndWait();
+            result.ifPresent(color -> this.game = new Game(mode, this, color));
+        } else {
+            this.game = new Game(mode, this, chess.core.piece.Color.WHITE);
+        }
     }
 }
