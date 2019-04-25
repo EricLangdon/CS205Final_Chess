@@ -24,6 +24,7 @@ public class Game {
     private GameMode mode;
     private ChessGUI ui;
     private JsonLoader loader;
+    private ChessJson chessObj;
 
     private Stack<Game> states;
 
@@ -42,6 +43,7 @@ public class Game {
         this.p2Clock = p2Clock;
         this.ui = ui;
         this.loader = loader;
+        this.chessObj = new ChessJson();
         newGame();
         states = new Stack<>();
         this.states.push(new Game(this));
@@ -85,8 +87,11 @@ public class Game {
      * @param loader the Json object used to parse and save the data
      * @return the file to be saved
      */
-    public File save(JsonLoader loader) {
-        return loader.save();
+    public void save(JsonLoader loader, File f) {
+        chessObj.setMoveList(getBoard().getMoves());
+        chessObj.setPlayer1Clock(p1Clock);
+        chessObj.setPlayer2Clock(p2Clock);
+        loader.save(chessObj, f);
     }
 
     /**

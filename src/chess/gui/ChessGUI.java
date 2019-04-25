@@ -36,6 +36,7 @@ public class ChessGUI extends Application {
 
     private static final Color BACKGROUND_COLOR = Color.DARKSLATEGRAY;
     private Game game;
+    private JsonLoader loader = new JsonLoader();
     private CustomGridPane grid;
     private BorderPane bp;
 
@@ -284,10 +285,11 @@ public class ChessGUI extends Application {
     private void save(Stage stage) {
         FileChooser fc = new FileChooser();
         fc.setTitle("Save to file");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
         File file = fc.showSaveDialog(stage);
         if (file != null) {
             JsonLoader loader = this.game.getLoader();
-            this.game.save(loader);
+            this.game.save(loader, file);
         }
     }
 
@@ -302,6 +304,7 @@ public class ChessGUI extends Application {
         if (file != null) {
             JsonLoader loader = this.game.getLoader();
             this.game.load(loader, file);
+            //start game over?
         }
     }
 
