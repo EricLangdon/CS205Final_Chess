@@ -14,7 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class BoardSquarePane extends VBox {
-    public static final int SQUARE_SIZE = 85;
+    public static int SQUARE_SIZE = 85;
     private static final Color DARK_COLOR = Color.rgb(192, 192, 192);
     private static final Color DARK_COLOR_SELECTED = Color.rgb(245, 245, 96);
     private static final Color DARK_COLOR_HIGHLIGHTED = Color.rgb(162, 162, 192);

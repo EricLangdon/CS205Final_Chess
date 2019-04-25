@@ -74,6 +74,7 @@ public class Board {
                 }
             }
         }
+        captured = new ArrayList<>(oldBoard.captured);
         moves = new ArrayList<>(oldBoard.moves);
     }
 
@@ -121,22 +122,22 @@ public class Board {
         if (source.isOccupied() && source.getPiece().legalMove(this, source, target, checkCheck)) {
             Move move = new Move(source, target);
             //Castling logic
-            if (source.getX() == 4 && source.getY() == 0 && target.getX() == 2) {
+            if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 0 && target.getX() == 2) {
                 getBoardSquareAt(3, 0).setPiece(getBoardSquareAt(0, 0).getPiece());
                 getBoardSquareAt(0, 0).setPiece(null);
-            } else if (source.getX() == 4 && source.getY() == 0 && target.getX() == 6) {
+            } else if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 0 && target.getX() == 6) {
                 getBoardSquareAt(5, 0).setPiece(getBoardSquareAt(7, 0).getPiece());
                 getBoardSquareAt(7, 0).setPiece(null);
-            } else if (source.getX() == 4 && source.getY() == 7 && target.getX() == 2) {
+            } else if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 7 && target.getX() == 2) {
                 getBoardSquareAt(3, 7).setPiece(getBoardSquareAt(0, 7).getPiece());
                 getBoardSquareAt(0, 7).setPiece(null);
-            } else if (source.getX() == 4 && source.getY() == 7 && target.getX() == 6) {
+            } else if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 7 && target.getX() == 6) {
                 getBoardSquareAt(5, 7).setPiece(getBoardSquareAt(7, 7).getPiece());
                 getBoardSquareAt(7, 7).setPiece(null);
             }
             if (target.isOccupied()) {
                 move.setCapturedPiece(target.getPiece());
-                captured.add(target.getPiece());
+                pieceCaptured(target.getPiece());
             }
 
             moves.add(move);
@@ -145,17 +146,17 @@ public class Board {
             target.getPiece().setHasMoved(true);
 
             //En passant pawn take
-            if(target.getPiece() instanceof Pawn && ((Pawn) target.getPiece()).getEnPassant()){
-                if(target.getPiece().getColor()==Color.WHITE){
-                    move.setCapturedPiece(getBoardSquareAt(target.getX(), target.getY()-1).getPiece());
-                    captured.add(getBoardSquareAt(target.getX(), target.getY()-1).getPiece());
-                    getBoardSquareAt(target.getX(),target.getY()-1).setPiece(null);
+            if (target.getPiece() instanceof Pawn && ((Pawn) target.getPiece()).getEnPassant()) {
+                if (target.getPiece().getColor() == Color.WHITE) {
+                    move.setCapturedPiece(getBoardSquareAt(target.getX(), target.getY() - 1).getPiece());
+                    pieceCaptured(getBoardSquareAt(target.getX(), target.getY() - 1).getPiece());
+                    getBoardSquareAt(target.getX(), target.getY() - 1).setPiece(null);
                     ((Pawn) target.getPiece()).setEnPassant(false);
 
-                } else if (target.getPiece().getColor()==Color.BLACK){
-                    move.setCapturedPiece(getBoardSquareAt(target.getX(), target.getY()+1).getPiece());
-                    captured.add(getBoardSquareAt(target.getX(), target.getY()+1).getPiece());
-                    getBoardSquareAt(target.getX(), target.getY()+1).setPiece(null);
+                } else if (target.getPiece().getColor() == Color.BLACK) {
+                    move.setCapturedPiece(getBoardSquareAt(target.getX(), target.getY() + 1).getPiece());
+                    pieceCaptured(getBoardSquareAt(target.getX(), target.getY() + 1).getPiece());
+                    getBoardSquareAt(target.getX(), target.getY() + 1).setPiece(null);
                     ((Pawn) target.getPiece()).setEnPassant(false);
                 }
             }
@@ -198,12 +199,35 @@ public class Board {
     }
 
     /**
+     * checkmate
+     *
+     * @param color color to check
+     * @return true if side is in checkmate
+     */
+    public boolean checkmate(Color color) {
+        boolean checkmate = true;
+
+        if (!colorInCheck(color)) {
+            return false;
+        } else {
+            for (BoardSquare bs : this.getBoardSquares()) {
+                if (bs.isOccupied() && bs.getPiece().getColor() == color && bs.getPiece().getAvailableMoves(this, bs).size() > 0) {
+                    checkmate = false;
+                }
+            }
+        }
+        return checkmate;
+    }
+
+    /**
      * isCaptured
      *
      * @param p the piece that has been captured
      */
     public void pieceCaptured(Piece p) {
-        captured.add(p);
+        if (p != null) {
+            captured.add(p);
+        }
     }
 
     /**
@@ -299,6 +323,7 @@ public class Board {
 
     /**
      * check to see if there is a promotable pawn
+     *
      * @return bool
      */
     public boolean checkPromotion() {
@@ -322,20 +347,21 @@ public class Board {
 
     /**
      * find promotable pawn
+     *
      * @return boardsquare
      */
     public BoardSquare getPromotablePawn() {
         BoardSquare square;
-        for (int i=0; i < 8; i++){
-            square=getBoardSquareAt(i, 7);
-            if(square.isOccupied()){
-                if (square.getPiece() instanceof Pawn){
+        for (int i = 0; i < 8; i++) {
+            square = getBoardSquareAt(i, 7);
+            if (square.isOccupied()) {
+                if (square.getPiece() instanceof Pawn) {
                     return square;
                 }
             }
-            square=getBoardSquareAt(i, 0);
-            if(square.isOccupied()){
-                if(square.getPiece() instanceof Pawn){
+            square = getBoardSquareAt(i, 0);
+            if (square.isOccupied()) {
+                if (square.getPiece() instanceof Pawn) {
                     return square;
                 }
             }
@@ -346,14 +372,15 @@ public class Board {
     /**
      * Replace pawn with Piece
      */
-    public void replacePawn(Piece piece, BoardSquare square){
-        if(square.isOccupied() && square.getPiece() instanceof  Pawn) {
+    public void replacePawn(Piece piece, BoardSquare square) {
+        if (square.isOccupied() && square.getPiece() instanceof Pawn) {
             square.setPiece(piece);
         }
     }
 
     /**
      * Get arraylist of moves
+     *
      * @return arraylist of moves
      */
     public ArrayList<Move> getMoves() {
@@ -362,9 +389,10 @@ public class Board {
 
     /**
      * Get number of moves
+     *
      * @return number of moves
      */
-    public int getNumMoves(){
+    public int getNumMoves() {
         return moves.size();
     }
 }

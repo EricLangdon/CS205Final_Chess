@@ -14,7 +14,7 @@ public class Pawn extends Piece {
     public Pawn(Color color) {
         super(color);
         unicode = 0x2659;
-        score = 1;
+        score = 10;
     }
 
     /**
@@ -26,6 +26,7 @@ public class Pawn extends Piece {
      * @param target the boardsquare that the piece wants to be moved to
      * @return boolean true if move is legal
      */
+    @SuppressWarnings("Duplicates")
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
         //Checks if target is legal first
         if (super.legalMove(board, source, target, checkCheck)) {
@@ -65,14 +66,14 @@ public class Pawn extends Piece {
                 BoardSquare lastSource = moves.get(moves.size() - 1).getSource();
                 BoardSquare lastTarget = moves.get(moves.size() - 1).getTarget();
                 //Target is right
-                if (lastSource.getY() == 6 && lastTarget.getX() == source.getX() + invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
-                        && target.getX() == source.getX() + invert) {
+                if (lastSource.getY() == 6 && lastTarget.getPiece() instanceof Pawn && lastTarget.getX() == source.getX() + invert
+                        && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert && target.getX() == source.getX() + invert) {
                     enPassant=true;
                     return true;
                 }
                 //Target is left
-                else if (lastSource.getY() == 6 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
-                        && target.getX() == source.getX() - invert) {
+                else if (lastSource.getY() == 6 && lastTarget.getPiece() instanceof Pawn && lastTarget.getX() == source.getX() - invert
+                        && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert && target.getX() == source.getX() - invert) {
                     enPassant=true;
                     return true;
                 }
@@ -82,14 +83,14 @@ public class Pawn extends Piece {
                 BoardSquare lastSource = moves.get(moves.size() - 1).getSource();
                 BoardSquare lastTarget = moves.get(moves.size() - 1).getTarget();
                 // Target is left
-                if (lastSource.getY() == 1 && lastTarget.getX() == source.getX() + invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
-                        && target.getX() == source.getX() + invert) {
+                if (lastSource.getY() == 1 && lastTarget.getPiece() instanceof Pawn && lastTarget.getX() == source.getX() + invert
+                        && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert && target.getX() == source.getX() + invert) {
                     enPassant=true;
                     return true;
                 }
                 //Target is right
-                else if (lastSource.getY() == 1 && lastTarget.getX() == source.getX() - invert && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert
-                        && target.getX() == source.getX() - invert) {
+                else if (lastSource.getY() == 1 && lastTarget.getPiece() instanceof Pawn && lastTarget.getX() == source.getX() - invert
+                        && lastTarget.getY() == source.getY() && target.getY() == source.getY() + invert && target.getX() == source.getX() - invert) {
                     enPassant=true;
                     return true;
                 }

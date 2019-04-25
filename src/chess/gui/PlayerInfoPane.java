@@ -1,29 +1,26 @@
 package chess.gui;
 
-import chess.core.game.ChessClock;
 import chess.core.game.Game;
 import chess.core.piece.Piece;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class PlayerInfoPane extends HBox {
 
-    private chess.core.piece.Color player;
-    private Game game;
-    private ChessClock timer;
-
     private static final Color TEXT_COLOR = Color.web("#ccc");
     private static final Color BACKGROUND_COLOR = Color.DARKSLATEGRAY;
+    private chess.core.piece.Color player;
+    private Game game;
+    private Label timer;
 
     public PlayerInfoPane(Game game, chess.core.piece.Color player) {
         super(0);
         this.player = player;
         this.game = game;
-        this.timer = new ChessClock(player);
         draw();
     }
 
@@ -32,7 +29,7 @@ public class PlayerInfoPane extends HBox {
         this.setPadding(new Insets(0));
         this.setBackground(new Background(new BackgroundFill(BACKGROUND_COLOR, CornerRadii.EMPTY, Insets.EMPTY)));
 
-        Label scoreLabel = new Label("Score: " + this.game.getScore(player));
+        Label scoreLabel = new Label("Score: " + this.game.getScore(player) / 10);
         scoreLabel.setFont(new Font(22));
         scoreLabel.setTextFill(TEXT_COLOR);
 
@@ -51,11 +48,19 @@ public class PlayerInfoPane extends HBox {
         }
 
 
-        Label timer = new Label("Time Left: " + game.getTimeRemaining(player)); //TODO: update time
+        timer = new Label();
         timer.setFont(new Font(22));
         timer.setTextFill(TEXT_COLOR);
         timer.setAlignment(Pos.CENTER_RIGHT);
+        updateTimer();
         this.getChildren().addAll(scoreLabel, captured, timer);
+    }
+
+    /**
+     * Update the timer in the info pane to match the value in the actual game state
+     */
+    public void updateTimer() {
+        timer.setText("Time Left: " + game.getTimeRemaining(player));
     }
 
 

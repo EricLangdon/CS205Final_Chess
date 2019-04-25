@@ -13,7 +13,7 @@ public class Knight extends Piece {
     public Knight(Color color) {
         super(color);
         unicode = 0x2658;
-        score = 3;
+        score = 30;
     }
 
     /**

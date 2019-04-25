@@ -13,7 +13,7 @@ public class Bishop extends Piece {
     public Bishop(Color color) {
         super(color);
         unicode = 0x2657;
-        score = 3;
+        score = 30;
     }
 
     /**
