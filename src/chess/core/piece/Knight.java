@@ -23,6 +23,7 @@ public class Knight extends Piece {
      * @param board  the board
      * @param source the boardsquare containing the piece checking for move
      * @param target the boardsquare that the piece wants to be moved to
+     * @param checkCheck whether the move should check if the king is in check
      * @return boolean true if move is legal
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
@@ -38,12 +39,16 @@ public class Knight extends Piece {
             }
 
             //Handles knight logic
+            //Up two, left or right one
             if (target.getY() == source.getY() + 2 && target.getX() == source.getX() + invert) {              //Up 2 and left/right
                 return true;
+            //Up one, left or right two
             } else if (target.getY() == source.getY() + 1 && target.getX() == source.getX() + 2 * invert) {    //Up 1 and left/right
                 return true;
+            //Down one, left or right two
             } else if (target.getY() == source.getY() - 1 && target.getX() == source.getX() + 2 * invert) {    //Down 1 and left/right
                 return true;
+            //Down two, left or right one
             } else if (target.getY() == source.getY() - 2 && target.getX() == source.getX() + invert) {      //down 2 and left/right
                 return true;
             } else {
@@ -56,6 +61,7 @@ public class Knight extends Piece {
 
     /**
      * getColor
+     * returns the color of the knight
      *
      * @return the color of the piece
      */
