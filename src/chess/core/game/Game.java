@@ -79,7 +79,10 @@ public class Game {
         for (JsonNode move : moves) {
             board.movePiece(board.getBoardSquareAt(move.get("source").get("x").asInt(), move.get("source").get("y").asInt()), board.getBoardSquareAt(move.get("target").get("x").asInt(), move.get("target").get("y").asInt()));
         }
-        //TODO clocks, current turn, etc
+        this.p1Clock.setTime(root.get("Player1timer").asInt());
+        this.p2Clock.setTime(root.get("Player2timer").asInt());
+
+        this.currentTurn = Color.fromValue(root.get("turn").asInt());
 
         ui.turnComplete();
 
@@ -192,8 +195,15 @@ public class Game {
             moveList.add(moveNode);
         }
         root.put("moves", moveList);
+
         root.put("mode", getMode().ordinal());
+
         root.put("player1", getPlayer1Color().ordinal());
+
+        root.put("Player1timer", p1Clock.getTime());
+        root.put("Player2timer", p2Clock.getTime());
+
+        root.put("turn", getCurrentTurn().ordinal());
 
 
         String s = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
