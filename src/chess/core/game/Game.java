@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Stack;
 
 public class Game {
@@ -73,23 +74,28 @@ public class Game {
         this.cpuDepth = game.cpuDepth;
     }
 
+    /**
+     * Load a game from file
+     *
+     * @param file the file obj to load from
+     * @param ui   the ui instance
+     * @throws IOException if cant read file
+     */
     public Game(File file, ChessGUI ui) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.readValue(file, ObjectNode.class);
 
-        init(GameMode.fromValue(root.get("mode").asInt()), ui, Color.fromValue(root.get("player1").asInt()), cpuDepth);
+        init(GameMode.fromValue(root.get("mode").asInt()), ui, Objects.requireNonNull(Color.fromValue(root.get("player1").asInt())), cpuDepth);
         ArrayNode moves = (ArrayNode) root.get("moves");
         for (JsonNode move : moves) {
             board.movePiece(board.getBoardSquareAt(move.get("source").get("x").asInt(), move.get("source").get("y").asInt()), board.getBoardSquareAt(move.get("target").get("x").asInt(), move.get("target").get("y").asInt()));
+            this.executeTurn();
         }
         this.p1Clock.setTime(root.get("Player1timer").asInt());
         this.p2Clock.setTime(root.get("Player2timer").asInt());
 
         this.currentTurn = Color.fromValue(root.get("turn").asInt());
-
-        Platform.runLater(() -> {
-            ui.turnComplete();
-        });
+        Platform.runLater(ui::turnComplete);
 
     }
 
