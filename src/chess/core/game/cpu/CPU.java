@@ -61,7 +61,7 @@ public abstract class CPU {
             this.score = score;
         }
         public void addToScore(int score){
-            this.score+=score;g
+            this.score+=score;
         }
     }
 
