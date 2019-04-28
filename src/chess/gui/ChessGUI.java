@@ -352,8 +352,12 @@ public class ChessGUI extends Application {
         if (file != null) {
             try {
                 this.game = new Game(file, this);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Could not load game.");
+                alert.setContentText("An error occurred while trying to load game from file.");
+                alert.showAndWait();
             }
         }
     }
