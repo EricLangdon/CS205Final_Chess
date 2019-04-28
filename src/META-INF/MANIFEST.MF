@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: jackson-annotations-2.9.8.jar jackson-core-2.9.8.jar jacks
+ on-databind-2.9.8.jar
+Main-Class: chess.gui.ChessGUI
+
