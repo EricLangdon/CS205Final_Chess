@@ -32,7 +32,7 @@ public class Move implements Cloneable {
 
     /**
      * getSource
-     * 
+     *
      * @return the source boardsquare
      */
     public BoardSquare getSource() {
