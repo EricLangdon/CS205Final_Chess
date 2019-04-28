@@ -3,10 +3,8 @@ package chess.gui;
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
 import chess.core.board.Move;
-import chess.core.game.ChessJson;
 import chess.core.game.Game;
 import chess.core.game.GameResult;
-import chess.core.game.JsonLoader;
 import chess.core.piece.*;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -27,6 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Timer;
@@ -315,8 +314,12 @@ public class ChessGUI extends Application {
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
         File file = fc.showSaveDialog(stage);
         if (file != null) {
-            JsonLoader loader = new JsonLoader();
-            this.game.save(loader, file);
+            try {
+                this.game.save(file);
+            } catch (IOException e) {
+                // TODO alert
+                e.printStackTrace();
+            }
         }
     }
 
@@ -329,15 +332,11 @@ public class ChessGUI extends Application {
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
         File file = fc.showOpenDialog(stage);
         if (file != null) {
-            JsonLoader loader = new JsonLoader();
-            ChessJson newGameObj = this.game.load(loader, file);
-            Game newGame = new Game(newGameObj.getMode(), this, newGameObj.getPlayer1Color());
-            //loop thorugh move list
-            newGame.setMoves(newGameObj.getMoveList());
-            newGame.setP1Clock(newGameObj.getPlayer1Clock());
-            newGame.setP2Clock(newGameObj.getPlayer2Clock());
-
-            this.game = newGame;
+            try {
+                this.game = new Game(file, this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
