@@ -93,6 +93,8 @@ public class Game {
         }
         this.p1Clock.setTime(root.get("Player1timer").asInt());
         this.p2Clock.setTime(root.get("Player2timer").asInt());
+        this.p1Clock.start();
+        this.p2Clock.start();
 
         this.currentTurn = Color.fromValue(root.get("turn").asInt());
         Platform.runLater(ui::turnComplete);
