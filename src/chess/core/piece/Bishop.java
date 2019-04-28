@@ -27,7 +27,8 @@ public class Bishop extends Piece {
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
         if (super.legalMove(board, source, target, checkCheck)) {
-            if (source.getX() - target.getX() == source.getY() - target.getY()) { // if lower left or upper right diagonal
+            // if lower left or upper right diagonal
+            if (source.getX() - target.getX() == source.getY() - target.getY()) {
                 if (source.getX() < target.getX()) { // if target is upper right
                     for (int i = 1; source.getX() + i < target.getX(); i++) {
                         if (board.getBoardSquareAt(source.getX() + i, source.getY() + i).isOccupied()) {
@@ -43,7 +44,8 @@ public class Bishop extends Piece {
                     }
                     return true;
                 }
-            } else if (source.getX() - target.getX() == (source.getY() - target.getY()) * -1) { // if upper left or lower right diagonal
+                // if upper left or lower right diagonal
+            } else if (source.getX() - target.getX() == (source.getY() - target.getY()) * -1) {
                 if (source.getX() < target.getX()) { // if target is lower right
                     for (int i = 1; source.getX() + i < target.getX(); i++) {
                         if (board.getBoardSquareAt(source.getX() + i, source.getY() - i).isOccupied()) {

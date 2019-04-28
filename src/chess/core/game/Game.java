@@ -8,12 +8,18 @@ import chess.core.game.cpu.ComplexCPU;
 import chess.core.game.cpu.SimpleCPU;
 import chess.core.piece.*;
 import chess.gui.ChessGUI;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -28,9 +34,6 @@ public class Game {
     private ChessClock p2Clock;
     private GameMode mode;
     private ChessGUI ui;
-    private JsonLoader loader;
-    private ChessJson chessObj;
-
     private Stack<Game> states;
 
     /**
@@ -40,22 +43,7 @@ public class Game {
      * @param player1 color of player1
      */
     public Game(GameMode mode, ChessGUI ui, Color player1) {
-        this.mode = mode;
-        this.player1 = player1;
-        this.player2 = player1.other();
-        this.p1Clock = new ChessClock(this, player1);
-        this.p2Clock = new ChessClock(this, player2);
-        this.ui = ui;
-        this.chessObj = new ChessJson();
-        newGame();
-        states = new Stack<>();
-        this.states.push(new Game(this));
-        if (cpuTimer != null) {
-            cpuTimer.stop();
-        }
-        if (mode != GameMode.PVP) {
-            this.startCPU(player2);
-        }
+        init(mode, ui, player1);
     }
 
 
@@ -83,6 +71,42 @@ public class Game {
         this.states = game.states;
     }
 
+    public Game(File file, ChessGUI ui) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.readValue(file, ObjectNode.class);
+
+        init(GameMode.fromValue(root.get("mode").asInt()), ui, Color.fromValue(root.get("player1").asInt()));
+        ArrayNode moves = (ArrayNode) root.get("moves");
+        for (JsonNode move : moves) {
+            board.movePiece(board.getBoardSquareAt(move.get("source").get("x").asInt(), move.get("source").get("y").asInt()), board.getBoardSquareAt(move.get("target").get("x").asInt(), move.get("target").get("y").asInt()));
+        }
+        this.p1Clock.setTime(root.get("Player1timer").asInt());
+        this.p2Clock.setTime(root.get("Player2timer").asInt());
+
+        this.currentTurn = Color.fromValue(root.get("turn").asInt());
+
+        Platform.runLater(() -> { ui.turnComplete(); });
+
+    }
+
+    private void init(GameMode mode, ChessGUI ui, Color player1) {
+        this.mode = mode;
+        this.player1 = player1;
+        this.player2 = player1.other();
+        this.p1Clock = new ChessClock(this, player1);
+        this.p2Clock = new ChessClock(this, player2);
+        this.ui = ui;
+        newGame();
+        states = new Stack<>();
+        this.states.push(new Game(this));
+        if (cpuTimer != null) {
+            cpuTimer.stop();
+        }
+        if (mode != GameMode.PVP) {
+            this.startCPU(player2);
+        }
+    }
+
     /**
      * Setup game and board for a game
      */
@@ -105,7 +129,6 @@ public class Game {
             cpuTimer.stop();
         }
     }
-
 
     /**
      * Start the computer player on another thread
@@ -152,24 +175,44 @@ public class Game {
     /**
      * Save game to file
      *
-     * @param loader the Json object used to parse and save the data
-     * @return the file to be saved
+     * @param f      the file to be saved
      */
-    public void save(JsonLoader loader, File f) {
-        chessObj.setMoveList(getBoard().getMoves());
-        chessObj.setPlayer1Clock(p1Clock);
-        chessObj.setPlayer2Clock(p2Clock);
-        loader.save(chessObj, f);
-    }
+    public void save(File f) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode root = mapper.createObjectNode();
+        ArrayNode moveList = mapper.createArrayNode();
+        for (Move move : board.getMoves()) {
+            ObjectNode moveNode = mapper.createObjectNode();
+            ObjectNode source = mapper.createObjectNode();
+            source.put("x", move.getSource().getX());
+            source.put("y", move.getSource().getY());
 
-    /**
-     * Load game from a filepath
-     *
-     * @param loader Json loader
-     * @param file the file to be loaded
-     */
-    public void load(JsonLoader loader, File file) {
-        loader.load(file);
+            ObjectNode target = mapper.createObjectNode();
+            target.put("x", move.getTarget().getX());
+            target.put("y", move.getTarget().getY());
+
+            moveNode.put("source", source);
+            moveNode.put("target", target);
+            moveList.add(moveNode);
+        }
+        root.put("moves", moveList);
+
+        root.put("mode", getMode().ordinal());
+
+        root.put("player1", getPlayer1Color().ordinal());
+
+        root.put("Player1timer", p1Clock.getTime());
+        root.put("Player2timer", p2Clock.getTime());
+
+        root.put("turn", getCurrentTurn().ordinal());
+
+
+        String s = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+        FileWriter fw = new FileWriter(f);
+        fw.write(s);
+        fw.close();
+
+
     }
 
     /**
@@ -434,28 +477,18 @@ public class Game {
         return p1Clock;
     }
 
+    public void setP1Clock(ChessClock c) {
+        this.p1Clock = c;
+    }
+
     public ChessClock getP2Clock() {
         return p2Clock;
     }
 
-    /**
-     * getLoader
-     *
-     * @return the Json object used to save/load
-     */
-    public JsonLoader getLoader() {
-        return loader;
+    public void setP2Clock(ChessClock c) {
+        this.p2Clock = c;
     }
 
-    /**
-     * setLoader
-     *
-     * @param newLoader the new Json object to be used
-     */
-    public void setLoader(JsonLoader newLoader) {
-        this.loader = newLoader;
-    }
-  
     /**
      * Get the states stack
      *
@@ -465,8 +498,26 @@ public class Game {
         return states;
     }
 
+    /**
+     * Setters used for loading games
+     */
+    public void setMoves(ArrayList<Move> m) {
+        this.board.setMoves(m);
+    }
+
     public enum GameMode {
         PVP, DUMB_COMPUTER, SMART_COMPUTER, CVC;
         public static GameMode DEFAULT = SMART_COMPUTER;
+
+        public static GameMode fromValue(int val) {
+            for (GameMode m : GameMode.values()) {
+                if (m.ordinal() == val) {
+                    return m;
+                }
+            }
+            return null;
+        }
     }
+
+
 }

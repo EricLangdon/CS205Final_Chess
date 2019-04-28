@@ -12,6 +12,7 @@ import java.util.Random;
 public class ComplexCPU extends CPU {
     Color color;
     Stage gameStage;
+    int depth;
 
     /**
      * Default constructor
@@ -19,6 +20,7 @@ public class ComplexCPU extends CPU {
     public ComplexCPU() {
         this.color = Color.BLACK;
         this.gameStage = Stage.OPENING;
+        this.depth=2;
     }
 
     /**
@@ -29,6 +31,7 @@ public class ComplexCPU extends CPU {
     public ComplexCPU(Color newColor) {
         this.color = newColor;
         this.gameStage = Stage.OPENING;
+        this.depth=2;
     }
 
     /**
@@ -37,8 +40,8 @@ public class ComplexCPU extends CPU {
      *
      * @param board game board
      */
+    @SuppressWarnings("Duplicates")
     public void choiceMove(Board board) {
-        int depth = 2;
         int count = 0;
         for (Piece p : board.getCaptured()) {
             if (p.getColor() == color.other()) {
@@ -74,16 +77,16 @@ public class ComplexCPU extends CPU {
                         if (color == Color.WHITE) {
                             //E2 to E4
                             if (square.getX() == 4 && square.getY() == 1 && m.getX() == 4 && m.getY() == 3) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
                                 //D2 to D3
                             } else if (square.getX() == 3 && square.getY() == 1 && m.getX() == 3 && m.getY() == 2) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
                                 //B2 to B3
                             } else if (square.getX() == 1 && square.getY() == 1 && m.getX() == 1 && m.getY() == 2) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
                                 //G2 to G3
                             } else if (square.getX() == 6 && square.getY() == 1 && m.getX() == 6 && m.getY() == 2) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
                                 //B1 to C3
                             } else if (square.getX() == 1 && square.getY() == 0 && m.getX() == 2 && m.getY() == 2) {
                                 targetScores.get(targetScores.size() - 1).addToScore(1);
@@ -93,22 +96,22 @@ public class ComplexCPU extends CPU {
                             }
                             //Black openers
                         } else {
-                            //E7 to E5
+                            //Pawn E7 to E5
                             if (square.getX() == 4 && square.getY() == 6 && m.getX() == 4 && m.getY() == 4) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //D7 to D6
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
+                                //Pawn D7 to D6
                             } else if (square.getX() == 3 && square.getY() == 6 && m.getX() == 3 && m.getY() == 4) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //B7 to B6
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
+                                //Pawn B7 to B6
                             } else if (square.getX() == 1 && square.getY() == 6 && m.getX() == 1 && m.getY() == 5) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //G7 to G6
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
+                                //Pawn G7 to G6
                             } else if (square.getX() == 6 && square.getY() == 6 && m.getX() == 6 && m.getY() == 5) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //B8 to C6
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
+                                //Knight B8 to C6
                             } else if (square.getX() == 1 && square.getY() == 7 && m.getX() == 2 && m.getY() == 5) {
                                 targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //G8 to F6
+                                //Knight G8 to F6
                             } else if (square.getX() == 6 && square.getY() == 7 && m.getX() == 5 && m.getY() == 5) {
                                 targetScores.get(targetScores.size() - 1).addToScore(1);
                             }
@@ -160,87 +163,7 @@ public class ComplexCPU extends CPU {
                     }
                 }
             }
-
-
-//            Random randomNum = new Random();
-//            int randOpening = randomNum.nextInt(6);
-//            boolean moveComplete = false;
-//            if (color == Color.WHITE) {
-//                while (!moveComplete) {
-//                    //E2 to E4
-//                    if (randOpening == 0 && board.getBoardSquareAt(4, 1).isOccupied() && !board.getBoardSquareAt(4, 1).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(4, 1), board.getBoardSquareAt(4, 3));
-//                        moveComplete = true;
-//
-//                        //D2 to D3
-//                    } else if (randOpening == 1 && board.getBoardSquareAt(3, 1).isOccupied() && !board.getBoardSquareAt(3, 1).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(3, 1), board.getBoardSquareAt(3, 2));
-//                        moveComplete = true;
-//
-//                        //B2 to B3
-//                    } else if (randOpening == 2 && board.getBoardSquareAt(1, 1).isOccupied() && !board.getBoardSquareAt(1, 1).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(1, 1), board.getBoardSquareAt(1, 2));
-//                        moveComplete = true;
-//
-//                        //G2 to G3
-//                    } else if (randOpening == 3 && board.getBoardSquareAt(6, 1).isOccupied() && !board.getBoardSquareAt(6, 1).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(6, 1), board.getBoardSquareAt(6, 2));
-//                        moveComplete = true;
-//
-//                        //B1 to C3
-//                    } else if (randOpening == 4 && board.getBoardSquareAt(1, 0).isOccupied() && !board.getBoardSquareAt(1, 0).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(1, 0), board.getBoardSquareAt(2, 2));
-//                        moveComplete = true;
-//
-//                        //G1 to F3
-//                    } else if (randOpening == 5 && board.getBoardSquareAt(6, 0).isOccupied() && !board.getBoardSquareAt(6, 0).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(6, 0), board.getBoardSquareAt(5, 2));
-//                        moveComplete = true;
-//
-//                        //Select a different move
-//                    } else {
-//                        randOpening += 1;
-//                    }
-//                }
-//            } else if (color == Color.BLACK) {
-//                while (!moveComplete) {
-//                    //E7 to E5
-//                    if (randOpening == 0 && board.getBoardSquareAt(4, 6).isOccupied() && !board.getBoardSquareAt(4, 6).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(4, 6), board.getBoardSquareAt(4, 4));
-//                        moveComplete = true;
-//
-//                        //D7 to D6
-//                    } else if (randOpening == 1 && board.getBoardSquareAt(3, 6).isOccupied() && !board.getBoardSquareAt(3, 6).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(3, 6), board.getBoardSquareAt(3, 4));
-//                        moveComplete = true;
-//
-//                        //B7 to B6
-//                    } else if (randOpening == 2 && board.getBoardSquareAt(1, 6).isOccupied() && !board.getBoardSquareAt(1, 6).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(1, 6), board.getBoardSquareAt(1, 5));
-//                        moveComplete = true;
-//
-//                        //G7 to G6
-//                    } else if (randOpening == 3 && board.getBoardSquareAt(6, 6).isOccupied() && !board.getBoardSquareAt(6, 6).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(6, 6), board.getBoardSquareAt(6, 5));
-//                        moveComplete = true;
-//
-//                        //B8 to C6
-//                    } else if (randOpening == 4 && board.getBoardSquareAt(1, 7).isOccupied() && !board.getBoardSquareAt(1, 7).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(1, 7), board.getBoardSquareAt(2, 5));
-//                        moveComplete = true;
-//
-//                        //G8 to F6
-//                    } else if (randOpening == 5 && board.getBoardSquareAt(6, 7).isOccupied() && !board.getBoardSquareAt(6, 7).getPiece().getHasMoved()) {
-//                        board.movePiece(board.getBoardSquareAt(6, 7), board.getBoardSquareAt(5, 5));
-//                        moveComplete = true;
-//
-//                        //Select different move
-//                    } else {
-//                        randOpening += 1;
-//                    }
-//                }
-//            }
-            } else if (gameStage == Stage.MIDGAME || gameStage == Stage.ENDGAME) {
+        } else if (gameStage == Stage.MIDGAME || gameStage == Stage.ENDGAME) {
                 ArrayList<MoveScore> sourceScores = new ArrayList<>();
                 ArrayList<MoveScore> sourceMaxes = new ArrayList<>();
                 ArrayList<TargetScore> targetScores = new ArrayList<>();
@@ -321,6 +244,7 @@ public class ComplexCPU extends CPU {
          */
         public TargetScore scoreMove (Board board, BoardSquare source, BoardSquare target,int depth){
             Board tempBoard = new Board(board);
+            Board tempBoard2 = new Board(board);
             ArrayList<BoardSquare> moves;
             int sourceMax = 0, oppMaxInt = 0, sourceMin = 9999;
             TargetScore moveScore = new TargetScore(target, -9999);
@@ -360,7 +284,6 @@ public class ComplexCPU extends CPU {
                 if (oppMaxes.size() > 0) {
                     for (int i = 0; i < oppMaxes.size(); i++) {
                         // simulate opponent next move
-                        Board tempBoard2 = new Board(tempBoard);
                         tempBoard2.getBoardSquareAt(oppMaxes.get(i).getTarget().getX(), oppMaxes.get(i).getTarget().getY()).setPiece(tempBoard2.getBoardSquareAt(oppMaxes.get(i).getSource().getX(), oppMaxes.get(i).getSource().getY()).getPiece());
                         tempBoard2.getBoardSquareAt(oppMaxes.get(i).getSource().getX(), oppMaxes.get(i).getSource().getY()).setPiece(null);
                         tempBoard2.getBoardSquareAt(oppMaxes.get(i).getTarget().getX(), oppMaxes.get(i).getTarget().getY()).getPiece().setHasMoved(true);
@@ -408,7 +331,8 @@ public class ComplexCPU extends CPU {
                 // specific tweaks
                 if (tempBoard.colorInCheck(color.other())) {
                     moveScore.score += 1;
-                } else if (source.getPiece() instanceof King) {
+                }
+                if (source.getPiece() instanceof King) {
                     if (!source.getPiece().getHasMoved()) {
                         if (target.getX() - source.getX() != 2 && target.getX() - source.getX() != -2) {
                             moveScore.score -= 1;
@@ -417,7 +341,12 @@ public class ComplexCPU extends CPU {
                         }
                     }
                 }
-                if (source.getPiece() instanceof Rook || source.getPiece() instanceof Bishop || source.getPiece() instanceof Knight) {
+                if (source.getPiece() instanceof Rook) {
+                    if (tempBoard.colorInCheck(color.other())) {
+                        moveScore.score += 4;
+                    }
+                }
+                if (source.getPiece() instanceof Bishop || source.getPiece() instanceof Knight) {
                     if (!source.getPiece().getHasMoved()) {
                         // add move points
                         moveScore.score += 2;
@@ -427,19 +356,31 @@ public class ComplexCPU extends CPU {
                     }
                 } else if (source.getPiece() instanceof Pawn) {
                     if (target.getY() == 0 || target.getY() == 7) {
-                        moveScore.score += 89;
+                        moveScore.score += 79;
                     }
                 }
                 if (gameStage == Stage.ENDGAME) {
                     // TODO : end game strategy
-                    // Avoid same piece repeatedly checking
-                    // Bring reinforcements to the front
+                    // Pawn advancement
+                    if (source.getPiece() instanceof Pawn) {
+                        if (color == Color.BLACK) {
+                            moveScore.score += 8 - target.getY();
+                        } else {
+                            moveScore.score += target.getY() + 1;
+                        }
+                    }
                 }
                 for (BoardSquare bs : tempBoard.getBoardSquares()) {
                     if (bs.isOccupied() && bs.getPiece().getColor() == color.other() &&
                             bs.getPiece().getAvailableMoves(tempBoard, bs).size() != 0) {
                         moves = bs.getPiece().getAvailableMoves(tempBoard, bs);
                         for (BoardSquare m : moves) {
+                            tempBoard2.movePiece(bs, m);
+                            // checkmate
+                            if (tempBoard2.checkmate(color)) {
+                                moveScore.score -= 1000;
+                                return moveScore;
+                            }
                             if (m.isOccupied() && m.getPiece().getScore() > sourceMax) {
                                 sourceMax = m.getPiece().getScore();
                             }
@@ -459,4 +400,9 @@ public class ComplexCPU extends CPU {
                 }
             }
         }
+        public void setDepth(int depth){
+            this.depth=depth;
+        }
+
+        public int getDepth(){return depth;}
     }
