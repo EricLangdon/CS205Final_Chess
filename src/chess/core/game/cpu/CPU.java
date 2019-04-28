@@ -56,6 +56,13 @@ public abstract class CPU {
         public BoardSquare getTarget() {
             return target;
         }
+
+        public void setScore(int score) {
+            this.score = score;
+        }
+        public void addToScore(int score){
+            this.score+=score;g
+        }
     }
 
 }
