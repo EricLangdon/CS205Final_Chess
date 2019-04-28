@@ -12,6 +12,7 @@ import java.util.Random;
 public class ComplexCPU extends CPU {
     Color color;
     Stage gameStage;
+    int depth;
 
     /**
      * Default constructor
@@ -19,6 +20,7 @@ public class ComplexCPU extends CPU {
     public ComplexCPU() {
         this.color = Color.BLACK;
         this.gameStage = Stage.OPENING;
+        this.depth=2;
     }
 
     /**
@@ -29,6 +31,7 @@ public class ComplexCPU extends CPU {
     public ComplexCPU(Color newColor) {
         this.color = newColor;
         this.gameStage = Stage.OPENING;
+        this.depth=2;
     }
 
     /**
@@ -39,7 +42,6 @@ public class ComplexCPU extends CPU {
      */
     @SuppressWarnings("Duplicates")
     public void choiceMove(Board board) {
-        int depth = 2;
         int count = 0;
         for (Piece p : board.getCaptured()) {
             if (p.getColor() == color.other()) {
@@ -398,4 +400,9 @@ public class ComplexCPU extends CPU {
                 }
             }
         }
+        public void setDepth(int depth){
+            this.depth=depth;
+        }
+
+        public int getDepth(){return depth;}
     }
