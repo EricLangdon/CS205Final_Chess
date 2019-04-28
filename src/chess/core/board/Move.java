@@ -31,6 +31,8 @@ public class Move implements Cloneable {
     }
 
     /**
+     * getSource
+     * 
      * @return the source boardsquare
      */
     public BoardSquare getSource() {
@@ -38,6 +40,7 @@ public class Move implements Cloneable {
     }
 
     /**
+     * setSource
      * Copies the given boardsquare to source
      *
      * @param source the source boardsquare
@@ -47,6 +50,8 @@ public class Move implements Cloneable {
     }
 
     /**
+     * getTarget
+     *
      * @return the target boardsquare
      */
     public BoardSquare getTarget() {
@@ -54,6 +59,7 @@ public class Move implements Cloneable {
     }
 
     /**
+     * settarget
      * Copies the given boardsquare to target
      *
      * @param target the target boardsquare
@@ -63,13 +69,16 @@ public class Move implements Cloneable {
     }
 
     /**
-     * @return the captured piece, null if no piece captured
+     * getCaputredPiece
+     *
+     *  @return the captured piece, null if no piece captured
      */
     public Piece getCapturedPiece() {
         return capturedPiece;
     }
 
     /**
+     * setCapturedPiece
      * Set the captured piece, cloning it from the passed reference
      *
      * @param capturedPiece the captured piece, null if no piece captured
@@ -82,6 +91,11 @@ public class Move implements Cloneable {
         }
     }
 
+    /**
+     * Move toString
+     *
+     * @return prints the piece, the move source to target, and the captured piece
+     */
     @Override
     public String toString() {
         String s;
@@ -93,7 +107,8 @@ public class Move implements Cloneable {
     }
 
     /**
-
+     * equals
+     *
      * @param other the other move
      * @return true if the source, target, and captured piece are all equal
      */
