@@ -27,7 +27,6 @@ public class Game {
     private ChessClock p2Clock;
     private GameMode mode;
     private ChessGUI ui;
-    private JsonLoader loader;
     private ChessJson chessObj;
 
     private Stack<Game> states;
@@ -152,12 +151,18 @@ public class Game {
      * Save game to file
      *
      * @param loader the Json object used to parse and save the data
-     * @return the file to be saved
+     * @param f the file to be saved
      */
     public void save(JsonLoader loader, File f) {
+
         chessObj.setMoveList(getBoard().getMoves());
-        chessObj.setPlayer1Clock(p1Clock);
-        chessObj.setPlayer2Clock(p2Clock);
+        chessObj.setPlayer1Color(getPlayer1Color());
+        chessObj.setPlayer2Color(getPlayer2Color());
+        chessObj.setPlayer1Clock(getP1Clock());
+        chessObj.setPlayer2Clock(getP2Clock());
+        chessObj.setMode(getMode());
+        chessObj.setPlayer1Score(getScore(getPlayer1Color()));
+        chessObj.setPlayer2Score(getScore(getPlayer2Color()));
         loader.save(chessObj, f);
     }
 
@@ -167,9 +172,7 @@ public class Game {
      * @param loader Json loader
      * @param file the file to be loaded
      */
-    public void load(JsonLoader loader, File file) {
-        loader.load(file);
-    }
+    public ChessJson load(JsonLoader loader, File file) { return loader.load(file); }
 
     /**
      * Undo the last move
@@ -438,24 +441,6 @@ public class Game {
     }
 
     /**
-     * getLoader
-     *
-     * @return the Json object used to save/load
-     */
-    public JsonLoader getLoader() {
-        return loader;
-    }
-
-    /**
-     * setLoader
-     *
-     * @param newLoader the new Json object to be used
-     */
-    public void setLoader(JsonLoader newLoader) {
-        this.loader = newLoader;
-    }
-  
-    /**
      * Get the states stack
      *
      * @return the states stack
@@ -468,4 +453,15 @@ public class Game {
         PVP, DUMB_COMPUTER, SMART_COMPUTER, CVC;
         public static GameMode DEFAULT = SMART_COMPUTER;
     }
+
+    /**
+     * Setters used for loading games
+     */
+    public void setMoves(ArrayList<Move> m) {this.board.setMoves(m);}
+
+    public void setP1Clock (ChessClock c) { this.p1Clock = c; }
+
+    public void setP2Clock (ChessClock c) { this.p2Clock = c;}
+
+
 }

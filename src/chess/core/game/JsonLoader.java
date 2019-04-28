@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class JsonLoader {
 
     private ObjectMapper mapper = new ObjectMapper();
-    private ChessJson chessObj = new ChessJson();
 
     /**
      * save
@@ -32,7 +31,11 @@ public class JsonLoader {
      *
      * @param file the file to load from
      */
-    public void load(File file) {
-
+    public ChessJson load(File file) {
+        ChessJson chessObj = new ChessJson();
+        try {
+            chessObj = mapper.readValue(file, ChessJson.class );
+        } catch (Exception e) {}
+        return chessObj;
     }
 }

@@ -3,6 +3,7 @@ package chess.gui;
 import chess.core.board.Board;
 import chess.core.board.BoardSquare;
 import chess.core.board.Move;
+import chess.core.game.ChessJson;
 import chess.core.game.Game;
 import chess.core.game.GameResult;
 import chess.core.game.JsonLoader;
@@ -329,8 +330,14 @@ public class ChessGUI extends Application {
         File file = fc.showOpenDialog(stage);
         if (file != null) {
             JsonLoader loader = new JsonLoader();
-            this.game.load(loader, file);
-            //start game over?
+            ChessJson newGameObj = this.game.load(loader, file);
+            Game newGame = new Game(newGameObj.getMode(), this, newGameObj.getPlayer1Color());
+            //loop thorugh move list
+            newGame.setMoves(newGameObj.getMoveList());
+            newGame.setP1Clock(newGameObj.getPlayer1Clock());
+            newGame.setP2Clock(newGameObj.getPlayer2Clock());
+
+            this.game = newGame;
         }
     }
 
