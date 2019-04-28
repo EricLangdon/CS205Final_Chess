@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.util.Duration;
 
 import java.io.File;
@@ -84,7 +85,7 @@ public class Game {
 
         this.currentTurn = Color.fromValue(root.get("turn").asInt());
 
-        ui.turnComplete();
+        Platform.runLater(() -> { ui.turnComplete(); });
 
     }
 
