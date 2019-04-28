@@ -41,13 +41,15 @@ public class ChessGUI extends Application {
     private BorderPane bp;
     private MenuBar menuBar;
     private GameParameters gameParameters;
+    private Stage primaryStage;
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
+        this.primaryStage = stage;
         gameParameters = new GameParameters();
         newGame(false);
         BorderPane main = new BorderPane();
@@ -59,6 +61,8 @@ public class ChessGUI extends Application {
 
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> resizeListener(primaryStage, obs, oldVal, newVal));
         primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> resizeListener(primaryStage, obs, oldVal, newVal));
+
+        primaryStage.setOnCloseRequest(e -> this.exit());
 
         bp = new BorderPane();
         main.setCenter(bp);
@@ -90,7 +94,7 @@ public class ChessGUI extends Application {
         loadItem.setAccelerator(new KeyCodeCombination(KeyCode.O, modifier));
         //exit
         MenuItem exitItem = new MenuItem("Quit");
-        exitItem.setOnAction(e -> Platform.exit());
+        exitItem.setOnAction(e -> this.exit());
         exitItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, modifier));
 
         fileMenu.getItems().addAll(newItem, saveItem, loadItem, exitItem);
@@ -469,7 +473,7 @@ public class ChessGUI extends Application {
             Platform.runLater(() -> {
                 Optional<ButtonType> result = alert.showAndWait();
                 if (!result.isPresent() || result.get().equals(exitButtonType)) {
-                    System.exit(0);
+                   this.exit();
                 } else if (result.get().equals(continueButtonType)) {
                     this.game.disableTimer(color);
                 }
@@ -494,7 +498,7 @@ public class ChessGUI extends Application {
             Platform.runLater(() -> {
                 Optional<ButtonType> result = alert.showAndWait();
                 if (!result.isPresent() || result.get().equals(exitButtonType)) {
-                    System.exit(0);
+                    this.exit();
                 } else if (result.get().equals(newGameButtonType)) {
                     this.game.end();
                     newGame(true);
@@ -502,6 +506,12 @@ public class ChessGUI extends Application {
                 }
             });
         }
+    }
+
+    private void exit() {
+        primaryStage.close();
+        Platform.exit();
+        System.exit(0);
     }
 
     /**
@@ -595,10 +605,7 @@ public class ChessGUI extends Application {
             if (redraw) {
                 redrawGrid();
             }
-        } else {
-            Platform.exit();
-        }
-
+        } 
     }
 
     private class GameParameters {
