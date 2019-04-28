@@ -75,16 +75,16 @@ public class ComplexCPU extends CPU {
                         if (color == Color.WHITE) {
                             //E2 to E4
                             if (square.getX() == 4 && square.getY() == 1 && m.getX() == 4 && m.getY() == 3) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
                                 //D2 to D3
                             } else if (square.getX() == 3 && square.getY() == 1 && m.getX() == 3 && m.getY() == 2) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
                                 //B2 to B3
                             } else if (square.getX() == 1 && square.getY() == 1 && m.getX() == 1 && m.getY() == 2) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
                                 //G2 to G3
                             } else if (square.getX() == 6 && square.getY() == 1 && m.getX() == 6 && m.getY() == 2) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
                                 //B1 to C3
                             } else if (square.getX() == 1 && square.getY() == 0 && m.getX() == 2 && m.getY() == 2) {
                                 targetScores.get(targetScores.size() - 1).addToScore(1);
@@ -94,22 +94,22 @@ public class ComplexCPU extends CPU {
                             }
                             //Black openers
                         } else {
-                            //E7 to E5
+                            //Pawn E7 to E5
                             if (square.getX() == 4 && square.getY() == 6 && m.getX() == 4 && m.getY() == 4) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //D7 to D6
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
+                                //Pawn D7 to D6
                             } else if (square.getX() == 3 && square.getY() == 6 && m.getX() == 3 && m.getY() == 4) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //B7 to B6
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
+                                //Pawn B7 to B6
                             } else if (square.getX() == 1 && square.getY() == 6 && m.getX() == 1 && m.getY() == 5) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //G7 to G6
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
+                                //Pawn G7 to G6
                             } else if (square.getX() == 6 && square.getY() == 6 && m.getX() == 6 && m.getY() == 5) {
-                                targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //B8 to C6
+                                targetScores.get(targetScores.size() - 1).addToScore(5);
+                                //Knight B8 to C6
                             } else if (square.getX() == 1 && square.getY() == 7 && m.getX() == 2 && m.getY() == 5) {
                                 targetScores.get(targetScores.size() - 1).addToScore(1);
-                                //G8 to F6
+                                //Knight G8 to F6
                             } else if (square.getX() == 6 && square.getY() == 7 && m.getX() == 5 && m.getY() == 5) {
                                 targetScores.get(targetScores.size() - 1).addToScore(1);
                             }
