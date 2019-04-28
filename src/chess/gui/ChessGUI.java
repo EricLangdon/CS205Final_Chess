@@ -297,15 +297,18 @@ public class ChessGUI extends Application {
         Piece bishop = new Bishop(color);
         Piece knight = new Knight(color);
 
-        ChoiceDialog<Piece> dialog = new ChoiceDialog<Piece>(queen, rook, bishop, knight);
-
+        ChoiceDialog<Piece> dialog = new ChoiceDialog<>(queen, rook, bishop, knight);
         dialog.setTitle("Pawn Promotion");
         dialog.setHeaderText("Select a new piece:");
         dialog.setContentText("Piece:");
+        dialog.getDialogPane().getButtonTypes().clear();
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
 
-        Optional<Piece> result = dialog.showAndWait();
-
-        result.ifPresent(piece -> this.game.getBoard().replacePawn(piece, bs));
+        Optional<Piece> result;
+        do {
+            result = dialog.showAndWait();
+        } while (!result.isPresent());
+        this.game.getBoard().replacePawn(result.get(), bs);
     }
 
     /**
@@ -473,7 +476,7 @@ public class ChessGUI extends Application {
             Platform.runLater(() -> {
                 Optional<ButtonType> result = alert.showAndWait();
                 if (!result.isPresent() || result.get().equals(exitButtonType)) {
-                   this.exit();
+                    this.exit();
                 } else if (result.get().equals(continueButtonType)) {
                     this.game.disableTimer(color);
                 }
@@ -605,7 +608,7 @@ public class ChessGUI extends Application {
             if (redraw) {
                 redrawGrid();
             }
-        } 
+        }
     }
 
     private class GameParameters {
