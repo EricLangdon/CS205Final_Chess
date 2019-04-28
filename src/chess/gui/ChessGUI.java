@@ -571,6 +571,8 @@ public class ChessGUI extends Application {
                 items.getChildren().addAll(modeSelectBox);
             } else if (observableValue.getValue() == Game.GameMode.CVC) {
                 items.getChildren().addAll(modeSelectBox, depthSelectBox);
+            } else if (observableValue.getValue() == Game.GameMode.DUMB_COMPUTER) {
+                items.getChildren().addAll(modeSelectBox, colorSelectBox);
             } else {
                 items.getChildren().addAll(modeSelectBox, depthSelectBox, colorSelectBox);
             }
@@ -588,7 +590,7 @@ public class ChessGUI extends Application {
         Optional<GameParameters> result = dialog.showAndWait();
         if (result.isPresent()) {
             GameParameters results = result.get();
-            this.game = new Game(results.mode, this, results.color);
+            this.game = new Game(results.mode, this, results.color, results.depth);
             this.gameParameters = results;
             if (redraw) {
                 redrawGrid();

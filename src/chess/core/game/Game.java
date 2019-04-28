@@ -35,6 +35,7 @@ public class Game {
     private GameMode mode;
     private ChessGUI ui;
     private Stack<Game> states;
+    private int cpuDepth;
 
     /**
      * Constructor
@@ -42,8 +43,8 @@ public class Game {
      * @param mode    gamemode
      * @param player1 color of player1
      */
-    public Game(GameMode mode, ChessGUI ui, Color player1) {
-        init(mode, ui, player1);
+    public Game(GameMode mode, ChessGUI ui, Color player1, int cpuDepth) {
+        init(mode, ui, player1, cpuDepth);
     }
 
 
@@ -53,8 +54,8 @@ public class Game {
      *
      * @param mode gamemmode
      */
-    public Game(GameMode mode, ChessGUI ui) {
-        this(mode, ui, Color.WHITE);
+    public Game(GameMode mode, ChessGUI ui, int cpuDepth) {
+        this(mode, ui, Color.WHITE, cpuDepth);
     }
 
     /**
@@ -69,13 +70,14 @@ public class Game {
         this.mode = game.mode;
         this.ui = game.ui;
         this.states = game.states;
+        this.cpuDepth = game.cpuDepth;
     }
 
     public Game(File file, ChessGUI ui) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode root = mapper.readValue(file, ObjectNode.class);
 
-        init(GameMode.fromValue(root.get("mode").asInt()), ui, Color.fromValue(root.get("player1").asInt()));
+        init(GameMode.fromValue(root.get("mode").asInt()), ui, Color.fromValue(root.get("player1").asInt()), cpuDepth);
         ArrayNode moves = (ArrayNode) root.get("moves");
         for (JsonNode move : moves) {
             board.movePiece(board.getBoardSquareAt(move.get("source").get("x").asInt(), move.get("source").get("y").asInt()), board.getBoardSquareAt(move.get("target").get("x").asInt(), move.get("target").get("y").asInt()));
@@ -85,17 +87,20 @@ public class Game {
 
         this.currentTurn = Color.fromValue(root.get("turn").asInt());
 
-        Platform.runLater(() -> { ui.turnComplete(); });
+        Platform.runLater(() -> {
+            ui.turnComplete();
+        });
 
     }
 
-    private void init(GameMode mode, ChessGUI ui, Color player1) {
+    private void init(GameMode mode, ChessGUI ui, Color player1, int cpuDepth) {
         this.mode = mode;
         this.player1 = player1;
         this.player2 = player1.other();
         this.p1Clock = new ChessClock(this, player1);
         this.p2Clock = new ChessClock(this, player2);
         this.ui = ui;
+        this.cpuDepth = cpuDepth;
         newGame();
         states = new Stack<>();
         this.states.push(new Game(this));
@@ -140,6 +145,7 @@ public class Game {
         switch (mode) {
             case SMART_COMPUTER:
                 cpu = new ComplexCPU(color);
+                ((ComplexCPU) cpu).setDepth(cpuDepth);
                 break;
             case DUMB_COMPUTER:
                 cpu = new SimpleCPU(color);
@@ -147,6 +153,8 @@ public class Game {
             case CVC:
                 cpu = new ComplexCPU(color);
                 cpu2 = new ComplexCPU(color.other());
+                ((ComplexCPU) cpu).setDepth(cpuDepth);
+                ((ComplexCPU) cpu2).setDepth(cpuDepth);
                 break;
             default:
                 return;
@@ -175,7 +183,7 @@ public class Game {
     /**
      * Save game to file
      *
-     * @param f      the file to be saved
+     * @param f the file to be saved
      */
     public void save(File f) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
