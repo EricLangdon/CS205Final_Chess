@@ -23,7 +23,7 @@ public class Board {
      */
     public Board() {
         moves = new ArrayList<>();
-        // BoardSquares
+        // Initialize BoardSquares
         for (int i = 0; i < NUM_ROWS; i++) {
             board.add(new ArrayList<>(NUM_COLS));
             for (int j = 0; j < NUM_COLS; j++) {
@@ -32,6 +32,7 @@ public class Board {
             }
         }
 
+        //Puts all pieces on the board
         // Pawns
         for (int i = 0; i < NUM_COLS; i++) {
             getBoardSquareAt(i, 1).setPiece(new Pawn(Color.WHITE));
@@ -119,27 +120,36 @@ public class Board {
      * @return true if the piece is successfully moved, false if the move failed
      */
     public boolean movePiece(BoardSquare source, BoardSquare target, boolean checkCheck) {
+        //If the move is legal
         if (source.isOccupied() && source.getPiece().legalMove(this, source, target, checkCheck)) {
             Move move = new Move(source, target);
+
             //Castling logic
+            //White queen-side
             if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 0 && target.getX() == 2) {
                 getBoardSquareAt(3, 0).setPiece(getBoardSquareAt(0, 0).getPiece());
                 getBoardSquareAt(0, 0).setPiece(null);
+            //White king-side
             } else if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 0 && target.getX() == 6) {
                 getBoardSquareAt(5, 0).setPiece(getBoardSquareAt(7, 0).getPiece());
                 getBoardSquareAt(7, 0).setPiece(null);
+            //Black queen-side
             } else if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 7 && target.getX() == 2) {
                 getBoardSquareAt(3, 7).setPiece(getBoardSquareAt(0, 7).getPiece());
                 getBoardSquareAt(0, 7).setPiece(null);
+            //Black king-side
             } else if (source.getPiece() instanceof King && source.getX() == 4 && source.getY() == 7 && target.getX() == 6) {
                 getBoardSquareAt(5, 7).setPiece(getBoardSquareAt(7, 7).getPiece());
                 getBoardSquareAt(7, 7).setPiece(null);
             }
+
+            //Adds target piece to taken list
             if (target.isOccupied()) {
                 move.setCapturedPiece(target.getPiece());
                 pieceCaptured(target.getPiece());
             }
 
+            //Add move to moves list and set the source piece to null
             moves.add(move);
             target.setPiece(source.getPiece());
             source.setPiece(null);
@@ -176,6 +186,8 @@ public class Board {
         ArrayList<BoardSquare> opponentSources = new ArrayList<>();
         BoardSquare kingSquare = new BoardSquare();
         BoardSquare square;
+
+        //Forloop finds all boardsquares of opponent pieces and ally king
         for (int i = 0; i < NUM_COLS; i++) {
             for (int j = 0; j < NUM_ROWS; j++) {
                 square = getBoardSquareAt(j, i);
@@ -189,7 +201,9 @@ public class Board {
                 }
             }
         }
-        int k = 0;
+
+        //Forloop determines if the boardsquare the ally king
+        //occupies is a legal move of any opponent piece
         for (BoardSquare sq : opponentSources) {
             if (sq.getPiece().legalMove(this, sq, kingSquare, false)) {
                 return true;
@@ -221,6 +235,7 @@ public class Board {
 
     /**
      * isCaptured
+     * adds passed in piece to captured list
      *
      * @param p the piece that has been captured
      */
@@ -231,6 +246,7 @@ public class Board {
     }
 
     /**
+     * selectSquare
      * deselect the currently selected square and select the new one
      *
      * @param square the square to select
@@ -244,6 +260,7 @@ public class Board {
     }
 
     /**
+     * deselectSquare
      * deselect the currently selected square
      */
     public void deselectSquare() {
@@ -254,7 +271,7 @@ public class Board {
     }
 
     /**
-     * get the selected square
+     * getSeleftedSquare
      *
      * @return the selected square
      */
@@ -263,7 +280,7 @@ public class Board {
     }
 
     /**
-     * add another square to highlight
+     * addHighlightedSquare
      *
      * @param square the square to highlight
      */
@@ -275,7 +292,8 @@ public class Board {
     }
 
     /**
-     * unhighlight a single square
+     * removeHighlightedSquare
+     *  unhighlight a single square
      *
      * @param square the square to unhighlight
      */
@@ -285,6 +303,7 @@ public class Board {
     }
 
     /**
+     * resetHighlightedSquares
      * Unhighlight all squares
      */
     public void resetHighlightedSquares() {
@@ -296,6 +315,9 @@ public class Board {
 
     /**
      * getPieces
+     *
+     * returns list of all pieces
+     * @return arraylist of all pieces
      */
     public ArrayList<Piece> getPieces(Color color) {
         ArrayList<Piece> pieces = new ArrayList<>();
@@ -311,6 +333,11 @@ public class Board {
         return pieces;
     }
 
+    /**
+     * getBoardSquares
+     *
+     * @return list of all boardsquares in the board
+     */
     public ArrayList<BoardSquare> getBoardSquares() {
         ArrayList<BoardSquare> squares = new ArrayList<>(64);
         for (int i = 0; i < Board.NUM_COLS; i++) {
@@ -322,19 +349,21 @@ public class Board {
     }
 
     /**
-     * check to see if there is a promotable pawn
+     * chekPromotopn
      *
-     * @return bool
+     * @return bool is there is a pawn ready for promotion
      */
     public boolean checkPromotion() {
         BoardSquare square;
         for (int i = 0; i < 8; i++) {
+            //Checks for white pawn promotion
             square = getBoardSquareAt(i, 7);
             if (square.isOccupied()) {
                 if (square.getPiece() instanceof Pawn) {
                     return true;
                 }
             }
+            //checks for black pawn promotion
             square = getBoardSquareAt(i, 0);
             if (square.isOccupied()) {
                 if (square.getPiece() instanceof Pawn) {
@@ -346,9 +375,9 @@ public class Board {
     }
 
     /**
-     * find promotable pawn
+     * getPromotablePawn
      *
-     * @return boardsquare
+     * @return boardsquare of the pawn ready for promotion
      */
     public BoardSquare getPromotablePawn() {
         BoardSquare square;
@@ -370,7 +399,11 @@ public class Board {
     }
 
     /**
-     * Replace pawn with Piece
+     * replacePawn
+     * replaces the promotable pawn to the passed in piece
+     *
+     * @param piece the piece type the pawn will promote to
+     * @param square the boardsquare location of the pawn
      */
     public void replacePawn(Piece piece, BoardSquare square) {
         if (square.isOccupied() && square.getPiece() instanceof Pawn) {
@@ -379,16 +412,16 @@ public class Board {
     }
 
     /**
-     * Get arraylist of moves
+     * getMoves
      *
-     * @return arraylist of moves
+     * @return arraylist of all moves
      */
     public ArrayList<Move> getMoves() {
         return moves;
     }
 
     /**
-     * Get number of moves
+     * getNumMoves
      *
      * @return number of moves
      */
@@ -397,7 +430,10 @@ public class Board {
     }
 
     /**
+     * setMoves
      * Setter used for loading games
      */
-    public void setMoves(ArrayList<Move> m) { this.moves = m;}
+    public void setMoves(ArrayList<Move> m) {
+        this.moves = m;
+    }
 }
