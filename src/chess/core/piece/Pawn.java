@@ -9,8 +9,14 @@ import java.util.ArrayList;
 
 public class Pawn extends Piece {
 
+    //Boolean flag for pawn ability to make en passant move
     public boolean enPassant=false;
 
+    /**
+     * Pawn constructor
+     *
+     * @param color The color of the pawn
+     */
     public Pawn(Color color) {
         super(color);
         unicode = 0x2659;
@@ -30,7 +36,7 @@ public class Pawn extends Piece {
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
         //Checks if target is legal first
         if (super.legalMove(board, source, target, checkCheck)) {
-
+            //Gets the previous moves
             ArrayList<Move> moves = board.getMoves();
 
             //Creates the inverter that applies the moves to opposite color
@@ -101,7 +107,17 @@ public class Pawn extends Piece {
         return false;
     }
 
+    /**
+     * getEnPassent
+     *
+     * @return the flag if the en passant move is possible
+     */
     public boolean getEnPassant(){ return enPassant; }
 
+    /**
+     * setEnPassent
+     *
+     * @param enPassant flag if the en passant move is possible
+     */
     public void setEnPassant(boolean enPassant){this.enPassant=enPassant;}
 }
