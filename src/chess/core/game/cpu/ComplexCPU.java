@@ -242,6 +242,7 @@ public class ComplexCPU extends CPU {
          */
         public TargetScore scoreMove (Board board, BoardSquare source, BoardSquare target,int depth){
             Board tempBoard = new Board(board);
+            Board tempBoard2 = new Board(board);
             ArrayList<BoardSquare> moves;
             int sourceMax = 0, oppMaxInt = 0, sourceMin = 9999;
             TargetScore moveScore = new TargetScore(target, -9999);
@@ -281,7 +282,6 @@ public class ComplexCPU extends CPU {
                 if (oppMaxes.size() > 0) {
                     for (int i = 0; i < oppMaxes.size(); i++) {
                         // simulate opponent next move
-                        Board tempBoard2 = new Board(tempBoard);
                         tempBoard2.getBoardSquareAt(oppMaxes.get(i).getTarget().getX(), oppMaxes.get(i).getTarget().getY()).setPiece(tempBoard2.getBoardSquareAt(oppMaxes.get(i).getSource().getX(), oppMaxes.get(i).getSource().getY()).getPiece());
                         tempBoard2.getBoardSquareAt(oppMaxes.get(i).getSource().getX(), oppMaxes.get(i).getSource().getY()).setPiece(null);
                         tempBoard2.getBoardSquareAt(oppMaxes.get(i).getTarget().getX(), oppMaxes.get(i).getTarget().getY()).getPiece().setHasMoved(true);
@@ -329,7 +329,8 @@ public class ComplexCPU extends CPU {
                 // specific tweaks
                 if (tempBoard.colorInCheck(color.other())) {
                     moveScore.score += 1;
-                } else if (source.getPiece() instanceof King) {
+                }
+                if (source.getPiece() instanceof King) {
                     if (!source.getPiece().getHasMoved()) {
                         if (target.getX() - source.getX() != 2 && target.getX() - source.getX() != -2) {
                             moveScore.score -= 1;
@@ -338,7 +339,12 @@ public class ComplexCPU extends CPU {
                         }
                     }
                 }
-                if (source.getPiece() instanceof Rook || source.getPiece() instanceof Bishop || source.getPiece() instanceof Knight) {
+                if (source.getPiece() instanceof Rook) {
+                    if (tempBoard.colorInCheck(color.other())) {
+                        moveScore.score += 4;
+                    }
+                }
+                if (source.getPiece() instanceof Bishop || source.getPiece() instanceof Knight) {
                     if (!source.getPiece().getHasMoved()) {
                         // add move points
                         moveScore.score += 2;
@@ -348,19 +354,31 @@ public class ComplexCPU extends CPU {
                     }
                 } else if (source.getPiece() instanceof Pawn) {
                     if (target.getY() == 0 || target.getY() == 7) {
-                        moveScore.score += 89;
+                        moveScore.score += 79;
                     }
                 }
                 if (gameStage == Stage.ENDGAME) {
                     // TODO : end game strategy
-                    // Avoid same piece repeatedly checking
-                    // Bring reinforcements to the front
+                    // Pawn advancement
+                    if (source.getPiece() instanceof Pawn) {
+                        if (color == Color.BLACK) {
+                            moveScore.score += 8 - target.getY();
+                        } else {
+                            moveScore.score += target.getY() + 1;
+                        }
+                    }
                 }
                 for (BoardSquare bs : tempBoard.getBoardSquares()) {
                     if (bs.isOccupied() && bs.getPiece().getColor() == color.other() &&
                             bs.getPiece().getAvailableMoves(tempBoard, bs).size() != 0) {
                         moves = bs.getPiece().getAvailableMoves(tempBoard, bs);
                         for (BoardSquare m : moves) {
+                            tempBoard2.movePiece(bs, m);
+                            // checkmate
+                            if (tempBoard2.checkmate(color)) {
+                                moveScore.score -= 1000;
+                                return moveScore;
+                            }
                             if (m.isOccupied() && m.getPiece().getScore() > sourceMax) {
                                 sourceMax = m.getPiece().getScore();
                             }
