@@ -244,7 +244,6 @@ public class ComplexCPU extends CPU {
          */
         public TargetScore scoreMove (Board board, BoardSquare source, BoardSquare target,int depth){
             Board tempBoard = new Board(board);
-            Board tempBoard2 = new Board(board);
             ArrayList<BoardSquare> moves;
             int sourceMax = 0, oppMaxInt = 0, sourceMin = 9999;
             TargetScore moveScore = new TargetScore(target, -9999);
@@ -284,6 +283,7 @@ public class ComplexCPU extends CPU {
                 if (oppMaxes.size() > 0) {
                     for (int i = 0; i < oppMaxes.size(); i++) {
                         // simulate opponent next move
+                        Board tempBoard2 = new Board(tempBoard);
                         tempBoard2.getBoardSquareAt(oppMaxes.get(i).getTarget().getX(), oppMaxes.get(i).getTarget().getY()).setPiece(tempBoard2.getBoardSquareAt(oppMaxes.get(i).getSource().getX(), oppMaxes.get(i).getSource().getY()).getPiece());
                         tempBoard2.getBoardSquareAt(oppMaxes.get(i).getSource().getX(), oppMaxes.get(i).getSource().getY()).setPiece(null);
                         tempBoard2.getBoardSquareAt(oppMaxes.get(i).getTarget().getX(), oppMaxes.get(i).getTarget().getY()).getPiece().setHasMoved(true);
@@ -375,12 +375,6 @@ public class ComplexCPU extends CPU {
                             bs.getPiece().getAvailableMoves(tempBoard, bs).size() != 0) {
                         moves = bs.getPiece().getAvailableMoves(tempBoard, bs);
                         for (BoardSquare m : moves) {
-                            tempBoard2.movePiece(bs, m);
-                            // checkmate
-                            if (tempBoard2.checkmate(color)) {
-                                moveScore.score -= 1000;
-                                return moveScore;
-                            }
                             if (m.isOccupied() && m.getPiece().getScore() > sourceMax) {
                                 sourceMax = m.getPiece().getScore();
                             }
