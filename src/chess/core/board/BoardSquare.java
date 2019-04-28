@@ -21,7 +21,7 @@ public class BoardSquare {
     }
 
     /**
-     * Constructor
+     * Non-default Constructor
      *
      * @param xCoor
      * @param yCoor
@@ -63,6 +63,7 @@ public class BoardSquare {
     }
 
     /**
+     * setPiece
      * Set the piece occupying the boardSquare
      *
      * @param piece the piece
@@ -90,16 +91,17 @@ public class BoardSquare {
     }
 
     /**
-     * Get if the boardsquare is selected
+     * isSelected
      *
-     * @return if the boardsquare is selected
+     * @return true if the boardsquare is selected
      */
     public boolean isSelected() {
         return selected;
     }
 
     /**
-     * Set the selected state of the boardsquare
+     * setSelected
+     * Sets the selected state of the boardsquare
      *
      * @param selected if the boardsquare is selected
      */
@@ -108,9 +110,9 @@ public class BoardSquare {
     }
 
     /**
-     * Get if the boardsquare is highlighted
+     * isHighlighted
      *
-     * @return if the boardsquare is highlighted
+     * @return true if the boardsquare is highlighted
      */
     public boolean isHighlighted() {
         return highlighted;
@@ -118,7 +120,8 @@ public class BoardSquare {
 
 
     /**
-     * Set the highlighted state of the boardsquare
+     * setHighlighted
+     * sets the high lighted square to the passed in value
      *
      * @param highlighted if the boardsquare is highlighted
      */
@@ -126,13 +129,18 @@ public class BoardSquare {
         this.highlighted = highlighted;
     }
 
+    /**
+     * toString method
+     *
+     * @return string representing the boardsquare
+     */
     @Override
     public String toString() {
         return Character.toString((char) (x + 1 + 64)) + (y + 1);
     }
 
     /**
-     *
+     * equals method
      * @param other the other BoardSquare
      * @return returns true if the coordinates are the same
      */
