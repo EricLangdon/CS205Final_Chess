@@ -41,6 +41,12 @@ public abstract class Piece implements Cloneable {
         this.unicode = oldPiece.getUnicode();
     }
 
+    /**
+     * Piece clone
+     * Creates an identical copy of the piece
+     *
+     * @return A piece clone
+     */
     public Piece clone() {
         try {
             Piece clonePiece = (Piece) super.clone();
@@ -53,23 +59,36 @@ public abstract class Piece implements Cloneable {
 
 
     /**
-     * Check if the given move is legal given the board and source and target squares. To be overridden in piece subclasses
+     * legalMove without check checker
+     * Call the over ridden legalMove method and sets checkChecker to false.
      *
      * @param board  the board
      * @param source the boardsquare containing the piece checking for move
      * @param target the boardsquare that the piece wants to be moved to
+     * @return boolean if the move passes initial checks
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target) {
         return legalMove(board, source, target, false);
     }
 
+    /**
+     *legalMove with passed in checkChecker
+     * Checks if the move is legal based on initial checks and determines
+     * if the move puts the color in check if checkChecker is passed in as true
+     *
+     * @param board
+     * @param source
+     * @param target
+     * @param checkCheck
+     * @return boolean if the move passed initial checks
+     */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
         //Checks if source location equals target location
         if (target.getX() == source.getX() && target.getY() == source.getY()) {
             return false;
         }
 
-        //Call test in check
+        //Call test in check if checkChecker is true
         if (checkCheck) {
             Board tempBoard = new Board(board);
             tempBoard.movePiece(tempBoard.getBoardSquareAt(source.getX(), source.getY()), tempBoard.getBoardSquareAt(target.getX(), target.getY()), false);
@@ -104,6 +123,8 @@ public abstract class Piece implements Cloneable {
     }
 
     /**
+     * getColor
+     *
      * @return the color of the piece
      */
     public Color getColor() {
@@ -111,7 +132,7 @@ public abstract class Piece implements Cloneable {
     }
 
     /**
-     * Return if the piece has moved yet
+     * getHasMoved
      *
      * @return true if the piece has moved
      */
@@ -120,7 +141,7 @@ public abstract class Piece implements Cloneable {
     }
 
     /**
-     * Set of the piece has moved
+     * setHasMoved
      *
      * @param hasMoved if the piece has moved
      */
@@ -128,6 +149,11 @@ public abstract class Piece implements Cloneable {
         this.hasMoved = hasMoved;
     }
 
+    /**
+     * getUnicode
+     *
+     * @return the unicode of the piece
+     */
     public char getUnicode() {
         if (this.color == Color.BLACK) {
             return (char) (unicode + 6);
@@ -136,7 +162,7 @@ public abstract class Piece implements Cloneable {
     }
 
     /**
-     * Set the color of the piece
+     * setColor
      *
      * @param color the color of the piece
      */
@@ -145,20 +171,27 @@ public abstract class Piece implements Cloneable {
     }
 
     /**
-     * Get the score value of the piece
+     * getScore
      *
-     * @return the value
+     * @return the score value of the piece
      */
     public int getScore() {
         return score;
     }
 
+    /**
+     * toString
+     *
+     * @return detailed string of the piece
+     */
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + " " + this.getUnicode();
     }
 
     /**
+     * equals
+     * 
      * @param other the other piece
      * @return returns true if the piece is the same class, color, and hasMoved state
      */
