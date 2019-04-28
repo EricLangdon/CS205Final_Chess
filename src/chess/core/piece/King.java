@@ -27,10 +27,12 @@ public class King extends Piece {
      */
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
         if (super.legalMove(board, source, target, checkCheck)) {
+            // standard king movement rules
             if ((source.getX() == target.getX() || source.getX() - target.getX() == 1 || source.getX() - target.getX() == -1) &&
                     (source.getY() == target.getY() || source.getY() - target.getY() == 1 || source.getY() - target.getY() == -1)) {
                 return true;
-            } else if (!getHasMoved()) { // if King has not moved (for castling)
+                // castling rules
+            } else if (!getHasMoved()) {
                 // get row that the castle is taking place in
                 if (checkCheck && !board.colorInCheck(color)) {
                     int row = 0;
@@ -39,29 +41,33 @@ public class King extends Piece {
                     }
                     Board tempBoard1 = new Board(board);
                     Board tempBoard2 = new Board(board);
-                    if (source.getY() == target.getY() && source.getX() - target.getX() == -2) { // if King is moving two to the right
-                        if (!board.getBoardSquareAt(source.getX() + 1, row).isOccupied()) { // path is clear
+                    // if King is moving two to the right
+                    if (source.getY() == target.getY() && source.getX() - target.getX() == -2) {
+                        // path is clear
+                        if (!board.getBoardSquareAt(source.getX() + 1, row).isOccupied()) {
                             tempBoard1.getBoardSquareAt(target.getX(),target.getY()).setPiece(tempBoard1.getBoardSquareAt(source.getX(),source.getY()).getPiece());
                             tempBoard2.getBoardSquareAt(target.getX() - 1,target.getY()).setPiece(tempBoard2.getBoardSquareAt(source.getX(),source.getY()).getPiece());
                             tempBoard1.getBoardSquareAt(source.getX(),source.getY()).setPiece(null);
                             tempBoard2.getBoardSquareAt(source.getX(),source.getY()).setPiece(null);
                             if (!tempBoard1.colorInCheck(color) && !tempBoard2.colorInCheck(color)) {
-                                if (board.getBoardSquareAt(7, row).isOccupied()) { // if there is a piece in that corner
-                                    // if right rook has not moved
+                                // check rook in corner has not moved
+                                if (board.getBoardSquareAt(7, row).isOccupied()) {
                                     return !board.getBoardSquareAt(7, row).getPiece().getHasMoved();
                                 }
                             }
                         }
-                    } else if (source.getY() == target.getY() && source.getX() - target.getX() == 2) { // if King is moving two to the left
+                        // if King is moving two to the left
+                    } else if (source.getY() == target.getY() && source.getX() - target.getX() == 2) {
+                        // path is clear
                         if (!board.getBoardSquareAt(source.getX() - 1, row).isOccupied() &&
-                                !board.getBoardSquareAt(source.getX() - 3, row).isOccupied()) { // path is clear
+                                !board.getBoardSquareAt(source.getX() - 3, row).isOccupied()) {
                             tempBoard1.getBoardSquareAt(target.getX(),target.getY()).setPiece(tempBoard1.getBoardSquareAt(source.getX(),source.getY()).getPiece());
                             tempBoard2.getBoardSquareAt(target.getX() + 1,target.getY()).setPiece(tempBoard2.getBoardSquareAt(source.getX(),source.getY()).getPiece());
                             tempBoard1.getBoardSquareAt(source.getX(),source.getY()).setPiece(null);
                             tempBoard2.getBoardSquareAt(source.getX(),source.getY()).setPiece(null);
                             if (!tempBoard1.colorInCheck(color) && !tempBoard2.colorInCheck(color)) {
-                                if (board.getBoardSquareAt(0, row).isOccupied()) { // if there is a piece in that corner
-                                    // if left rook has not moved
+                                // check rook in corner has not moved
+                                if (board.getBoardSquareAt(0, row).isOccupied()) {
                                     return !board.getBoardSquareAt(0, row).getPiece().getHasMoved();
                                 }
                             }

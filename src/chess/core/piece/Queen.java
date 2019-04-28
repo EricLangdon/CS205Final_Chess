@@ -28,7 +28,7 @@ public class Queen extends Piece {
     public boolean legalMove(Board board, BoardSquare source, BoardSquare target, boolean checkCheck) {
         if (super.legalMove(board, source, target, checkCheck)) {
 
-            // horizontal/vertical logic
+            // horizontal/vertical logic (same as rook)
             if (source.getX() == target.getX()) { // if in the same column
                 if (source.getY() < target.getY()) { // if target is higher on the board
                     for (int i = 1; source.getY() + i < target.getY(); i++) {
@@ -63,8 +63,9 @@ public class Queen extends Piece {
                 }
             }
 
-            // diagonal logic
-            if (source.getX() - target.getX() == source.getY() - target.getY()) { // if lower left or upper right diagonal
+            // diagonal logic (same as bishop)
+            // if lower left or upper right diagonal
+            if (source.getX() - target.getX() == source.getY() - target.getY()) {
                 if (source.getX() < target.getX()) { // if target is upper right
                     for (int i = 1; source.getX() + i < target.getX(); i++) {
                         if (board.getBoardSquareAt(source.getX() + i, source.getY() + i).isOccupied()) {
@@ -80,7 +81,8 @@ public class Queen extends Piece {
                     }
                     return true;
                 }
-            } else if (source.getX() - target.getX() == (source.getY() - target.getY()) * -1) { // if upper left or lower right diagonal
+                // if upper left or lower right diagonal
+            } else if (source.getX() - target.getX() == (source.getY() - target.getY()) * -1) {
                 if (source.getX() < target.getX()) { // if target is lower right
                     for (int i = 1; source.getX() + i < target.getX(); i++) {
                         if (board.getBoardSquareAt(source.getX() + i, source.getY() - i).isOccupied()) {
@@ -97,7 +99,6 @@ public class Queen extends Piece {
                     return true;
                 }
             }
-
         }
         return false;
     }
