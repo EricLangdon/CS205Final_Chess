@@ -395,4 +395,9 @@ public class Board {
     public int getNumMoves() {
         return moves.size();
     }
+
+    /**
+     * Setter used for loading games
+     */
+    public void setMoves(ArrayList<Move> m) { this.moves = m;}
 }
