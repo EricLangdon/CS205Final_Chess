@@ -10,6 +10,7 @@ import chess.core.piece.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -39,6 +40,7 @@ public class ChessGUI extends Application {
     private CustomGridPane grid;
     private BorderPane bp;
     private MenuBar menuBar;
+    private GameParameters gameParameters;
 
     public static void main(String[] args) {
         launch(args);
@@ -46,7 +48,8 @@ public class ChessGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        newGame(Game.GameMode.DEFAULT);
+        gameParameters = new GameParameters();
+        newGame(false);
         BorderPane main = new BorderPane();
         Scene scene = new Scene(main, 900, 800);
         primaryStage.setScene(scene);
@@ -72,8 +75,10 @@ public class ChessGUI extends Application {
         }
         Menu fileMenu = new Menu("File");
 
-        Menu newMenu = new Menu("New Game");
-        updateNewMenu(newMenu, modifier);
+        // new
+        MenuItem newItem = new MenuItem("New Game");
+        newItem.setOnAction(e -> this.newGame(true));
+        newItem.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
 
         // save
         MenuItem saveItem = new MenuItem("Save Game");
@@ -88,7 +93,7 @@ public class ChessGUI extends Application {
         exitItem.setOnAction(e -> Platform.exit());
         exitItem.setAccelerator(new KeyCodeCombination(KeyCode.Q, modifier));
 
-        fileMenu.getItems().addAll(newMenu, saveItem, loadItem, exitItem);
+        fileMenu.getItems().addAll(newItem, saveItem, loadItem, exitItem);
 
         Menu editMenu = new Menu("Edit");
         MenuItem undoItem = new MenuItem("Undo");
@@ -129,9 +134,20 @@ public class ChessGUI extends Application {
 
     }
 
+    /**
+     * Update player info (timer, score, etc) without redraw
+     */
     private void updatePlayerInfo() {
         ((PlayerInfoPane) bp.getBottom()).updateTimer();
         ((PlayerInfoPane) bp.getTop()).updateTimer();
+    }
+
+    /**
+     * Redraw the player info
+     */
+    private void redrawPlayerInfo() {
+        bp.setTop(new PlayerInfoPane(this.game, chess.core.piece.Color.BLACK));
+        bp.setBottom(new PlayerInfoPane(this.game, chess.core.piece.Color.WHITE));
     }
 
     /**
@@ -269,11 +285,6 @@ public class ChessGUI extends Application {
         }
     }
 
-    private void redrawPlayerInfo() {
-        bp.setTop(new PlayerInfoPane(this.game, chess.core.piece.Color.BLACK));
-        bp.setBottom(new PlayerInfoPane(this.game, chess.core.piece.Color.WHITE));
-    }
-
     private void handlePawnPromotion() {
         BoardSquare bs = game.getBoard().getPromotablePawn();
         chess.core.piece.Color color = bs.getPiece().getColor();
@@ -334,6 +345,9 @@ public class ChessGUI extends Application {
         }
     }
 
+    /**
+     * Undo the last move
+     */
     private void undo() {
         if (!game.undo()) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -346,6 +360,9 @@ public class ChessGUI extends Application {
         redrawGrid();
     }
 
+    /**
+     * Show the game log
+     */
     private void showGameLog() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Game Log");
@@ -389,22 +406,6 @@ public class ChessGUI extends Application {
         }
     }
 
-    private void updateNewMenu(Menu newMenu, KeyCombination.Modifier modifier) {
-        newMenu.getItems().clear();
-        for (Game.GameMode mode : Game.GameMode.values()) {
-            MenuItem item = new MenuItem(mode.toString());
-            item.setOnAction(event -> {
-                this.game.end();
-                newGame(mode);
-                updateNewMenu(newMenu, modifier);
-                redrawGrid();
-            });
-            if (mode == this.game.getMode()) {
-                item.setAccelerator(new KeyCodeCombination(KeyCode.N, modifier));
-            }
-            newMenu.getItems().add(item);
-        }
-    }
 
     /**
      * Get the BoardSquarePane at a set of x, y coordinates if it exists
@@ -435,6 +436,9 @@ public class ChessGUI extends Application {
         return null;
     }
 
+    /**
+     * Popup if the game is over
+     */
     private void handleGameOver() {
 
         if (!game.isGameOver()) {
@@ -487,18 +491,29 @@ public class ChessGUI extends Application {
                     System.exit(0);
                 } else if (result.get().equals(newGameButtonType)) {
                     this.game.end();
-                    newGame(this.game.getMode());
+                    newGame(true);
                     redrawGrid();
                 }
             });
         }
     }
 
+    /**
+     * To be called when a turn is complete, update and handle if game is over
+     */
     public void turnComplete() {
         redrawGrid();
         handleGameOver();
     }
 
+    /**
+     * JavaFX listener, handle resize event
+     *
+     * @param stage
+     * @param observable
+     * @param oldValue
+     * @param newValue
+     */
     public void resizeListener(Stage stage, ObservableValue observable, Number oldValue, Number newValue) {
         double size = Math.min(stage.getHeight(), stage.getWidth());
         BoardSquarePane.SQUARE_SIZE = (int) size / 10;
@@ -506,18 +521,91 @@ public class ChessGUI extends Application {
         redrawGrid();
     }
 
-    private void newGame(Game.GameMode mode) {
-        if (mode != Game.GameMode.PVP && mode != Game.GameMode.CVC) {
-            ChoiceDialog<chess.core.piece.Color> dialog = new ChoiceDialog<>(chess.core.piece.Color.WHITE, chess.core.piece.Color.BLACK);
+    /**
+     * Popup the dialog for a new game with parameters
+     *
+     * @param redraw should the game be redrawn when the user clicks ok
+     */
+    private void newGame(boolean redraw) {
+        Dialog<GameParameters> dialog = new Dialog<>();
+        dialog.setTitle("Select Parameters");
+        dialog.setHeaderText("Select game parameters ");
+        dialog.setContentText("Parameters:");
+        dialog.getDialogPane().setMinWidth(250);
+        dialog.getDialogPane().setMinHeight(225);
 
-            dialog.setTitle("Select Color");
-            dialog.setHeaderText("Select your color: ");
-            dialog.setContentText("Color:");
+        DialogPane dialogPane = dialog.getDialogPane();
+        dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        VBox items = new VBox(8);
+        dialogPane.setContent(items);
 
-            Optional<chess.core.piece.Color> result = dialog.showAndWait();
-            result.ifPresent(color -> this.game = new Game(mode, this, color));
+        ChoiceBox<chess.core.piece.Color> colorSelect = new ChoiceBox<>(FXCollections.observableArrayList(chess.core.piece.Color.WHITE, chess.core.piece.Color.BLACK));
+        colorSelect.getSelectionModel().select(this.gameParameters.color);
+        BorderPane colorSelectBox = new BorderPane();
+        colorSelectBox.setLeft(new Label("Color:"));
+        colorSelectBox.setRight(colorSelect);
+        colorSelect.setMinWidth(175);
+
+        ChoiceBox<Integer> depthSelect = new ChoiceBox<>();
+        depthSelect.getItems().addAll(1, 2, 3);
+        depthSelect.getSelectionModel().select(Integer.valueOf(this.gameParameters.depth));
+        BorderPane depthSelectBox = new BorderPane();
+        depthSelectBox.setLeft(new Label("Depth:"));
+        depthSelectBox.setRight(depthSelect);
+        depthSelect.setMinWidth(175);
+
+        ChoiceBox<Game.GameMode> modeSelect = new ChoiceBox<>(FXCollections.observableArrayList(Game.GameMode.values()));
+        BorderPane modeSelectBox = new BorderPane();
+        modeSelectBox.setLeft(new Label("Mode:"));
+        modeSelectBox.setRight(modeSelect);
+        modeSelect.setMinWidth(175);
+        modeSelect.getSelectionModel().selectedItemProperty().addListener((observableValue, number, number2) -> {
+            items.getChildren().clear();
+            if (observableValue.getValue() == Game.GameMode.PVP) {
+                items.getChildren().addAll(modeSelectBox);
+            } else if (observableValue.getValue() == Game.GameMode.CVC) {
+                items.getChildren().addAll(modeSelectBox, depthSelectBox);
+            } else {
+                items.getChildren().addAll(modeSelectBox, depthSelectBox, colorSelectBox);
+            }
+            dialog.getDialogPane().setContent(items);
+            dialog.getDialogPane().setContent(dialog.getDialogPane().getContent());
+        });
+        modeSelect.getSelectionModel().select(this.gameParameters.mode); // trigger update ^
+
+        dialog.setResultConverter((ButtonType button) -> {
+            if (button == ButtonType.OK) {
+                return new GameParameters(depthSelect.getValue(), colorSelect.getValue(), modeSelect.getValue());
+            }
+            return null;
+        });
+        Optional<GameParameters> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            GameParameters results = result.get();
+            this.game = new Game(results.mode, this, results.color);
+            this.gameParameters = results;
+            if (redraw) {
+                redrawGrid();
+            }
         } else {
-            this.game = new Game(mode, this, chess.core.piece.Color.WHITE);
+            Platform.exit();
+        }
+
+    }
+
+    private class GameParameters {
+        int depth;
+        chess.core.piece.Color color;
+        Game.GameMode mode;
+
+        GameParameters(int depth, chess.core.piece.Color color, Game.GameMode mode) {
+            this.depth = depth;
+            this.color = color;
+            this.mode = mode;
+        }
+
+        GameParameters() {
+            this(2, chess.core.piece.Color.WHITE, Game.GameMode.DEFAULT);
         }
     }
 }
