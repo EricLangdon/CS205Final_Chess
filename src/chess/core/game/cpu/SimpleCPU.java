@@ -47,6 +47,7 @@ public class SimpleCPU extends CPU {
         int randomNum1 = 0, randomNum2 = 0;
         int temp;
 
+        //Gets all pieces and adds their moves to the target hashmap
         for (int i = 0; i < Board.NUM_COLS; i++) {
             for (int j = 0; j < Board.NUM_ROWS; j++) {
                 square = board.getBoardSquareAt(i, j);
@@ -60,6 +61,7 @@ public class SimpleCPU extends CPU {
             }
         }
 
+        //Selects a random piece and move, then executes taht move
         if (sources.size() != 0) {
             randomNum1 = random.nextInt(sources.size());
             randSource = sources.get(randomNum1);
