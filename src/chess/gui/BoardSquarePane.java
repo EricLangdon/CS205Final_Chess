@@ -13,6 +13,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+/**
+ * Pane that represents a board square
+ */
 public class BoardSquarePane extends VBox {
     public static int SQUARE_SIZE = 85;
     private static final Color DARK_COLOR = Color.rgb(192, 192, 192);

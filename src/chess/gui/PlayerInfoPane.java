@@ -17,6 +17,10 @@ public class PlayerInfoPane extends HBox {
     private Game game;
     private Label timer;
 
+    /**
+     * @param game   the game
+     * @param player the player
+     */
     public PlayerInfoPane(Game game, chess.core.piece.Color player) {
         super(0);
         this.player = player;
@@ -24,6 +28,9 @@ public class PlayerInfoPane extends HBox {
         draw();
     }
 
+    /**
+     * Draw the pane
+     */
     private void draw() {
         this.setAlignment(Pos.CENTER);
         this.setPadding(new Insets(0));
@@ -33,6 +40,7 @@ public class PlayerInfoPane extends HBox {
         scoreLabel.setFont(new Font(22));
         scoreLabel.setTextFill(TEXT_COLOR);
 
+        // cpatured pieces
         FlowPane captured = new FlowPane();
         captured.setAlignment(Pos.CENTER_LEFT);
         for (Piece piece : this.game.getBoard().getCaptured()) {
@@ -47,7 +55,7 @@ public class PlayerInfoPane extends HBox {
             captured.getChildren().add(label);
         }
 
-
+        // timer
         timer = new Label();
         timer.setFont(new Font(22));
         timer.setTextFill(TEXT_COLOR);

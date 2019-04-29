@@ -59,9 +59,10 @@ public class ChessGUI extends Application {
         primaryStage.setMinHeight(700);
         primaryStage.setMinWidth(700);
 
+        // resize listeners
         primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> resizeListener(primaryStage, obs, oldVal, newVal));
         primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> resizeListener(primaryStage, obs, oldVal, newVal));
-
+        // exit cleanly
         primaryStage.setOnCloseRequest(e -> this.exit());
 
         bp = new BorderPane();
@@ -99,12 +100,14 @@ public class ChessGUI extends Application {
 
         fileMenu.getItems().addAll(newItem, saveItem, loadItem, exitItem);
 
+        // edit menu
         Menu editMenu = new Menu("Edit");
         MenuItem undoItem = new MenuItem("Undo");
         undoItem.setOnAction(e -> this.undo());
         editMenu.getItems().add(undoItem);
         undoItem.setAccelerator(new KeyCodeCombination(KeyCode.Z, modifier));
 
+        // view menu
         Menu viewMenu = new Menu("View");
         MenuItem logItem = new MenuItem("Game Log");
         logItem.setAccelerator(new KeyCodeCombination(KeyCode.L, modifier));
@@ -395,6 +398,7 @@ public class ChessGUI extends Application {
             MoveLabel ml = new MoveLabel(move);
             list.getItems().add(ml);
             if (i % 2 == game.getPlayer1Color().ordinal() && game.getMode() != Game.GameMode.PVP && game.getMode() != Game.GameMode.CVC) {
+                // dont let player revert other player in pvp
                 ml.setDisable(true);
             }
             i++;
@@ -463,6 +467,7 @@ public class ChessGUI extends Application {
         }
         GameResult winner = game.getWinner();
         if (winner == GameResult.BLACKWIN_TIME || winner == GameResult.WHITEWIN_TIME) {
+            // pause the time once game over
             game.getP1Clock().pause();
             game.getP2Clock().pause();
 
@@ -477,6 +482,7 @@ public class ChessGUI extends Application {
             alert.getButtonTypes().clear();
             alert.getButtonTypes().addAll(exitButtonType, continueButtonType);
 
+            // must run later since called from non ui thread
             Platform.runLater(() -> {
                 Optional<ButtonType> result = alert.showAndWait();
                 if (!result.isPresent() || result.get().equals(exitButtonType)) {
@@ -515,6 +521,9 @@ public class ChessGUI extends Application {
         }
     }
 
+    /**
+     * exit the app cleanly
+     */
     private void exit() {
         primaryStage.close();
         Platform.exit();
@@ -582,6 +591,7 @@ public class ChessGUI extends Application {
         modeSelectBox.setLeft(new Label("Mode:"));
         modeSelectBox.setRight(modeSelect);
         modeSelect.setMinWidth(175);
+        // show different choice boxes based on mode
         modeSelect.getSelectionModel().selectedItemProperty().addListener((observableValue, number, number2) -> {
             items.getChildren().clear();
             if (observableValue.getValue() == Game.GameMode.PVP) {
@@ -597,12 +607,13 @@ public class ChessGUI extends Application {
             dialog.getDialogPane().setContent(dialog.getDialogPane().getContent());
         });
         modeSelect.getSelectionModel().select(this.gameParameters.mode); // trigger update ^
-
+        // convert to gameParameters object
         dialog.setResultConverter((ButtonType button) -> {
             if (button == ButtonType.OK) {
                 return new GameParameters(depthSelect.getValue(), colorSelect.getValue(), modeSelect.getValue());
             }
             return null;
+
         });
         Optional<GameParameters> result = dialog.showAndWait();
         if (result.isPresent()) {
