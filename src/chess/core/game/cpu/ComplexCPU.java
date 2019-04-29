@@ -58,7 +58,7 @@ public class ComplexCPU extends CPU {
         }
 
         if (gameStage == Stage.OPENING) {
-            // TODO: opening moves
+            //Todo  briefly explain all arraylists
             ArrayList<MoveScore> sourceScores = new ArrayList<>();
             ArrayList<MoveScore> sourceMaxes = new ArrayList<>();
             ArrayList<TargetScore> targetScores = new ArrayList<>();
@@ -71,6 +71,7 @@ public class ComplexCPU extends CPU {
             for (BoardSquare square : board.getBoardSquares()) {
                 if (square.isOccupied() && square.getPiece().getColor() == color &&
                         square.getPiece().getAvailableMoves(board, square).size() != 0) {
+                    //for each piece, score each possible move
                     moves = square.getPiece().getAvailableMoves(board, square);
                     for (BoardSquare m : moves) {
                         targetScores.add(scoreMove(board, square, m, depth));
@@ -118,6 +119,7 @@ public class ComplexCPU extends CPU {
                             }
                         }
                     }
+                    //take all the best moves for that piece
                     for (TargetScore t : targetScores) {
                         if (t.getScore() == targetMax) {
                             targetMaxes.add(t);
@@ -127,6 +129,7 @@ public class ComplexCPU extends CPU {
                             targetMaxes.add(t);
                         }
                     }
+                    //take one random move of thaty piece's best moves
                     if (targetMaxes.size() != 0) {
                         if (targetMaxes.size() == 1) {
                             sourceScores.add(new MoveScore(square, targetMaxes.get(0).getTarget(), targetMax));
@@ -139,6 +142,7 @@ public class ComplexCPU extends CPU {
                     targetMax = -9999;
                 }
             }
+            //cycle scores, filling an arraylist with the maxes
             for (MoveScore s : sourceScores) {
                 if (s.getScore() == sourceMax) {
                     sourceMaxes.add(s);
@@ -148,6 +152,7 @@ public class ComplexCPU extends CPU {
                     sourceMaxes.add(s);
                 }
             }
+            //choose a random move of the best available
             if (sourceMaxes.size() != 0) {
                 if (sourceMaxes.size() == 1) {
                     board.movePiece(sourceMaxes.get(0).getSource(), sourceMaxes.get(0).getTarget());
@@ -215,7 +220,7 @@ public class ComplexCPU extends CPU {
                     sourceMaxes.add(s);
                 }
             }
-            // choose random move of best available
+            // choose random move of the best available
             if (sourceMaxes.size() != 0) {
                 if (sourceMaxes.size() == 1) {
                     board.movePiece(sourceMaxes.get(0).getSource(), sourceMaxes.get(0).getTarget());
