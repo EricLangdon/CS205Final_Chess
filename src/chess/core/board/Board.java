@@ -349,7 +349,7 @@ public class Board {
     }
 
     /**
-     * chekPromotopn
+     * checkPromotion
      *
      * @return bool is there is a pawn ready for promotion
      */
@@ -431,7 +431,8 @@ public class Board {
 
     /**
      * setMoves
-     * Setter used for loading games
+     *
+     * @param m the new list of moves
      */
     public void setMoves(ArrayList<Move> m) {
         this.moves = m;

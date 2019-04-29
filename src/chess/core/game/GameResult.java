@@ -3,6 +3,12 @@ package chess.core.game;
 public enum GameResult {
     DRAW, BLACKWIN, WHITEWIN, BLACKWIN_TIME, WHITEWIN_TIME;
 
+    /**
+     * toString method to return the result of the game
+     *
+     * @return the result of the game as a string
+     */
+
     public String toString() {
         switch (this) {
             case BLACKWIN_TIME:
