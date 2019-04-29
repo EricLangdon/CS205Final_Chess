@@ -75,6 +75,7 @@ public class Game {
     }
 
     /**
+     * Non-default Load Constructor
      * Load a game from file
      *
      * @param file the file obj to load from
@@ -346,6 +347,12 @@ public class Game {
     }
 
     @SuppressWarnings("Duplicates")
+    /**
+     * isGasmeOver
+     * determines if the game has ended
+     * Game can end by win, stalemate, or timer finish
+     *
+     */
     public boolean isGameOver() {
         if (p1Clock.getTime() == -1 || p2Clock.getTime() == -1) {
             return true;
@@ -353,27 +360,34 @@ public class Game {
         ArrayList<Piece> blackLeft = board.getPieces(Color.BLACK);
         ArrayList<Piece> whiteLeft = board.getPieces(Color.WHITE);
         ArrayList<Move> gameMoves = getBoard().getMoves();
+
         //Piece deficit stalemate check
         if (blackLeft.size() <= 2 && whiteLeft.size() <= 2) {
+            //If only kings are left
             if (blackLeft.size() == 1 && whiteLeft.size() == 1) {
                 return true;
             } else if (blackLeft.size() == 1 && whiteLeft.size() == 2) {
+                //Black king and White King + Bishop
                 if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Bishop
                         || whiteLeft.get(0) instanceof Bishop && whiteLeft.get(1) instanceof King) {
                     return true;
+                //Black king and White King + Knight
                 } else if (whiteLeft.get(0) instanceof King && whiteLeft.get(1) instanceof Knight
                         || whiteLeft.get(0) instanceof Knight && whiteLeft.get(1) instanceof King) {
                     return true;
                 }
 
             } else if (blackLeft.size() == 2 && whiteLeft.size() == 1) {
+                //Black king + Bishop and White King
                 if (blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Bishop
                         || blackLeft.get(0) instanceof Bishop && blackLeft.get(1) instanceof King) {
                     return true;
+                //Black king + Knight and White King
                 } else if (blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Knight
                         || blackLeft.get(0) instanceof Knight && blackLeft.get(1) instanceof King) {
                     return true;
                 }
+            //If Black King + Bishop and White King + Bishop
             } else if (blackLeft.size() == 2 && whiteLeft.size() == 2) {
                 if (blackLeft.get(0) instanceof King && blackLeft.get(1) instanceof Bishop
                         || blackLeft.get(0) instanceof Bishop && blackLeft.get(1) instanceof King) {
@@ -383,7 +397,8 @@ public class Game {
                     }
                 }
             }
-            //Threefold repetition draw check
+
+        //Threefold repetition draw check
         } else if (gameMoves.size() >= 8) {
             if (gameMoves.get(gameMoves.size() - 2).getTarget() == gameMoves.get(gameMoves.size() - 4).getSource()
                     && gameMoves.get(gameMoves.size() - 4).getTarget() == gameMoves.get(gameMoves.size() - 6).getSource()
@@ -396,6 +411,7 @@ public class Game {
                 }
             }
         }
+
         // Checks if player can move a piece
         for (BoardSquare bs : board.getBoardSquares()) {
             if (bs.isOccupied() && bs.getPiece().getColor().equals(currentTurn) && !bs.getPiece().getAvailableMoves(board, bs).isEmpty()) {
@@ -432,10 +448,20 @@ public class Game {
         return currentTurn;
     }
 
+    /**
+     * getPlayer1Color
+     *
+     * @return the color of player 1
+     */
     public Color getPlayer1Color() {
         return player1;
     }
 
+    /**
+     * getPlayer2Color
+     *
+     * @return the color of player 2
+     */
     public Color getPlayer2Color() {
         return player2;
     }
@@ -481,6 +507,12 @@ public class Game {
         clock.cancel();
     }
 
+    /**
+     * equals
+     *
+     * @param oldGame to compare to
+     * @return true if both game boards are equal
+     */
     public boolean equals(Game oldGame) {
         if (this.getBoard().equals(oldGame.getBoard())) {
             return true;
@@ -489,18 +521,40 @@ public class Game {
         }
     }
 
+    /**
+     * getP1Clock
+     *
+     * @return the time for player 1
+     */
     public ChessClock getP1Clock() {
         return p1Clock;
     }
 
+    /**
+     * setP1Clock
+     * sets player 1 clock to the passed in time
+     *
+     * @param c a chess clock
+     */
     public void setP1Clock(ChessClock c) {
         this.p1Clock = c;
     }
 
+    /**
+     * getP2Clock
+     *
+     * @return the time for player 2
+     */
     public ChessClock getP2Clock() {
         return p2Clock;
     }
 
+    /**
+     * setP2Clock
+     * sets player 2 clock to the passed in time
+     *
+     * @param c a chess clock
+     */
     public void setP2Clock(ChessClock c) {
         this.p2Clock = c;
     }
@@ -515,16 +569,32 @@ public class Game {
     }
 
     /**
+     * setMoves
      * Setters used for loading games
      */
     public void setMoves(ArrayList<Move> m) {
         this.board.setMoves(m);
     }
 
+    /**
+     * GameMode class
+     * Holds all the game modes
+     */
     public enum GameMode {
         PVP, DUMB_COMPUTER, SMART_COMPUTER, CVC;
+        /**
+         * Default constructor
+         *
+         * sets the default mode to the smart computer
+         */
         public static GameMode DEFAULT = SMART_COMPUTER;
 
+        /**
+         * fromValue
+         *
+         * @param val the position of the enum
+         * @return the game mode at the specified ordinal position
+         */
         public static GameMode fromValue(int val) {
             for (GameMode m : GameMode.values()) {
                 if (m.ordinal() == val) {
